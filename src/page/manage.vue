@@ -37,8 +37,8 @@
 						<!--<el-menu-item index="explain">说明</el-menu-item>-->
 					<!--</el-submenu>-->
 					<el-submenu index="2">
-					<template slot="title"><i class="el-icon-warning"></i>电话联系记录</template>
-					<el-menu-item index="explain">说明</el-menu-item>
+					<template slot="title"><i class="el-icon-warning"></i>电话联系</template>
+					<el-menu-item index="phone_contact">所有电联记录</el-menu-item>
 					</el-submenu>
 				</el-menu>
 			</el-col>
