@@ -18,7 +18,6 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 
 	if (window.fetch && method == 'fetch') {
 		let requestConfig = {
-			credentials: 'include',
 			method: type,
 			headers: {
 				'Accept': 'application/json',
@@ -56,7 +55,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			}
 
 			requestObj.open(type, url, true);
-			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			requestObj.setRequestHeader("Content-type", "application/json");
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {

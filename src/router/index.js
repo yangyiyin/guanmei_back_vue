@@ -20,7 +20,7 @@ const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manag
 // const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'adminSet');
 // const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage');
 // const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain');
-const phone_contact = r => require.ensure([], () => r(require('@/page/phone_contact')), 'phone_contact');
+const phone_contact = r => require.ensure([], () => r(require('@/page_earth/phone_contact')), 'phone_contact');
 
 const routes = [
 	{
@@ -96,7 +96,7 @@ const routes = [
 			{
 				path: '/phone_contact',
 				component: phone_contact,
-				meta: ['电话联系', '所有电联记录'],
+				meta: ['电话联系', '慈溪电联记录'],
 			}
 
 		]

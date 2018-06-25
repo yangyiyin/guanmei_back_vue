@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {getAdminInfo} from '@/api/getData'
-
+import constant from '@/config/constant'
 Vue.use(Vuex)
 
 const state = {
+	constant:constant,
 	adminInfo: {
 		avatar: 'default.jpg'
 	},
