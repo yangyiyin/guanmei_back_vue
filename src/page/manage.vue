@@ -37,7 +37,7 @@
 						<!--<el-menu-item index="explain">说明</el-menu-item>-->
 					<!--</el-submenu>-->
 					<el-submenu index="2">
-					<template slot="title"><i class="el-icon-warning"></i>电话联系</template>
+					<template slot="title"><i class="el-icon-phone"></i>电话联系</template>
 					<el-menu-item index="phone_contact">慈溪电联记录</el-menu-item>
 					</el-submenu>
 				</el-menu>
