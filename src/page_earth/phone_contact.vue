@@ -1,6 +1,25 @@
 <template>
     <div class="fillcontain">
         <head-top></head-top>
+        <div class="table_container" style="padding-bottom: 0">
+            <el-select v-model="choose_categories" multiple placeholder="请选择分类">
+                <el-option
+                        v-for="item in categories"
+                        :key="item.id"
+                        :label="item.display_name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+
+            <el-input
+                    style="display: inline-block;width: 250px;"
+                    placeholder="主体名称"
+                    v-model="title"
+                    clearable>
+            </el-input>
+            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+
+        </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
@@ -67,7 +86,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {cixi_list} from '@/api/getDataEarth'
+    import {cixi_list,entity_cixi_edit,entity_categories} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -77,21 +96,32 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current_entity:{},
-                remark:''
+                remark:'',
+                choose_categories:[],
+                categories:[],
+                title:''
             }
         },
         components: {
             headTop,
         },
         created(){
+            this.entity_categories();
             this.cixi_list();
         },
         mounted(){
 
         },
         methods: {
+            entity_categories() {
+                entity_categories([]).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.categories = res.data.list;
+                    }
+                }.bind(this));
+            },
             cixi_list() {
-                cixi_list({page:this.currentPage,page_size:this.limit}).then(function(res){
+                cixi_list({page:this.currentPage,page_size:this.limit,cate_ids:this.choose_categories,title:this.title}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -108,8 +138,27 @@
                 this.current_entity = row;
             },
             modify_info() {
+                entity_cixi_edit({
+                    id:this.current_entity.id,
+                    mobile:this.current_entity.mobile,
+                    desc:this.current_entity.desc,
+                    remark:this.current_entity.remark,
 
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisible = false;
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
                 this.dialogFormVisible = false;
+            },
+            search() {
+                this.cixi_list();
             }
         },
     }
