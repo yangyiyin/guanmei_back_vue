@@ -60,7 +60,8 @@
                         :current-page="currentPage"
                         :page-size="limit"
                         layout="total, prev, pager, next"
-                        :total="count">
+                        :total="count"
+                        background>
                 </el-pagination>
             </div>
         </div>
@@ -158,6 +159,7 @@
                 this.dialogFormVisible = false;
             },
             search() {
+                this.currentPage = 1;
                 this.cixi_list();
             }
         },
