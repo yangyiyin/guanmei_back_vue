@@ -47,7 +47,7 @@
 		mounted(){
 			this.showLogin = true;
 			if (!this.adminInfo.id) {
-    			this.getAdminData()
+    			//this.getAdminData()
     		}
 		},
 		computed: {
