@@ -16,9 +16,6 @@
 				    	<el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
 				  	</el-form-item>
 				</el-form>
-				<p class="tip">温馨提示：</p>
-				<p class="tip">未登录过的新用户，自动注册</p>
-				<p class="tip">注册过的用户可凭账号密码登录</p>
 	  		</section>
 	  	</transition>
   	</div>
@@ -27,6 +24,7 @@
 <script>
 	import {login, getAdminInfo} from '@/api/getData'
 	import {mapActions, mapState} from 'vuex'
+	import {setStore, getStore} from '@/config/mUtils'
 
 	export default {
 	    data(){
@@ -61,7 +59,9 @@
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
 						const res = await login({user_name: this.loginForm.username, password: this.loginForm.password})
-						if (res.status == 1) {
+						if (res.code == this.$store.state.constant.status_success) {
+							setStore('token', res.data.token);
+							setStore('user_info', res.data.user_info);
 							this.$message({
 		                        type: 'success',
 		                        message: '登录成功'
@@ -70,7 +70,7 @@
 						}else{
 							this.$message({
 		                        type: 'error',
-		                        message: res.message
+		                        message: res.msg
 		                    });
 						}
 					} else {

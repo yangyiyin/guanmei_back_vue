@@ -65,7 +65,7 @@
                 </el-pagination>
             </div>
         </div>
-        <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
+        <el-dialog title="修改信息" :visible.sync="dialogFormVisible" width="30%">
             <el-form :model="current_entity">
                 <el-form-item label="手机号">
                     <el-input v-model="current_entity.mobile" auto-complete="off"></el-input>
@@ -115,7 +115,7 @@
         },
         methods: {
             entity_categories() {
-                entity_categories([]).then(function (res) {
+                entity_categories().then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.categories = res.data.list;
                     }

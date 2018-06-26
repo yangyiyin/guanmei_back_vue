@@ -1,4 +1,5 @@
 import { baseUrl } from './env'
+import {getStore} from '@/config/mUtils'
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	type = type.toUpperCase();
@@ -28,6 +29,8 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		}
 
 		if (type == 'POST') {
+			data = data ? data : {};
+			data.token = getStore('token') ? getStore('token') : '';
 			Object.defineProperty(requestConfig, 'body', {
 				value: JSON.stringify(data)
 			})
