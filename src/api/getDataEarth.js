@@ -19,3 +19,7 @@ export const entity_cixi_edit = data => fetch('/waibao/entity/cixi_edit', data, 
 export const entity_categories = data => fetch('/waibao/entity/categories', data, 'POST').then(check_login);
 export const managerrecommend_tmp_add = data => fetch('//88plus.net/public/index.php/ADMINAPIManagerrecommend/managerrecommend/tmp_add', data, 'POST');
 export const managerrecommend_cache_data = data => fetch('//88plus.net/public/index.php/ADMINAPI/managerrecommend/cache_data', data, 'POST');
+export const managerrecommend_tmp_list = data => fetch('/managerrecommend/template/index', data, 'POST').then(check_login);
+export const managerrecommend_tmp_info = data => fetch('/managerrecommend/template/info', data, 'POST').then(check_login);
+export const managerrecommend_tmp_verify = data => fetch('/managerrecommend/template/verify', data, 'POST').then(check_login);
+export const managerrecommend_tmp_del = data => fetch('/managerrecommend/template/del', data, 'POST').then(check_login);

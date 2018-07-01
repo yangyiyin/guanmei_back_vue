@@ -182,10 +182,11 @@
         </template>
 
 
-        <div style="position: fixed;top: 100px;right: 100px;">
-            <iframe ref="iframe" class="embed-responsive-item" style="width: 375px;height:667px;" src="http://www.myweb.com/git-res/shop-y/index.php/HomeManagerRecommend/Pages/index?is_preview=1"></iframe>
+        <div style="position: fixed;top: 150px;right: 75px;">
+            <img style="position: absolute;width: 555px;right:-120px;top: -74px;z-index: -1" src="http://paz3jxo1v.bkt.clouddn.com/phone.png"/>
+            <iframe ref="iframe" class="embed-responsive-item" style="width: 298px;height:524px;" src="http://www.myweb.com/git-res/shop-y/index.php/HomeManagerRecommend/Pages/index?is_preview=1"></iframe>
             <br/>
-            <el-button type="warning" style="color: #fff;text-align:center;width: 375px;" v-on:click="get_data" >刷新预览</el-button>
+            <el-button type="warning" style="color: #fff;text-align:center;width: 300px;margin-top: 80px" v-on:click="get_data" >刷新预览</el-button>
         </div>
 
 
@@ -195,11 +196,12 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {managerrecommend_tmp_add,managerrecommend_cache_data} from '@/api/getDataEarth'
+    import {managerrecommend_tmp_add,managerrecommend_cache_data,managerrecommend_tmp_info} from '@/api/getDataEarth'
 
     export default {
         data(){
             return {
+                id:0,
                 activeName: 'first',
                 blocks:[{id:1,name:'限时抢购'},{id:2,name:'砍价'},{id:3,name:'集赞'},{id:4,name:'投票'},{id:5,name:'图文'}],
                 type:1,
@@ -234,8 +236,51 @@
         },
         mounted(){
 
+            //console.log(this.$route.query);
         },
+        beforeRouteEnter (to, from, next) {
+            next(vm => {
+                // 通过 `vm` 访问组件实例
+                vm.id = to.query.id ? to.query.id : 0;
+                vm.get_tmp_info();
+        })
+        },
+
         methods: {
+            init() {
+                this.activeName = 'first';
+                this.type = 1;
+                this.title = '';
+                this.img = '';
+                this.tmp_data = {
+                    height:'1000rpx',
+                    bg:{src:''},
+                    music:{},
+                    time_limit_left:0,
+                    add_extra_img_max:2,
+                    add_extra_text_max:2,
+                    can_add_extra_img:true,
+                    can_add_extra_text:true,
+                    page:[{ type:'text',
+                        text:'',
+                        src:'',
+                        is_available:true,
+                        can_del_block:true,
+                        style:''}]
+                };
+
+            },
+            get_tmp_info() {
+                managerrecommend_tmp_info({id:this.id}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                        this.type = res.data.type;
+                        this.title = res.data.title;
+                        this.img = res.data.img;
+                        this.tmp_data = res.data.tmp_data;
+                    }
+                }.bind(this));
+            },
             handleAvatarSuccess(res, file) {
                 this.img = res.data;
             },
@@ -317,12 +362,13 @@
                         });
                         return;
                     }
-                    managerrecommend_tmp_add({type:this.type,title:this.title,img:this.img,tmp_data:this.tmp_data}).then(function (response) {
+                    managerrecommend_tmp_add({id:this.id,type:this.type,title:this.title,img:this.img,tmp_data:this.tmp_data}).then(function (response) {
                         if (response.success) {
                             this.$message({
                                 message: response.message,
                                 type: 'success'
                             });
+                            this.$router.push({path:'managerrecommend_template_list',query:{}});
                         } else {
                             this.$message({
                                 message: response.message,

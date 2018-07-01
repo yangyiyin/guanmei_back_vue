@@ -43,7 +43,8 @@
 
 					<el-submenu index="3">
 						<template slot="title"><i class="el-icon-goods"></i>店长的推荐</template>
-						<el-menu-item index="managerrecommend_template">模板</el-menu-item>
+						<el-menu-item index="managerrecommend_template_list">模板列表</el-menu-item>
+						<el-menu-item index="managerrecommend_template">制作模板</el-menu-item>
 					</el-submenu>
 
 				</el-menu>

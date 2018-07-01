@@ -8,6 +8,7 @@ const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manag
 const error = r => require.ensure([], () => r(require('@/page/error')), 'error');
 const phone_contact = r => require.ensure([], () => r(require('@/page_biz/phone_contact')), 'phone_contact');
 const managerrecommend_template = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_template')), 'managerrecommend_template');
+const managerrecommend_template_list = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_template_list')), 'managerrecommend_template_list');
 
 
 const routes = [
@@ -28,7 +29,12 @@ const routes = [
 			{
 				path: '/managerrecommend_template',
 				component: managerrecommend_template,
-				meta: ['店长的推荐', '模板'],
+				meta: ['店长的推荐', '制作模板'],
+			},
+			{
+				path: '/managerrecommend_template_list',
+				component: managerrecommend_template_list,
+				meta: ['店长的推荐', '模板列表'],
 			},
 			{
 				path: '/error',
