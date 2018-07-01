@@ -37,9 +37,15 @@
 						<!--<el-menu-item index="explain">说明</el-menu-item>-->
 					<!--</el-submenu>-->
 					<el-submenu index="2">
-					<template slot="title"><i class="el-icon-phone"></i>电话联系</template>
+					<template slot="title"><i class="el-icon-phone"></i>电话销售</template>
 					<el-menu-item index="phone_contact">慈溪电联记录</el-menu-item>
 					</el-submenu>
+
+					<el-submenu index="3">
+						<template slot="title"><i class="el-icon-goods"></i>店长的推荐</template>
+						<el-menu-item index="managerrecommend_template">模板</el-menu-item>
+					</el-submenu>
+
 				</el-menu>
 			</el-col>
 			<el-col :span="20" style="height: 100%;overflow: auto;">

@@ -3,7 +3,11 @@ import {getStore} from '@/config/mUtils'
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	type = type.toUpperCase();
-	url = baseUrl + url;
+	if (url.indexOf('//') == -1) {
+		url = baseUrl + url;
+	} else {
+
+	}
 
 	if (type == 'GET') {
 		let dataStr = ''; //数据拼接字符串

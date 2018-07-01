@@ -17,3 +17,5 @@ var check_login = function(res){
 export const cixi_list = data => fetch('/waibao/entity/cixi_list', data, 'POST').then(check_login);
 export const entity_cixi_edit = data => fetch('/waibao/entity/cixi_edit', data, 'POST').then(check_login);;
 export const entity_categories = data => fetch('/waibao/entity/categories', data, 'POST').then(check_login);
+export const managerrecommend_tmp_add = data => fetch('//88plus.net/public/index.php/ADMINAPIManagerrecommend/managerrecommend/tmp_add', data, 'POST');
+export const managerrecommend_cache_data = data => fetch('//88plus.net/public/index.php/ADMINAPI/managerrecommend/cache_data', data, 'POST');

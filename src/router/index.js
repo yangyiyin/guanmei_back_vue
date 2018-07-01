@@ -7,6 +7,7 @@ const login = r => require.ensure([], () => r(require('@/page/login')), 'login')
 const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manage');
 const error = r => require.ensure([], () => r(require('@/page/error')), 'error');
 const phone_contact = r => require.ensure([], () => r(require('@/page_biz/phone_contact')), 'phone_contact');
+const managerrecommend_template = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_template')), 'managerrecommend_template');
 
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
 				path: '/phone_contact',
 				component: phone_contact,
 				meta: ['电话联系', '慈溪电联记录'],
+			},
+			{
+				path: '/managerrecommend_template',
+				component: managerrecommend_template,
+				meta: ['店长的推荐', '模板'],
 			},
 			{
 				path: '/error',
