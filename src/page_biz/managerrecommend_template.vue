@@ -242,7 +242,12 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
-                vm.get_tmp_info();
+                if (vm.id) {
+                    vm.get_tmp_info();
+                } else {
+                    vm.init();
+                }
+
         })
         },
 
