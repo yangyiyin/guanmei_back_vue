@@ -278,7 +278,7 @@
             get_tmp_info() {
                 managerrecommend_tmp_info({id:this.id}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
-
+                        this.activeName = 'first';
                         this.type = res.data.type;
                         this.title = res.data.title;
                         this.img = res.data.img;
