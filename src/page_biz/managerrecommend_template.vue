@@ -119,6 +119,17 @@
                         </div>
 
                         <div v-if="item.type == 'vote' " class="search_item">
+                            <el-select v-model="item.style_type" placeholder="默认样式">
+                                <el-option
+                                        v-for="item in [{key:0,value:'默认样式'},{key:1,value:'样式1'}]"
+                                        :key="item.key"
+                                        :label="item.value"
+                                        :value="item.key">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div v-if="item.type == 'vote' " class="search_item">
                             <el-input clearable placeholder="数量" v-model="item.vote_num" style="width: 250px">
                                 <template slot="prepend">数量</template>
                             </el-input>
@@ -265,13 +276,13 @@
                     time_limit_left:0,
                     add_extra_img_max:2,
                     add_extra_text_max:2,
-                    can_add_extra_img:true,
-                    can_add_extra_text:true,
+                    can_add_extra_img:false,
+                    can_add_extra_text:false,
                     page:[{ type:'text',
                         text:'',
                         src:'',
                         is_available:true,
-                        can_del_block:true,
+                        can_del_block:false,
                         style:''}]
                 };
 
