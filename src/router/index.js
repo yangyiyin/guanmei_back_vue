@@ -9,6 +9,7 @@ const error = r => require.ensure([], () => r(require('@/page/error')), 'error')
 const phone_contact = r => require.ensure([], () => r(require('@/page_biz/phone_contact')), 'phone_contact');
 const managerrecommend_template = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_template')), 'managerrecommend_template');
 const managerrecommend_template_list = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_template_list')), 'managerrecommend_template_list');
+const managerrecommend_user = r => require.ensure([], () => r(require('@/page_biz/managerrecommend_user')), 'managerrecommend_user');
 
 
 const routes = [
@@ -21,6 +22,11 @@ const routes = [
 		component: manage,
 		name: '',
 		children: [
+			{
+				path: '/error',
+				component: error,
+				meta: ['错误', '错误'],
+			},
 			{
 				path: '/phone_contact',
 				component: phone_contact,
@@ -37,9 +43,9 @@ const routes = [
 				meta: ['店长的推荐', '模板列表'],
 			},
 			{
-				path: '/error',
-				component: error,
-				meta: ['错误', '错误'],
+				path: '/managerrecommend_user',
+				component: managerrecommend_user,
+				meta: ['店长的推荐', '用户管理'],
 			}
 
 		]

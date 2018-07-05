@@ -23,3 +23,8 @@ export const managerrecommend_tmp_list = data => fetch('/managerrecommend/templa
 export const managerrecommend_tmp_info = data => fetch('/managerrecommend/template/info', data, 'POST').then(check_login);
 export const managerrecommend_tmp_verify = data => fetch('/managerrecommend/template/verify', data, 'POST').then(check_login);
 export const managerrecommend_tmp_del = data => fetch('/managerrecommend/template/del', data, 'POST').then(check_login);
+export const managerrecommend_user_list = data => fetch('/managerrecommend/user/index', data, 'POST').then(check_login);
+export const managerrecommend_user_info = data => fetch('/managerrecommend/user/info', data, 'POST').then(check_login);
+export const managerrecommend_user_verify = data => fetch('/managerrecommend/user/verify', data, 'POST').then(check_login);
+export const managerrecommend_user_del = data => fetch('/managerrecommend/user/del', data, 'POST').then(check_login);
+export const managerrecommend_vip_extend = data => fetch('/managerrecommend/user/vip_extend', data, 'POST').then(check_login);

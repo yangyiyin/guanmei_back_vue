@@ -175,7 +175,7 @@
                     </div>
                     <el-button style="width: 500px;margin-top: 10px;margin-bottom: 10px" v-on:click="add_page_item" >+</el-button>
                     <br/>
-                    <el-button type="success" style="width: 500px;margin-bottom: 10px" v-on:click="submit" >保存</el-button>
+                    <el-button type="success" style="width: 500px;margin-bottom: 10px" v-on:click="submit" :loading="loading">保存</el-button>
 
                 </el-tab-pane>
             </el-tabs>
@@ -201,6 +201,7 @@
     export default {
         data(){
             return {
+                loading:false,
                 id:0,
                 activeName: 'first',
                 blocks:[{id:1,name:'限时抢购'},{id:2,name:'砍价'},{id:3,name:'集赞'},{id:4,name:'投票'},{id:5,name:'图文'}],
@@ -214,13 +215,13 @@
                     time_limit_left:0,
                     add_extra_img_max:2,
                     add_extra_text_max:2,
-                    can_add_extra_img:true,
-                    can_add_extra_text:true,
+                    can_add_extra_img:false,
+                    can_add_extra_text:false,
                     page:[{ type:'text',
                         text:'',
                         src:'',
                         is_available:true,
-                        can_del_block:true,
+                        can_del_block:false,
                         style:''}]
                 },
                 types:['text','img','sign','timelimit','cutprice_btn','cutprice_price','praise','vote']
@@ -323,18 +324,6 @@
                 this.tmp_data.page.splice(index, 1);
             },
             get_data: function () {
-                /**    managerrecommend_tmp_add:"ADMINAPIManagerrecommend/managerrecommend/tmp_add",
-                 managerrecommend_cache_data:"managerrecommend/cache_data",
-                 */
-//                this.$http.post('//88plus.net/public/index.php/ADMINAPIManagerrecommend/managerrecommend/tmp_add',{tmp_data:this.tmp_data}).then(function (response) {
-//
-//                    if (response.body.success) {
-//                        $('iframe').attr("src","https://www.88plus.net/public/index.php/HomeManagerRecommend/Pages/index?is_preview=1");
-//                    } else {
-//                        alert('上传失败!')
-//                    }
-//                },response => {
-//                });
 
                 managerrecommend_cache_data({tmp_data:this.tmp_data}).then(function (response) {
 
@@ -367,6 +356,7 @@
                         });
                         return;
                     }
+                    this.loading = true;
                     managerrecommend_tmp_add({id:this.id,type:this.type,title:this.title,img:this.img,tmp_data:this.tmp_data}).then(function (response) {
                         if (response.success) {
                             this.$message({
@@ -385,7 +375,9 @@
 
                 }.bind(this)).catch(() => {
 
-                });
+                }).finally(function(){
+                    this.loading = false;
+                }.bind(this));
 
             }
 
