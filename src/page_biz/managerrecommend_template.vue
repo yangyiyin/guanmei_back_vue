@@ -135,6 +135,18 @@
                             </el-input>
                         </div>
 
+                        <div v-if="item.type == 'fight_group' " class="search_item">
+                            <el-input clearable placeholder="价格(元)" v-model="item.fight_group_price" style="width: 250px">
+                                <template slot="prepend">价格(元)</template>
+                            </el-input>
+                        </div>
+
+                        <div v-if="item.type == 'fight_group' " class="search_item">
+                            <el-input clearable placeholder="成团人数" v-model="item.fight_group_number" style="width: 250px">
+                                <template slot="prepend">成团人数</template>
+                            </el-input>
+                        </div>
+
                         <div v-if="item.type == 'cutprice_price' " class="search_item">
                             <el-input clearable placeholder="原价(元)" v-model="item.cutprice_price" style="width: 250px">
                                 <template slot="prepend">原价(元)</template>
@@ -235,7 +247,7 @@
                         can_del_block:false,
                         style:''}]
                 },
-                types:['text','img','sign','timelimit','cutprice_btn','cutprice_price','praise','vote']
+                types:['text','img','sign','timelimit','cutprice_btn','cutprice_price','praise','vote','fight_group']
 
             }
 
