@@ -141,6 +141,12 @@
                             </el-input>
                         </div>
 
+                        <div v-if="item.type == 'quick_buy' " class="search_item">
+                            <el-input clearable placeholder="价格(元)" v-model="item.quick_buy_price" style="width: 250px">
+                                <template slot="prepend">价格(元)</template>
+                            </el-input>
+                        </div>
+
                         <div v-if="item.type == 'fight_group' " class="search_item">
                             <el-input clearable placeholder="成团人数" v-model="item.fight_group_number" style="width: 250px">
                                 <template slot="prepend">成团人数</template>
@@ -227,7 +233,7 @@
                 loading:false,
                 id:0,
                 activeName: 'first',
-                blocks:[{id:1,name:'限时抢购'},{id:2,name:'砍价'},{id:3,name:'集赞'},{id:4,name:'投票'},{id:5,name:'图文'}],
+                blocks:[{id:6,name:'拼团'},{id:2,name:'砍价'},{id:1,name:'限时特惠'},{id:7,name:'预约报名'},{id:3,name:'集赞'},{id:4,name:'投票'},{id:5,name:'图文'}],
                 type:1,
                 title:'',
                 img:'',
@@ -247,7 +253,7 @@
                         can_del_block:false,
                         style:''}]
                 },
-                types:['text','img','sign','timelimit','cutprice_btn','cutprice_price','praise','vote','fight_group']
+                types:['text','img','sign','quick_buy','timelimit','cutprice_btn','cutprice_price','praise','vote','fight_group']
 
             }
 
@@ -337,7 +343,7 @@
                     text:'',
                     src:'',
                     is_available:true,
-                    can_del_block:true,
+                    can_del_block:false,
                     style:''
 
                 }
