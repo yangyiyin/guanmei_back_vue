@@ -2,39 +2,38 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
-            <el-select v-model="choose_categories" multiple placeholder="请选择分类">
-                <el-option
-                        v-for="item in categories"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                </el-option>
-            </el-select>
 
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="标题"
+                    placeholder="名称"
                     v-model="title"
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_news(0)">新增新闻</el-button>
 
         </div>
         <div class="table_container">
-
             <el-table
                     :data="tableData"
                     style="width: 100%">
-
-                <el-table-column label="标题" prop="title"></el-table-column>
-                <el-table-column label="封面">
+                <el-table-column label="图片">
                     <template slot-scope="scope">
-                        <img :src="scope.row.img" width="40" height="40"/>
+                        <img :src="scope.row.img" width="60" height="30"/>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+
+                <el-table-column label="标题" prop="title"></el-table-column>
+                <el-table-column label="排序">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="goto_edit(scope.row.id)">编辑</el-button>
+                        {{scope.row.sort}}
+                        <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="操作" width="300">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="goto_edit_news(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
@@ -52,24 +51,37 @@
                 </el-pagination>
             </div>
         </div>
+        <el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">
+            <el-form :model="current">
+                <el-form-item label="排序值(越大越靠前)">
+                    <el-input v-model="current.sort" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sort">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {managerrecommend_tmp_list,managerrecommend_tmp_verify,managerrecommend_tmp_del} from '@/api/getDataEarth'
+    import {news_list,news_del,news_verify,news_sort} from '@/api/getDataEarth'
     export default {
         data(){
             return {
-                loadingBtn:-1,
                 tableData: [],
                 limit: 10,
                 count: 0,
                 currentPage: 1,
-                remark:'',
-                choose_categories:[],
-                categories:[{id:1,name:'限时抢购'},{id:2,name:'砍价'},{id:3,name:'集赞'},{id:4,name:'投票'},{id:5,name:'图文'}],
-                title:''
+                dialogFormVisible:false,
+                current:{},
+//                remark:'',
+//                choose_categories:[],
+//                categories:[],
+                title:'',
+                loadingBtn:-1
             }
         },
         components: {
@@ -85,11 +97,11 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
-            })
+        })
         },
         methods: {
             list() {
-                managerrecommend_tmp_list({page:this.currentPage,page_size:this.limit,cate_ids:this.choose_categories,title:this.title}).then(function(res){
+                news_list({page:this.currentPage,page_size:this.limit,title:this.title}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -101,13 +113,21 @@
                 this.currentPage = val;
                 this.list();
             },
-            goto_edit(id){
-//                this.$router.push('managerrecommend_template?id='+id);
-                this.$router.push({path:'managerrecommend_template',query:{id:id}});
+            handleEdit(row){
+                this.dialogFormVisible = true;
+                if (row) {
+                    this.current_entity = row;
+                } else {
+                    this.current_entity = {};
+                }
+
             },
             search() {
                 this.currentPage = 1;
                 this.list();
+            },
+            goto_edit_news(id) {
+                this.$router.push({path:'add_news',query:{id:id}});
             },
             verify(scope, status) {
 
@@ -118,7 +138,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    managerrecommend_tmp_verify({id:item.id,status:status}).then(function(res){
+                    news_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -132,7 +152,6 @@
                             });
                         }
                     }.bind(this)).finally(function(){
-                        console.log(1);
                         this.loadingBtn = -1;
                     }.bind(this));
                 }.bind(this));
@@ -142,14 +161,15 @@
             },
             del(item, index) {
 
-                this.$confirm('此操作将永久删除该条模板数据, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    managerrecommend_tmp_del({id:item.id}).then(function(res){
+                    news_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.tableData.splice(index,1);
+                            this.count --;
                             this.$message({
                                 type: 'success',
                                 message: '操作成功'
@@ -163,6 +183,32 @@
                     }.bind(this));
                 }.bind(this))
 
+            },
+            handleSort(row){
+                this.dialogFormVisible = true;
+                this.current = row;
+            },
+            sort() {
+                news_sort({
+                    id:this.current.id,
+                    sort:this.current.sort
+
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisible = false;
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                }.bind(this));
+                this.dialogFormVisible = false;
             }
         },
     }
