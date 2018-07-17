@@ -39,6 +39,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="标题" prop="title"></el-table-column>
+                <el-table-column label="报名类型" prop="type"></el-table-column>
                 <el-table-column label="排序">
                     <template slot-scope="scope">
                         {{scope.row.sort}}

@@ -4,6 +4,19 @@
 
         <div class="table_container" style="padding:20px">
 
+            <template class="search_item">
+                <span style="font-size: 14px;">报名类型:</span>
+                <el-select v-model="type" placeholder="类型">
+                    <el-option
+                            v-for="item in blocks"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </template>
+
+
             <div class="search_item">
                 <span style="font-size: 14px;">考试标题:</span>
                 <el-input clearable placeholder="请输入标题" v-model="title" style="width: 250px">
@@ -75,7 +88,12 @@
                 examination_time:'',
                 sign_end_time:'',
                 editorOption:{},
-                upload_url:this.$store.state.constant.upload_url
+                upload_url:this.$store.state.constant.upload_url,
+                blocks:[
+                    {id:1,name:'只限内部报名'},
+                    {id:2,name:'内外都可报名'},
+                ],
+                type:1
             }
 
         },
@@ -126,6 +144,7 @@
 //            },
             init() {
                 this.loading = false;
+                this.type = 1;
                 this.title = '';
                 this.img = '';
                 this.content='';
@@ -135,6 +154,7 @@
             get_info() {
                 examination_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
+                        this.type = parseInt(res.data.type);
                         this.title = res.data.title;
                         this.content = res.data.content;
                         this.img = res.data.img;
@@ -180,7 +200,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    examination_edit({id:this.id,title:this.title,img:this.img,content:this.content,sign_end_time:this.sign_end_time,examination_time:this.examination_time}).then(function (res) {
+                    examination_edit({id:this.id,title:this.title,type:this.type,img:this.img,content:this.content,sign_end_time:this.sign_end_time,examination_time:this.examination_time}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
