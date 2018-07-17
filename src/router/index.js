@@ -10,6 +10,11 @@ const news = r => require.ensure([], () => r(require('@/page_biz/news')), 'news'
 const add_news = r => require.ensure([], () => r(require('@/page_biz/add_news')), 'add_news');
 const sign = r => require.ensure([], () => r(require('@/page_biz/sign')), 'sign');
 const sign_edit = r => require.ensure([], () => r(require('@/page_biz/sign_edit')), 'sign_edit');
+const examination = r => require.ensure([], () => r(require('@/page_biz/examination')), 'examination');
+const examination_edit = r => require.ensure([], () => r(require('@/page_biz/examination_edit')), 'examination_edit');
+const examination_signs = r => require.ensure([], () => r(require('@/page_biz/examination_signs')), 'examination_signs');
+const users = r => require.ensure([], () => r(require('@/page_biz/users')), 'users');
+const config = r => require.ensure([], () => r(require('@/page_biz/config')), 'config');
 
 
 const routes = [
@@ -47,11 +52,31 @@ const routes = [
 				component: sign_edit,
 				meta: ['教务管理', '编辑报名简章'],
 			},
-			// {
-			// 	path: '/examination',
-			// 	component: examination,
-			// 	meta: ['教务管理', '考试管理'],
-			// }
+			{
+				path: '/examination',
+				component: examination,
+				meta: ['教务管理', '考试管理'],
+			},
+			{
+				path: '/examination_edit',
+				component: examination_edit,
+				meta: ['教务管理', '编辑考试'],
+			},
+			{
+				path: '/examination_signs',
+				component: examination_signs,
+				meta: ['教务管理', '考试学员情况'],
+			},
+			{
+				path: '/users',
+				component: users,
+				meta: ['用户管理', '微信小程序用户'],
+			},
+			{
+				path: '/config',
+				component: config,
+				meta: ['系统设置', '参数配置'],
+			}
 
 		]
 	}

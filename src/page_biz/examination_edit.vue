@@ -5,28 +5,52 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
+                <span style="font-size: 14px;">考试标题:</span>
                 <el-input clearable placeholder="请输入标题" v-model="title" style="width: 250px">
-                    <template slot="prepend">标题</template>
                 </el-input>
             </div>
 
-            <p class="search_item" style="font-size: 12px">上传图片:</p>
-            <el-upload
+            <div class="block search_item">
+                <span style="font-size: 14px;">考试时间:</span>
+                <el-date-picker
+                        v-model="examination_time"
+                        type="datetime"
+                        value-format="timestamp"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
 
-                    class="avatar-uploader"
-                    :action="upload_url"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                <img v-if="img" :src="img" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
 
+            <div class="block search_item">
+                <span style="font-size: 14px;">报名截止:</span>
+                <el-date-picker
+                        v-model="sign_end_time"
+                        type="datetime"
+                        value-format="timestamp"
+                        placeholder="选择日期时间">
+                </el-date-picker>
+            </div>
 
             <div class="search_item">
-                <quill-editor :content="content" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
+                <span style="font-size: 14px;vertical-align: top">考试内容:</span>
+                <el-input style="width: 300px" placeholder="内容..." v-model="content" type="textarea" :rows="2" >
 
+                </el-input>
             </div>
+
+            <!--<p class="search_item" style="font-size: 12px">上传图片:</p>-->
+            <!--<el-upload-->
+
+                    <!--class="avatar-uploader"-->
+                    <!--:action="upload_url"-->
+                    <!--:show-file-list="false"-->
+                    <!--:on-success="handleAvatarSuccess"-->
+                    <!--:before-upload="beforeAvatarUpload">-->
+                <!--<img v-if="img" :src="img" class="avatar">-->
+                <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+            <!--</el-upload>-->
+
+
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">发布</el-button>
 
@@ -38,7 +62,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {news_edit,news_info} from '@/api/getDataEarth'
+    import {examination_edit,examination_info} from '@/api/getDataEarth'
     import { quillEditor } from 'vue-quill-editor'
     export default {
         data(){
@@ -48,6 +72,8 @@
                 title:'',
                 img:'',
                 content:'',
+                examination_time:'',
+                sign_end_time:'',
                 editorOption:{},
                 upload_url:this.$store.state.constant.upload_url
             }
@@ -69,7 +95,7 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
-//                console.log(vm.id )
+
                 if (vm.id && vm.id > 0) {
                     vm.get_info();
                 } else {
@@ -80,36 +106,40 @@
         },
         methods: {
 
-            handleAvatarSuccess(res, file) {
-                this.img = res.data[0];
-            },
-            beforeAvatarUpload(file) {
-                const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 1;
-
-                if (!isJPG) {
-                    this.$message.error('图片格式只支持jpg和png!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('图片大小不能超过 1MB!');
-                }
-                return isJPG && isLt2M;
-            },
-            onEditorChange({ editor, html, text }) {//富文本编辑器  文本改变时 设置字段值
-                this.content = html
-            },
+//            handleAvatarSuccess(res, file) {
+//                this.img = res.data[0];
+//            },
+//            beforeAvatarUpload(file) {
+//                const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
+//                const isLt2M = file.size / 1024 / 1024 < 1;
+//
+//                if (!isJPG) {
+//                    this.$message.error('图片格式只支持jpg和png!');
+//                }
+//                if (!isLt2M) {
+//                    this.$message.error('图片大小不能超过 1MB!');
+//                }
+//                return isJPG && isLt2M;
+//            },
+//            onEditorChange({ editor, html, text }) {//富文本编辑器  文本改变时 设置字段值
+//                this.content = html
+//            },
             init() {
                 this.loading = false;
                 this.title = '';
                 this.img = '';
                 this.content='';
+                this.examination_time='';
+                this.sign_end_time='';
             },
             get_info() {
-                news_info({id:this.id}).then(function (res) {
+                examination_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.title = res.data.title;
                         this.content = res.data.content;
                         this.img = res.data.img;
+                        this.examination_time=res.data.examination_time;
+                        this.sign_end_time=res.data.sign_end_time;
                     } else {
                         this.$message({
                             message: res.msg,
@@ -124,11 +154,17 @@
                 if (!this.title) {
                     var error_msg = '请填写标题';
                 }
-                if (!this.img) {
-                    var error_msg = '请上传图片';
+//                if (!this.img) {
+//                    var error_msg = '请上传图片';
+//                }
+                if (!this.examination_time) {
+                    var error_msg = '请选择考试时间';
+                }
+                if (!this.sign_end_time) {
+                    var error_msg = '请选择报名截止时间';
                 }
                 if (!this.content) {
-                    var error_msg = '请填写内容';
+                    var error_msg = '请填写内容描述';
                 }
                 if (error_msg) {
                     this.$message({
@@ -144,13 +180,13 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    news_edit({id:this.id,title:this.title,img:this.img,content:this.content}).then(function (res) {
+                    examination_edit({id:this.id,title:this.title,img:this.img,content:this.content,sign_end_time:this.sign_end_time,examination_time:this.examination_time}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'news',query:{}});
+                            this.$router.push({path:'examination',query:{}});
                         } else {
                             this.$message({
                                 message: res.msg,
