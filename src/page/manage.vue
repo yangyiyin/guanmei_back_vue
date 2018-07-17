@@ -24,7 +24,7 @@
 					</el-submenu>
 
 					<el-submenu index="5">
-						<template slot="title"><i class="el-icon-view"></i>系统设置</template>
+						<template slot="title"><i class="el-icon-setting"></i>系统设置</template>
 
 						<el-menu-item index="config">参数配置</el-menu-item>
 					</el-submenu>
