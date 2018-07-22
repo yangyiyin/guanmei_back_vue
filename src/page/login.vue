@@ -1,7 +1,7 @@
 <template>
   	<div class="login_page fillcontain">
 	  	<transition name="form-fade" mode="in-out">
-	  		<section class="form_contianer" v-show="showLogin">
+	  		<section v-on:keyup.13="submitForm('loginForm')" class="form_contianer" v-show="showLogin">
 		  		<div class="manage_tip">
 		  			<p>文远教育后台管理系统</p>
 		  		</div>
