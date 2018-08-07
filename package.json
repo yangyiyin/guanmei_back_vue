@@ -15,8 +15,12 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^1.0.8",
     "echarts": "^3.5.4",
     "element-ui": "^2.4.1",
+    "mavon-editor": "^2.6.15",
+    "quill-image-drop-module": "^1.0.3",
+    "quill-image-resize-module": "^3.0.0",
     "time-formater": "^1.0.1",
     "vue": "^2.2.6",
     "vue-quill-editor": "^2.3.3",
