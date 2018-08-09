@@ -39,3 +39,4 @@ export const users_verify = data => fetch('/wenyuanjiaoyu/users/verify', data, '
 export const users_del = data => fetch('/wenyuanjiaoyu/users/del', data, 'POST').then(check_login);
 export const config_list = data => fetch('/wenyuanjiaoyu/config/index', data, 'POST').then(check_login);
 export const config_edit = data => fetch('/wenyuanjiaoyu/config/edit', data, 'POST').then(check_login);
+export const get_course_list = data => fetch('/wenyuanjiaoyu/student/get_course_list', data, 'POST').then(check_login);

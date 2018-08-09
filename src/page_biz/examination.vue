@@ -47,13 +47,18 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="操作" width="300">
+                <el-table-column label="考生报名" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="handleDaoru(scope.row)">导入</el-button>
                         <el-button size="mini" @click="handleDaochu(scope.row)">导出</el-button>
                         <el-button size="mini"  type="primary" @click="goto_sign_list(scope.row.id)">查看</el-button>
-                        <br/>
-                        <br/>
+
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="操作" width="300">
+                    <template slot-scope="scope">
+
                         <el-button size="mini" @click="goto_edit(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>

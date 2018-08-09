@@ -5,8 +5,15 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <el-input clearable placeholder="请输入标题" v-model="title" style="width: 250px">
+                <el-input clearable placeholder="请输入标题" v-model="title" style="width: 350px">
                     <template slot="prepend">标题</template>
+                </el-input>
+            </div>
+
+            <div class="search_item">
+
+                <el-input clearable placeholder="请输入链接地址" v-model="link" style="width: 350px">
+                    <template slot="prepend">链接地址</template>
                 </el-input>
             </div>
 
@@ -21,28 +28,29 @@
                 <img v-if="img" :src="img" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <block v-if="!link">
+                <p class="search_item" style="font-size: 12px">内容编辑:<a href="javascript:;" v-if="editor == 1" @click="editor=2">< 使用代码编辑 > </a><a href="javascript:;" v-if="editor == 2" @click="editor=1">[使用可视化编辑]</a></p>
+                <div class="search_item" v-if="editor == 1">
 
-            <p class="search_item" style="font-size: 12px">内容编辑:<a href="javascript:;" v-if="editor == 1" @click="editor=2">< 使用代码编辑 > </a><a href="javascript:;" v-if="editor == 2" @click="editor=1">[使用可视化编辑]</a></p>
-            <div class="search_item" v-if="editor == 1">
+                    <quill-editor ref="myQuillEditor" :content="content" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
 
-                <quill-editor ref="myQuillEditor" :content="content" :options = "editorOption" @change="onEditorChange($event)"></quill-editor>
+                    <el-upload style="display: none"
+                               class="avatar-uploader"
+                               ref="upload"
+                               :action="upload_url"
+                               :show-file-list="false"
+                               :on-success="handleImgSuccess"
+                               :before-upload="beforeAvatarUpload">
+                        <el-button id="imgInput"  v-loading.fullscreen.lock="fullscreenLoading"
+                                   element-loading-text="插入中,请稍候"></el-button>
+                    </el-upload>
 
-                <el-upload style="display: none"
-                        class="avatar-uploader"
-                           ref="upload"
-                        :action="upload_url"
-                        :show-file-list="false"
-                        :on-success="handleImgSuccess"
-                        :before-upload="beforeAvatarUpload">
-                    <el-button id="imgInput"  v-loading.fullscreen.lock="fullscreenLoading"
-                               element-loading-text="插入中,请稍候"></el-button>
-                </el-upload>
+                </div>
+                <div class="search_item" v-if="editor == 2">
 
-            </div>
-            <div class="search_item" v-if="editor == 2">
-
-                <mavon-editor :toolbars="toolbars" v-model="content"/>
-            </div>
+                    <mavon-editor :toolbars="toolbars" v-model="content"/>
+                </div>
+            </block>
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">发布</el-button>
 
 
@@ -67,6 +75,7 @@
                 title:'',
                 img:'',
                 content:'',
+                link:'',
                 editorOption:{
                     modules:{
                         imageDrop: true,
@@ -171,6 +180,7 @@
             init() {
                 this.loading = false;
                 this.title = '';
+                this.link = '';
                 this.img = '';
                 this.content='';
             },
@@ -178,6 +188,7 @@
                 news_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.title = res.data.title;
+                        this.link = res.data.link;
                         this.content = res.data.content;
                         this.img = res.data.img;
                     } else {
@@ -214,7 +225,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    news_edit({id:this.id,title:this.title,img:this.img,content:this.content}).then(function (res) {
+                    news_edit({id:this.id,title:this.title,link:this.link,img:this.img,content:this.content}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
