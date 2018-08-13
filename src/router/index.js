@@ -16,6 +16,9 @@ const examination_signs = r => require.ensure([], () => r(require('@/page_biz/ex
 const users = r => require.ensure([], () => r(require('@/page_biz/users')), 'users');
 const config = r => require.ensure([], () => r(require('@/page_biz/config')), 'config');
 const suggest = r => require.ensure([], () => r(require('@/page_biz/suggest')), 'suggest');
+const words = r => require.ensure([], () => r(require('@/page_biz/words')), 'words');
+const words_content = r => require.ensure([], () => r(require('@/page_biz/words_content')), 'words_content');
+const words_edit = r => require.ensure([], () => r(require('@/page_biz/words_edit')), 'words_edit');
 
 
 const routes = [
@@ -78,6 +81,22 @@ const routes = [
 				component: suggest,
 				meta: ['学校管理', '家长反馈'],
 			},
+			{
+				path: '/words',
+				component: words,
+				meta: ['学校管理', '教师评语'],
+			},
+			{
+				path: '/words_edit',
+				component: words_edit,
+				meta: ['学校管理', '教师评语'],
+			},
+			{
+				path: '/words_content',
+				component: words_content,
+				meta: ['学校管理', '教师评语'],
+			},
+
 			{
 				path: '/config',
 				component: config,

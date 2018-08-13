@@ -43,3 +43,11 @@ export const config_list = data => fetch('/wenyuanjiaoyu/config/index', data, 'P
 export const config_edit = data => fetch('/wenyuanjiaoyu/config/edit', data, 'POST').then(check_login);
 export const get_course_list = data => fetch('/wenyuanjiaoyu/student/get_course_list', data, 'POST').then(check_login);
 export const suggest_list = data => fetch('/wenyuanjiaoyu/suggest/index', data, 'POST').then(check_login);
+export const words_list = data => fetch('/wenyuanjiaoyu/words/index', data, 'POST').then(check_login);
+export const words_edit = data => fetch('/wenyuanjiaoyu/words/edit', data, 'POST').then(check_login);
+export const words_del = data => fetch('/wenyuanjiaoyu/words/del', data, 'POST').then(check_login);
+export const words_info = data => fetch('/wenyuanjiaoyu/words/info', data, 'POST').then(check_login);
+export const words_content_list = data => fetch('/wenyuanjiaoyu/words_content/index', data, 'POST').then(check_login);
+export const words_content_edit = data => fetch('/wenyuanjiaoyu/words_content/edit', data, 'POST').then(check_login);
+export const words_content_excel_out = data => fetch('/wenyuanjiaoyu/words_content/excel_out', data, 'POST').then(check_login);
+
