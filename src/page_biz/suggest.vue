@@ -5,14 +5,14 @@
 
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="学生姓名"
-                    v-model="student_name"
+                    placeholder="内容"
+                    v-model="content"
                     clearable>
             </el-input>
             <el-input
                     style="display: inline-block;width: 250px;"
                     placeholder="家长手机号"
-                    v-model="parent_tel"
+                    v-model="user_tel"
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -30,27 +30,16 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="家长手机1" >
-                                <span>{{ props.row.content.father_tel }}</span>
-                            </el-form-item>
-                            <el-form-item label="家长手机2" >
-                                <span>{{ props.row.content.mother_tel }}</span>
-                            </el-form-item>
-                            <el-form-item label="是否新生" >
-                                <span>{{ props.row.is_new ? '是':'否' }}</span>
-                            </el-form-item>
-                            <el-form-item label="结果备注" >
-                                <span>{{ props.row.content.remark }}</span>
-                            </el-form-item>
-                            <el-form-item label="" >
-                                <el-button size="mini"  type="warning" @click="handleGenTicket(props.row)">生成准考证</el-button>
+                            <el-form-item label="内容" >
+                                <span>{{ props.row.content}}</span>
                             </el-form-item>
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="学生姓名" prop="student_name"></el-table-column>
-                <el-table-column label="家长手机号" prop="parent_tel"></el-table-column>
-                <el-table-column label="来源" prop="from"></el-table-column>
+
+                <el-table-column label="家长手机号" prop="user_tel"></el-table-column>
+                <el-table-column label="内容" prop="content_pre"></el-table-column>
+                <el-table-column label="反馈时间" prop="create_time"></el-table-column>
                 <!--<el-table-column label="操作" width="300">-->
                     <!--<template slot-scope="scope">-->
                         <!--<el-button size="mini"  type="warning" @click="handleGenTicket(scope.row)">生成准考证</el-button>-->
@@ -70,23 +59,12 @@
                 </el-pagination>
             </div>
         </div>
-
-        <el-dialog title="生成准考证" :visible.sync="dialogFormVisibleTicket" width="30%">
-            <p>
-                您即将为【{{current.student_name}}】生成准考证图片
-            </p>
-
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisibleTicket = false">取 消</el-button>
-                <el-button type="primary" @click="genticket" :loading="loadingBtn == 'ticket'">开始生成</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_signs_list,examination_gen_ticket} from '@/api/getDataEarth'
+    import {suggest_list} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -97,18 +75,13 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
-                dialogFormVisibleDaoru:false,
-                dialogFormVisibleDaochu:false,
-                dialogFormVisibleTicket:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
-                student_name:'',
-                parent_tel:'',
-                loadingBtn:-1,
-                upload_url:this.$store.state.constant.examination_daoru_excel_url,
-                upload_data:{token:getStore('token') ? getStore('token') : ''}
+                content:'',
+                user_tel:'',
+                loadingBtn:-1
             }
         },
         components: {
@@ -129,7 +102,7 @@
         },
         methods: {
             list() {
-                examination_signs_list({id:this.id,page:this.currentPage,page_size:this.limit,student_name:this.student_name,parent_tel:this.parent_tel}).then(function(res){
+                suggest_list({id:this.id,page:this.currentPage,page_size:this.limit,content:this.content,user_tel:this.user_tel}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -144,34 +117,7 @@
             search() {
                 this.currentPage = 1;
                 this.list();
-            },
-            handleGenTicket(row){
-                this.dialogFormVisibleTicket = true;
-                this.current = row;
-            },
-            genticket(){
-                this.loadingBtn = 'ticket';
-                examination_gen_ticket({
-                    sign_id:this.current.id
-                }).then(function(res){
-                    this.loadingBtn = '-1';
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.dialogFormVisibleTicket = false;
-                        this.$message({
-                            type: 'success',
-                            message: '生成成功'
-                        });
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                        return;
-                    }
-                    this.dialogFormVisibleTicket = false;
-                }.bind(this));
-            },
+            }
         },
     }
 </script>

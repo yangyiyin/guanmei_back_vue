@@ -47,11 +47,14 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="考生报名" width="300">
+                <el-table-column label="考生报名" width="450">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="handleDaoru(scope.row)">导入</el-button>
                         <el-button size="mini" @click="handleDaochu(scope.row)">导出</el-button>
                         <el-button size="mini"  type="primary" @click="goto_sign_list(scope.row.id)">查看</el-button>
+                        <el-button size="mini"  type="warning" @click="handleGenTicket(scope.row)">生成准考证</el-button>
+                        <el-button size="mini" v-if="!scope.row.has_send_mail || scope.row.has_send_mail == 0"  type="warning" @click="handleSendEmail(scope.row)">发送邮箱</el-button>
+                        <el-button size="mini" v-if="scope.row.has_send_mail > 0"  type="info" >已发送邮箱</el-button>
 
                     </template>
                 </el-table-column>
@@ -91,10 +94,13 @@
 
         <el-dialog title="导入" :visible.sync="dialogFormVisibleDaoru" width="30%">
             <p>
-                您即将导入考试数据:{{current.title}}。
+                您即将导入考试数据:【{{current.title}}】。
             </p>
             <p>
                 特别说明:导入的excel数据将全部替代现有的后台数据,请确保导入数据正常且完整!
+            </p>
+            <p>
+                如果之前已生成过准考证,导入之后,原准考证将不再有效,请务必重新生成准考证!
             </p>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleDaoru = false">取 消</el-button>
@@ -109,7 +115,7 @@
                         :before-upload="beforeUpload"
                         style="display: inline-block;">
                     <!--<img v-if="img" :src="img" class="avatar">-->
-                    <el-button type="primary">开始导入</el-button>
+                    <el-button type="primary" :loading="loadingBtn == 'daoru'">开始导入</el-button>
                 </el-upload>
             </div>
         </el-dialog>
@@ -117,14 +123,40 @@
 
         <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
             <p>
-                您即将导出考试数据:{{current.title}}。
+                您即将导出考试数据:【{{current.title}}】。
             </p>
             <p>
                 特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
             </p>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
-                <el-button type="primary" @click="daochu">开始导出</el-button>
+                <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="生成准考证" :visible.sync="dialogFormVisibleTicket" width="30%">
+            <p>
+                您即将为【{{current.title}}】的每一位学生生成准考证图片
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则生成速度回比较慢,请不要关闭本窗口,如果要进行其他操作,可以新打开一个页面,进行相关操作
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleTicket = false">取 消</el-button>
+                <el-button type="primary" @click="genticket" :loading="loadingBtn == 'ticket'">开始生成</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="发送邮箱" :visible.sync="dialogFormVisibleMail" width="30%">
+            <p>
+                您即将为【{{current.title}}】的每一位学生发送准考证图片至家长邮箱中,请勿重复操作
+            </p>
+            <p>
+                特别说明:只有报名时候填写邮箱地址的家长才能收到邮件。
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleMail = false">取 消</el-button>
+                <el-button type="primary" @click="send_mail" :loading="loadingBtn == 'mail'">发送</el-button>
             </div>
         </el-dialog>
 
@@ -133,7 +165,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_list,examination_del,examination_verify,examination_sort,examination_excel_out} from '@/api/getDataEarth'
+    import {examination_list,examination_del,examination_verify,examination_sort,examination_excel_out, examination_gen_ticket, examination_send_mail} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -145,6 +177,8 @@
                 dialogFormVisible:false,
                 dialogFormVisibleDaoru:false,
                 dialogFormVisibleDaochu:false,
+                dialogFormVisibleTicket:false,
+                dialogFormVisibleMail:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -172,6 +206,7 @@
         },
         methods: {
             handleSuccess(res, file) {
+                this.loadingBtn = '-1';
                 if (this.upload_loading) {
                     this.upload_loading.close();
                 }
@@ -180,7 +215,7 @@
                     this.dialogFormVisibleDaoru = false;
                     this.$message({
                         type: 'success',
-                        message: '操作成功'
+                        message: res.msg
                     });
                 } else {
                     this.$message({
@@ -191,6 +226,7 @@
 
             },
             beforeUpload(file) {
+                this.loadingBtn = 'daoru';
                 var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
                 const extension = testmsg === 'xls'
                 const extension2 = testmsg === 'xlsx'
@@ -318,7 +354,14 @@
                 this.dialogFormVisibleDaochu = true;
                 this.current = row;
             },
-
+            handleGenTicket(row){
+                this.dialogFormVisibleTicket = true;
+                this.current = row;
+            },
+            handleSendEmail(row){
+                this.dialogFormVisibleMail = true;
+                this.current = row;
+            },
             sort() {
                 examination_sort({
                     id:this.current.id,
@@ -337,25 +380,77 @@
                             message: res.msg,
                             type: 'warning'
                         });
+                        return;
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
             },
             daochu() {
+                this.loadingBtn = 'daochu';
                 examination_excel_out({
                     id:this.current.id,
                     is_ajax:true
                 }).then(function(res){
+                    this.loadingBtn = '-1';
                     if (res.code == this.$store.state.constant.status_success) {
-                        window.location.href=this.$store.state.constant.examination_daoru_excel_out + '?id='+this.current.id+'&token=' + (getStore('token') ? getStore('token') : '');
+                        window.open(this.$store.state.constant.examination_daoru_excel_out + '?id='+this.current.id+'&token=' + (getStore('token') ? getStore('token') : ''));
+                        return;
                     } else {
                         this.$message({
                             showClose: true,
                             message: res.msg,
                             type: 'warning'
                         });
+                        return;
                     }
                     this.dialogFormVisibleDaochu = false;
+                }.bind(this));
+            },
+            genticket(){
+                this.loadingBtn = 'ticket';
+                examination_gen_ticket({
+                    id:this.current.id
+                }).then(function(res){
+                    this.loadingBtn = '-1';
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisibleTicket = false;
+                        this.$message({
+                            type: 'success',
+                            message: '生成成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.dialogFormVisibleTicket = false;
+                }.bind(this));
+            },
+            send_mail(){
+                this.loadingBtn = 'mail';
+                examination_send_mail({
+                    id:this.current.id
+                }).then(function(res){
+                    this.loadingBtn = '-1';
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.dialogFormVisibleMail = false;
+                        this.current.has_send_mail = 1;
+                        this.$message({
+                            type: 'success',
+                            message: '发送成功'
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.dialogFormVisibleTicket = false;
                 }.bind(this));
             }
         },

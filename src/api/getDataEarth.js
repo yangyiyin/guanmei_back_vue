@@ -33,6 +33,8 @@ export const examination_del = data => fetch('/wenyuanjiaoyu/examination/del', d
 export const examination_edit = data => fetch('/wenyuanjiaoyu/examination/edit', data, 'POST').then(check_login);
 export const examination_sort = data => fetch('/wenyuanjiaoyu/examination/sort', data, 'POST').then(check_login);
 export const examination_excel_out = data => fetch('/wenyuanjiaoyu/examination_signs/excel_out', data, 'POST').then(check_login);
+export const examination_gen_ticket = data => fetch('/wenyuanjiaoyu/examination_signs/gen_ticket', data, 'POST').then(check_login);
+export const examination_send_mail = data => fetch('/wenyuanjiaoyu/examination_signs/send_mail', data, 'POST').then(check_login);
 export const examination_signs_list = data => fetch('/wenyuanjiaoyu/examination_signs/index', data, 'POST').then(check_login);
 export const users_list = data => fetch('/wenyuanjiaoyu/users/index', data, 'POST').then(check_login);
 export const users_verify = data => fetch('/wenyuanjiaoyu/users/verify', data, 'POST').then(check_login);
@@ -40,3 +42,4 @@ export const users_del = data => fetch('/wenyuanjiaoyu/users/del', data, 'POST')
 export const config_list = data => fetch('/wenyuanjiaoyu/config/index', data, 'POST').then(check_login);
 export const config_edit = data => fetch('/wenyuanjiaoyu/config/edit', data, 'POST').then(check_login);
 export const get_course_list = data => fetch('/wenyuanjiaoyu/student/get_course_list', data, 'POST').then(check_login);
+export const suggest_list = data => fetch('/wenyuanjiaoyu/suggest/index', data, 'POST').then(check_login);
