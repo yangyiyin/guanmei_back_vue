@@ -43,7 +43,7 @@
                                 <span>{{ props.row.content.remark }}</span>
                             </el-form-item>
                             <el-form-item label="准考证" >
-                                <span><img style="width: 200px;" :src="props.row.ticket"/></span>
+                                <span><img style="width: 200px;" v-bind:src="props.row.ticket_url"/></span>
                             </el-form-item>
                             <el-form-item label="" >
                                 <el-button size="mini"  type="warning" @click="handleGenTicket(props.row)">生成准考证</el-button>
