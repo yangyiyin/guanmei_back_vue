@@ -42,6 +42,9 @@
                             <el-form-item label="结果备注" >
                                 <span>{{ props.row.content.remark }}</span>
                             </el-form-item>
+                            <el-form-item label="照片" >
+                                <span><img style="width: 80px;" v-bind:src="props.row.content.avatar"/></span>
+                            </el-form-item>
                             <el-form-item label="准考证" >
                                 <span><img style="width: 200px;" v-bind:src="props.row.ticket_url"/></span>
                             </el-form-item>
