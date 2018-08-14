@@ -126,33 +126,34 @@ $export($export.S + $export.F, 'Object', { assign: __webpack_require__(139) });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "F", function() { return news_list; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "D", function() { return news_info; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "G", function() { return news_verify; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return news_del; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "E", function() { return news_edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return news_sort; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return sign_info_default; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return sign_edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "B", function() { return sign_signs_list; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "C", function() { return sign_signs_del; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return sign_signs_areas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return examination_list; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "q", function() { return examination_info; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return examination_verify; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return examination_del; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return examination_edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "v", function() { return examination_sort; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return examination_excel_out; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return examination_gen_ticket; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return examination_send_mail; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "G", function() { return news_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "E", function() { return news_info; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "H", function() { return news_verify; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "I", function() { return news_del; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "F", function() { return news_edit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return news_sort; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "z", function() { return sign_info_default; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A", function() { return sign_edit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "C", function() { return sign_signs_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "D", function() { return sign_signs_del; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "B", function() { return sign_signs_areas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return examination_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return examination_info; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "u", function() { return examination_verify; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "v", function() { return examination_del; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return examination_edit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return examination_sort; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return examination_excel_out; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return examination_gen_ticket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "y", function() { return examination_send_mail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return examination_signs_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return setCanEditAvatar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return users_list; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return users_verify; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return users_del; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return config_list; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return config_edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return get_course_list; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "q", function() { return get_course_list; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return suggest_list; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return words_list; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return words_edit; });
@@ -242,6 +243,9 @@ var examination_send_mail = function examination_send_mail(data) {
 };
 var examination_signs_list = function examination_signs_list(data) {
     return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__config_fetch__["a" /* default */])('/wenyuanjiaoyu/examination_signs/index', data, 'POST').then(check_login);
+};
+var setCanEditAvatar = function setCanEditAvatar(data) {
+    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__config_fetch__["a" /* default */])('/wenyuanjiaoyu/examination_signs/setCanEditAvatar', data, 'POST').then(check_login);
 };
 var users_list = function users_list(data) {
     return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__config_fetch__["a" /* default */])('/wenyuanjiaoyu/users/index', data, 'POST').then(check_login);
@@ -595,7 +599,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue_quill_editor__["Quill"].register('modules/imageR
             this.content = '';
         },
         get_info: function get_info() {
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__api_getDataEarth__["D" /* news_info */])({ id: this.id }).then(function (res) {
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__api_getDataEarth__["E" /* news_info */])({ id: this.id }).then(function (res) {
                 if (res.code == this.$store.state.constant.status_success) {
                     this.title = res.data.title;
                     this.link = res.data.link;
@@ -635,7 +639,7 @@ __WEBPACK_IMPORTED_MODULE_2_vue_quill_editor__["Quill"].register('modules/imageR
                 type: 'warning'
             }).then(function () {
                 this.loading = true;
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__api_getDataEarth__["E" /* news_edit */])({ id: this.id, title: this.title, link: this.link, img: this.img, content: this.content }).then(function (res) {
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__api_getDataEarth__["F" /* news_edit */])({ id: this.id, title: this.title, link: this.link, img: this.img, content: this.content }).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
                             message: res.msg,

@@ -30,25 +30,31 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="家长手机1" >
+                            <el-form-item label="家长手机1:" >
                                 <span>{{ props.row.content.father_tel }}</span>
                             </el-form-item>
-                            <el-form-item label="家长手机2" >
+                            <el-form-item label="家长手机2:" >
                                 <span>{{ props.row.content.mother_tel }}</span>
                             </el-form-item>
-                            <el-form-item label="是否新生" >
+                            <el-form-item label="是否新生:" >
                                 <span>{{ props.row.is_new ? '是':'否' }}</span>
                             </el-form-item>
-                            <el-form-item label="结果备注" >
+                            <el-form-item label="结果备注:" >
                                 <span>{{ props.row.content.remark }}</span>
                             </el-form-item>
-                            <el-form-item label="照片" >
+                            <el-form-item label="照片:" >
                                 <span><img style="width: 80px;" v-bind:src="props.row.content.avatar"/></span>
                             </el-form-item>
-                            <el-form-item label="准考证" >
+                            <el-form-item label="修改照片:" >
+
+                                <el-button v-if="!props.row.can_edit_avatar || props.row.can_edit_avatar == 0" size="mini"  type="warning" @click="handleSetCanEditAvatar(props.row, 1)">设为允许</el-button>
+                                <el-button v-if="props.row.can_edit_avatar && props.row.can_edit_avatar != 0" size="mini"  type="warning" @click="handleSetCanEditAvatar(props.row, 0)">设为不允许</el-button>
+                            </el-form-item>
+                            <el-form-item label="准考证:" >
                                 <span><img style="width: 200px;" v-bind:src="props.row.ticket_url"/></span>
                             </el-form-item>
-                            <el-form-item label="" >
+
+                            <el-form-item label="生成准考证:" >
                                 <el-button size="mini"  type="warning" @click="handleGenTicket(props.row)">生成准考证</el-button>
                             </el-form-item>
                         </el-form>
@@ -92,7 +98,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {examination_signs_list,examination_gen_ticket} from '@/api/getDataEarth'
+    import {examination_signs_list,examination_gen_ticket,setCanEditAvatar} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -155,6 +161,29 @@
                 this.dialogFormVisibleTicket = true;
                 this.current = row;
             },
+            handleSetCanEditAvatar(row, can_edit) {
+                this.$confirm('此操作将让用户拥有是否可重新设置自己考试照片的权限, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    setCanEditAvatar({id:row.id, can_edit:can_edit}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            row.can_edit_avatar = can_edit;
+                            this.$message({
+                                type: 'success',
+                                message: '操作成功'
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
+            },
+
             genticket(){
                 this.loadingBtn = 'ticket';
                 examination_gen_ticket({
