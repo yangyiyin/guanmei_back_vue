@@ -42,6 +42,9 @@
                             <el-form-item label="结果备注" >
                                 <span>{{ props.row.content.remark }}</span>
                             </el-form-item>
+                            <el-form-item label="准考证" >
+                                <span><img style="width: 200px;" :src="props.row.ticket"/></span>
+                            </el-form-item>
                             <el-form-item label="" >
                                 <el-button size="mini"  type="warning" @click="handleGenTicket(props.row)">生成准考证</el-button>
                             </el-form-item>
