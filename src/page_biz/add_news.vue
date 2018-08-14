@@ -28,7 +28,7 @@
                 <img v-if="img" :src="img" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <block v-if="!link">
+            <div v-if="!link">
                 <p class="search_item" style="font-size: 12px">内容编辑:<a href="javascript:;" v-if="editor == 1" @click="editor=2">< 使用代码编辑 > </a><a href="javascript:;" v-if="editor == 2" @click="editor=1">[使用可视化编辑]</a></p>
                 <div class="search_item" v-if="editor == 1">
 
@@ -50,7 +50,7 @@
 
                     <mavon-editor :toolbars="toolbars" v-model="content"/>
                 </div>
-            </block>
+            </div>
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">发布</el-button>
 
 
