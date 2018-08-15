@@ -37,7 +37,7 @@
                 <el-table-column label="标题" prop="title"></el-table-column>
                 <el-table-column label="简介" prop="desc_pre"></el-table-column>
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
-                <el-table-column label="考生报名" width="300">
+                <el-table-column label="评语" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="handleDaoru(scope.row)">导入</el-button>
                         <el-button size="mini" @click="handleDaochu(scope.row)">导出</el-button>

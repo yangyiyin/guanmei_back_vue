@@ -876,7 +876,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }) : _c('i', {
     staticClass: "el-icon-plus avatar-uploader-icon"
-  })]), _vm._v(" "), (!_vm.link) ? _c('block', [_c('p', {
+  })]), _vm._v(" "), (!_vm.link) ? _c('div', [_c('p', {
     staticClass: "search_item",
     staticStyle: {
       "font-size": "12px"
