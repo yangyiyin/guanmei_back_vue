@@ -9,4 +9,5 @@ export default {
     examination_daoru_excel_out:baseUrl + '/wenyuanjiaoyu/examination_signs/excel_out',
     words_content_daoru_excel_in:baseUrl + '/wenyuanjiaoyu/words_content/excel_in',
     words_content_daochu_excel_out:baseUrl + '/wenyuanjiaoyu/words_content/excel_out',
+    suggest_excel_out:baseUrl + '/wenyuanjiaoyu/suggest/excel_out',
 }

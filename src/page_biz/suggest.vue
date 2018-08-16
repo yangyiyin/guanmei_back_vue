@@ -16,7 +16,7 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-
+            <el-button style="float: right" type="primary" size="mini" @click="handleDaochu()">导出</el-button>
         </div>
         <div class="table_container">
             <el-table
@@ -40,13 +40,7 @@
                 <el-table-column label="家长手机号" prop="user_tel"></el-table-column>
                 <el-table-column label="内容" prop="content_pre"></el-table-column>
                 <el-table-column label="反馈时间" prop="create_time"></el-table-column>
-                <!--<el-table-column label="操作" width="300">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<el-button size="mini"  type="warning" @click="handleGenTicket(scope.row)">生成准考证</el-button>-->
 
-
-                    <!--</template>-->
-                <!--</el-table-column>-->
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
@@ -59,12 +53,24 @@
                 </el-pagination>
             </div>
         </div>
+        <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
+            <p>
+                您即将导出家长反馈数据
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
+                <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {suggest_list} from '@/api/getDataEarth'
+    import {suggest_list,suggest_excel_out} from '@/api/getDataEarth'
     import {getStore} from '@/config/mUtils'
     export default {
         data(){
@@ -75,6 +81,7 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                dialogFormVisibleDaochu:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
@@ -117,7 +124,30 @@
             search() {
                 this.currentPage = 1;
                 this.list();
-            }
+            },
+            handleDaochu(){
+                this.dialogFormVisibleDaochu = true;
+            },
+            daochu() {
+                this.loadingBtn = 'daochu';
+                suggest_excel_out({
+                    is_ajax:true
+                }).then(function(res){
+                    this.loadingBtn = '-1';
+                    if (res.code == this.$store.state.constant.status_success) {
+                        window.open(this.$store.state.constant.suggest_excel_out + '?token=' + (getStore('token') ? getStore('token') : ''));
+                        return;
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.dialogFormVisibleDaochu = false;
+                }.bind(this));
+            },
         },
     }
 </script>
