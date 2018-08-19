@@ -13,6 +13,7 @@ const sign_edit = r => require.ensure([], () => r(require('@/page_biz/sign_edit'
 const examination = r => require.ensure([], () => r(require('@/page_biz/examination')), 'examination');
 const examination_edit = r => require.ensure([], () => r(require('@/page_biz/examination_edit')), 'examination_edit');
 const examination_signs = r => require.ensure([], () => r(require('@/page_biz/examination_signs')), 'examination_signs');
+const examination_signs_add = r => require.ensure([], () => r(require('@/page_biz/examination_signs_add')), 'examination_signs_add');
 const users = r => require.ensure([], () => r(require('@/page_biz/users')), 'users');
 const config = r => require.ensure([], () => r(require('@/page_biz/config')), 'config');
 const suggest = r => require.ensure([], () => r(require('@/page_biz/suggest')), 'suggest');
@@ -70,6 +71,11 @@ const routes = [
 				path: '/examination_signs',
 				component: examination_signs,
 				meta: ['学校管理', '考试学员情况'],
+			},
+			{
+				path: '/examination_signs_add',
+				component: examination_signs_add,
+				meta: ['学校管理', '考试线下报名'],
 			},
 			{
 				path: '/users',

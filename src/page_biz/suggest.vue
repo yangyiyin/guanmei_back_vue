@@ -40,6 +40,7 @@
                 <el-table-column label="家长手机号" prop="user_tel"></el-table-column>
                 <el-table-column label="内容" prop="content_pre"></el-table-column>
                 <el-table-column label="反馈时间" prop="create_time"></el-table-column>
+                <el-table-column label="学员" prop="bind_students"></el-table-column>
 
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">

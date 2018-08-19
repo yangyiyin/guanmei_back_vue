@@ -53,8 +53,9 @@
                         <el-button size="mini" @click="handleDaochu(scope.row)">导出</el-button>
                         <el-button size="mini"  type="primary" @click="goto_sign_list(scope.row.id)">查看</el-button>
                         <el-button size="mini"  type="warning" @click="handleGenTicket(scope.row)">生成准考证</el-button>
-                        <el-button size="mini" v-if="!scope.row.has_send_mail || scope.row.has_send_mail == 0"  type="warning" @click="handleSendEmail(scope.row)">发送邮箱</el-button>
-                        <el-button size="mini" v-if="scope.row.has_send_mail > 0"  type="info" >已发送邮箱</el-button>
+                        <!--<el-button size="mini" v-if="!scope.row.has_send_mail || scope.row.has_send_mail == 0"  type="warning" @click="handleSendEmail(scope.row)">发送邮箱</el-button>-->
+                        <!--<el-button size="mini" v-if="scope.row.has_send_mail > 0"  type="info" >已发送邮箱</el-button>-->
+                        <el-button size="mini" @click="sign_offline(scope.row.id)"  type="warning" >线下报名</el-button>
 
                     </template>
                 </el-table-column>
@@ -452,6 +453,9 @@
                     }
                     this.dialogFormVisibleTicket = false;
                 }.bind(this));
+            },
+            sign_offline(id) {
+                this.$router.push({path:'examination_signs_add',query:{id:id}});
             }
         },
     }

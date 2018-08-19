@@ -192,7 +192,6 @@
                 get_course_list({}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.courselist = res.data
-                        console.log(this.courselist)
                     } else {
                         this.$message({
                             message: res.msg,
@@ -318,11 +317,7 @@
         line-height: 100px;
         text-align: center;
     }
-    .avatar {
-        width: 200px;
-        height: 100px;
-        display: block;
-    }
+
     .ql-editor{
         min-height: 300px;
     }
