@@ -1,23 +1,25 @@
 <template>
   	<div class="login_page fillcontain">
 	  	<transition name="form-fade" mode="in-out">
-	  		<section v-on:keyup.13="submitForm('loginForm')" class="form_contianer" v-show="showLogin">
-		  		<div class="manage_tip">
-		  			<p>文远教育后台管理系统</p>
-		  		</div>
-		    	<el-form :model="loginForm" :rules="rules" ref="loginForm">
+			<section v-on:keyup.13="submitForm('loginForm')" class="form_contianer" v-show="showLogin">
+				<div class="manage_tip">
+					<p>冠美帽业管理系统</p>
+				</div>
+				<el-form :model="loginForm" :rules="rules" ref="loginForm">
 					<el-form-item prop="username">
-						<el-input v-model="loginForm.username" placeholder="用户名"><span>dsfsf</span></el-input>
+						<el-input v-model="loginForm.username" placeholder="用户名"></el-input>
 					</el-form-item>
 					<el-form-item prop="password">
 						<el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
 					</el-form-item>
 					<el-form-item>
-				    	<el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
-				  	</el-form-item>
+						<el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
+					</el-form-item>
 				</el-form>
-	  		</section>
+			</section>
 	  	</transition>
+		<p style="position: absolute;bottom: 20px;left: 50%;margin-left: -150px;width: 300px;text-align: center;color: #999;font-size: 12px;">技术支持:13646837040@壹像素工作室</p>
+
   	</div>
 </template>
 

@@ -4,32 +4,23 @@
 		<el-row style="height: 100%;">
 	  		<el-col :span="4"  style="height: 100%; ">
 				<el-menu :default-active="defaultActive" style="min-height: 100%;"   background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b" router>
-					<el-menu-item index="manage"><i class="el-icon-menu"></i>首页</el-menu-item>
-					<!--<el-submenu index="2">-->
-					<!--<template slot="title"><i class="el-icon-news"></i>新闻管理</template>-->
-					<!--<el-menu-item index="news">新闻管理</el-menu-item>-->
-					<!--</el-submenu>-->
+					<div style="background: rgb(255, 208, 75);height: 5px;"></div>
+
 
 					<el-submenu index="3">
-						<template slot="title"><i class="el-icon-goods"></i>学校管理</template>
-						<el-menu-item index="news">新闻管理</el-menu-item>
-						<!--<el-menu-item index="sign">课程报名管理</el-menu-item>-->
-						<el-menu-item index="examination">考试管理</el-menu-item>
-						<el-menu-item index="users">微信小程序用户管理</el-menu-item>
-						<el-menu-item index="suggest">家长反馈</el-menu-item>
-						<el-menu-item index="words">教师评语</el-menu-item>
+						<template slot="title"><i class="iconfont el-icon-cc">&#xe655;</i>后台用户管理</template>
+						<el-menu-item index="admin_user">用户管理</el-menu-item>
+						<el-menu-item index="admin_group">用户组管理</el-menu-item>
+
 					</el-submenu>
 
-					<!--<el-submenu index="4">-->
-						<!--<template slot="title"><i class="el-icon-view"></i>用户管理</template>-->
-
-						<!--<el-menu-item index="users">微信小程序用户管理</el-menu-item>-->
-					<!--</el-submenu>-->
-
 					<el-submenu index="5">
-						<template slot="title"><i class="el-icon-setting"></i>系统设置</template>
-
+						<template slot="title"><i class="el-icon-setting"></i>开发者设置</template>
+						<el-menu-item index="admin_purview">权限管理</el-menu-item>
 						<el-menu-item index="config">参数配置</el-menu-item>
+
+
+
 					</el-submenu>
 				</el-menu>
 			</el-col>
@@ -55,7 +46,11 @@
 
 <style lang="less" scoped>
 	@import '../style/mixin';
-	.manage_page{
-		
+	.iconfont{
+		vertical-align: middle;
+		margin-right: 5px;
+		width: 24px;
+		text-align: center;
+		font-size: 18px;
 	}
 </style>

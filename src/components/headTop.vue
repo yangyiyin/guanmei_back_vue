@@ -6,7 +6,8 @@
 			<el-breadcrumb-item v-for="(item, index) in $route.meta" :key="item">{{item}}</el-breadcrumb-item>
 		</el-breadcrumb>
 		<el-dropdown @command="handleCommand" menu-align='start'>
-			<img :src="avatar" class="avator">
+			<!--<img :src="avatar" class="avator">-->
+			<p style="height: 50px;line-height:50px;text-align: center;margin-right: 20px;cursor: pointer"><i class="iconfont">&#xe625;</i>{{user_info.show_name}}</p>
 			<el-dropdown-menu slot="dropdown">
 				<el-dropdown-item command="singout">退出</el-dropdown-item>
 			</el-dropdown-menu>
@@ -18,19 +19,23 @@
 	import {signout} from '@/api/getData'
 	import {baseImgPath} from '@/config/env'
 	import {mapActions, mapState} from 'vuex'
-	import {removeStore} from '@/config/mUtils'
+	import {removeStore,getStore} from '@/config/mUtils'
 	import avatar from '@/assets/img/avatar.png';
     export default {
     	data(){
     		return {
     			baseImgPath,
-				avatar
+				avatar,
+				user_info:''
     		}
     	},
     	created(){
     		if (!this.adminInfo.id) {
     			//this.getAdminData()
     		}
+			this.user_info = JSON.parse(getStore('user_info'));
+
+
     	},
     	computed: {
     		...mapState(['adminInfo']),

@@ -5,25 +5,28 @@
 
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="手机号"
-                    v-model="user_tel"
+                    placeholder="用户名"
+                    v-model="user_name"
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_admin_user(0)">新增用户</el-button>
 
         </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
                     style="width: 100%">
-
-                <el-table-column label="家长手机号" prop="user_tel"></el-table-column>
+                <el-table-column label="用户名" prop="user_name"></el-table-column>
+                <el-table-column label="显示名" prop="show_name"></el-table-column>
+                <el-table-column label="用户组" prop="group_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
+                        <el-button size="mini" @click="goto_edit_admin_user(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>
-                        <el-button size="mini" @click="del(scope.row, scope.$index)">注销</el-button>
+                        <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,7 +46,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {users_list,users_del,users_verify} from '@/api/getDataEarth'
+    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -53,10 +56,7 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
-                user_tel:'',
+                user_name:'',
                 loadingBtn:-1
             }
         },
@@ -64,7 +64,7 @@
             headTop,
         },
         created(){
-            this.list();
+
         },
         mounted(){
 
@@ -77,7 +77,7 @@
         },
         methods: {
             list() {
-                users_list({page:this.currentPage,page_size:this.limit,user_tel:this.user_tel}).then(function(res){
+                admin_user_list({page:this.currentPage,page_size:this.limit,user_name:this.user_name}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -89,12 +89,21 @@
                 this.currentPage = val;
                 this.list();
             },
+            handleEdit(row){
+                this.dialogFormVisible = true;
+                if (row) {
+                    this.current_entity = row;
+                } else {
+                    this.current_entity = {};
+                }
+
+            },
             search() {
                 this.currentPage = 1;
                 this.list();
             },
-            goto_edit_news(id) {
-                this.$router.push({path:'add_news',query:{id:id}});
+            goto_edit_admin_user(id) {
+                this.$router.push({path:'add_admin_user',query:{id:id}});
             },
             verify(scope, status) {
 
@@ -105,7 +114,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    users_verify({id:item.id,status:status}).then(function(res){
+                    admin_user_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -133,7 +142,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    users_del({id:item.id}).then(function(res){
+                    admin_user_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.tableData.splice(index,1);
                             this.count --;
