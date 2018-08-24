@@ -1,19 +1,10 @@
 import fetch from '@/config/fetch'
 import router from '@/router'
+import {check_login} from '@/config/mUtils'
 /**
  * 获取电话记录
  */
 
-var check_login = function(res){
-    return new Promise(function(resolve,reject){
-        if (res.code == 999) {
-            router.push('/');
-        } else {
-            resolve(res);
-        }
-
-    });
-}
 export const config_list = data => fetch('/guanmei/config/index', data, 'POST').then(check_login);
 export const config_edit = data => fetch('/guanmei/config/edit', data, 'POST').then(check_login);
 export const admin_user_list = data => fetch('/guanmei/admin_user/index', data, 'POST').then(check_login);

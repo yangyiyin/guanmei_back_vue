@@ -273,4 +273,16 @@ export const animate = (element, target, duration = 400, mode = 'ease-out', call
             }
         })
     }, 20);
+
+}
+
+export const check_login = function(res){
+    return new Promise(function(resolve,reject){
+        if (res.code == 999) {
+            router.push('/');
+        } else {
+            resolve(res);
+        }
+
+    });
 }
