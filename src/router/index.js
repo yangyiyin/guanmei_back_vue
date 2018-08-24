@@ -16,8 +16,6 @@ const admin_purview = r => require.ensure([], () => r(require('@/page_biz/admin_
 const add_admin_purview = r => require.ensure([], () => r(require('@/page_biz/add_admin_purview')), 'add_admin_purview');
 const group_purview = r => require.ensure([], () => r(require('@/page_biz/group_purview')), 'group_purview');
 const admin_log = r => require.ensure([], () => r(require('@/page_biz/admin_log')), 'admin_log');
-const test = r => require.ensure([], () => r(require('@/page_biz/test')), 'test');
-const add_test = r => require.ensure([], () => r(require('@/page_biz/add_test')), 'add_test');
 //{#replace1#}
 
 const routes = [
@@ -86,8 +84,6 @@ const routes = [
 				meta: ['后台管理', '用户组权限'],
 			},
 
-{path: '/test',component: test,meta: ['系统', '测试'],},
-{path: '/add_test',component: add_test,meta: ['系统', '设置测试'],},
 //{#replace2#}
 
 		]
