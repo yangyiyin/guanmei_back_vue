@@ -9,27 +9,27 @@ const state = {
 	adminInfo: {
 		avatar: 'default.jpg'
 	},
+	percentage:0
 }
 
 const mutations = {
 	saveAdminInfo(state, adminInfo){
 		state.adminInfo = adminInfo;
-	}
+	},
+	set_percentage(state, percentage){
+		state.percentage = percentage;
+	},
+	add_percentage(state, percentage){
+		var percentage = state.percentage + parseInt(percentage);
+		if (percentage >= 99) {
+			percentage = 99;
+		}
+		state.percentage = percentage;
+	},
 }
 
 const actions = {
-	async getAdminData({commit}){
-		try{
-			const res = await getAdminInfo()
-			if (res.status == 1) {
-				commit('saveAdminInfo', res.data);
-			}else{
-				throw new Error(res)
-			}
-		}catch(err){
-			console.log('您尚未登陆或者session失效')
-		}
-	}
+
 }
 
 export default new Vuex.Store({

@@ -104,7 +104,7 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.user_name = res.data.user_name;
                         this.show_name = res.data.show_name;
-                        this.password = res.data.password;
+                        this.password = '';
                         this.group_id = res.data.group_id;
                     } else {
                         this.$message({

@@ -36,4 +36,6 @@ export const admin_purview_verify = data => fetch('/guanmei/admin_purview/verify
 export const admin_purview_del = data => fetch('/guanmei/admin_purview/del', data, 'POST').then(check_login);
 export const admin_purview_info = data => fetch('/guanmei/admin_purview/info', data, 'POST').then(check_login);
 export const admin_purview_sort = data => fetch('/guanmei/admin_purview/sort', data, 'POST').then(check_login);
+export const get_menu = data => fetch('/guanmei/admin_purview/get_menu', data, 'POST').then(check_login);
+export const admin_log_list = data => fetch('/guanmei/admin_log/index', data, 'POST').then(check_login);
 

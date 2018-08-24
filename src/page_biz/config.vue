@@ -13,7 +13,7 @@
                     <template slot="prepend">值</template>
                 </el-input>
                 <el-input v-if="!item.can_edit" clearable placeholder="值" v-model="item.value" style="width: 250px;margin-top: 10px">
-                    <template slot="prepend" >{{item.remark}}</template>
+                    <template slot="prepend" >{{item.remark ? item.remark : item.key}}</template>
                 </el-input>
                 <el-input v-if="item.can_edit" clearable placeholder="备注" v-model="item.remark" style="width: 250px;margin-top: 10px">
                     <template slot="prepend">备注</template>

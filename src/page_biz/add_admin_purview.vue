@@ -46,6 +46,11 @@
                 </el-input>
             </div>
 
+            <div v-if="type==1" class="search_item">
+                <el-input clearable placeholder="请输入图标代码" v-model="ico" style="width: 350px">
+                    <template slot="prepend">图标</template>
+                </el-input>
+            </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -68,11 +73,12 @@
                 pid:'0',
                 name:'',
                 uri:'',
+                ico:'',
                 types:[
                     {id:0,name:'普通权限'},
                     {id:1,name:'菜单权限'}
                 ],
-                parents:[{id:'0',name:'顶级'}]
+                parents:[{id:'0',name:'顶级'}],
             }
 
         },
@@ -123,6 +129,7 @@
                 this.type=0;
                 this.pid = '0';
                 this.uri = '';
+                this.ico = '';
             },
             get_info() {
                 admin_purview_info({id:this.id}).then(function (res) {
@@ -132,11 +139,13 @@
                             this.type = parseInt(res.data.type);
                             this.uri = res.data.uri;
                             this.name = res.data.name;
+                            this.ico = res.data.ico;
                         } else if(this.action == 'add') {
                             this.pid = res.data.id
-                            this.type=0;
+                            this.type=parseInt(res.data.type);
                             this.uri = '';
                             this.name = '';
+                            this.ico = '';
                         }
 
                     } else {
@@ -175,7 +184,7 @@
                     if (this.action == 'add') {
                         this.id = '';
                     }
-                    admin_purview_edit({id:this.id,name:this.name,pid:this.pid,type:this.type,uri:this.uri}).then(function (res) {
+                    admin_purview_edit({id:this.id,name:this.name,pid:this.pid,type:this.type,uri:this.uri,ico:this.ico}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,

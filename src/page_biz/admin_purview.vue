@@ -3,12 +3,12 @@
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
 
-            <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="名称"
-                    v-model="name"
-                    clearable>
-            </el-input>
+            <!--<el-input-->
+                    <!--style="display: inline-block;width: 250px;"-->
+                    <!--placeholder="名称"-->
+                    <!--v-model="name"-->
+                    <!--clearable>-->
+            <!--</el-input>-->
 
             <el-select v-model="type" placeholder="类型">
                 <el-option
@@ -64,9 +64,11 @@
             <!--</div>-->
 
             <el-tree
+
                     :data="tree_data"
-                    :show-checkbox="show_checkbox"
-                    node-key="id"
+                    :show-checkbox="false"
+                    node-key="uri_md5"
+                    ref="tree"
                     default-expand-all
                     @node-drop="handleDrop"
                     draggable
@@ -86,6 +88,7 @@
             </el-tree>
 
         </div>
+
         <!--<el-dialog title="修改排序" :visible.sync="dialogFormVisible" width="30%">-->
             <!--<el-form :model="current">-->
                 <!--<el-form-item label="排序值(越大越靠前)">-->
@@ -102,7 +105,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_purview_tree,admin_purview_del,admin_purview_verify,admin_purview_sort} from '@/api/getDataEarth'
+    import {admin_purview_tree,admin_purview_del,admin_purview_verify,admin_purview_sort,admin_purview_edit} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -115,13 +118,12 @@
                 current:{},
                 name:'',
                 loadingBtn:-1,
-                type:-1,
+                type:0,
                 types:[
-                    {id:-1,name:'全部'},
                     {id:0,name:'普通权限'},
                     {id:1,name:'菜单权限'}
                 ],
-                show_checkbox:false
+
 
             }
         },
@@ -129,15 +131,15 @@
             headTop,
         },
         created(){
-
         },
         mounted(){
 
         },
         beforeRouteEnter (to, from, next) {
             next(vm => {
-                // 通过 `vm` 访问组件实例
+
                 vm.list();
+
         })
         },
         methods: {
@@ -238,10 +240,42 @@
                 this.dialogFormVisible = false;
             },
             handleDrop(node, pnode, position, event){
-                console.log(node)
-                console.log(pnode)
-                console.log(position)
-                console.log(event)
+
+
+                if (position == 'before') {
+                    this.current = node.data;
+                    this.current.sort = parseInt(pnode.data.sort) + 1;
+                    this.current.pid = pnode.data.pid;
+                } else if (position == 'after') {
+                    this.current = node.data;
+                    this.current.sort = parseInt(pnode.data.sort) - 1;
+                    this.current.pid = pnode.data.pid;
+                } else if (position == 'inner') {
+                    this.current = node.data;
+                    var sort = 1;
+                    if (pnode.childNodes.length && pnode.childNodes[pnode.childNodes.length-2] && pnode.childNodes[pnode.childNodes.length-2].data) {
+                        var sort = pnode.childNodes[pnode.childNodes.length-2].data.sort - 1;
+                    }
+                    this.current.sort = parseInt(sort);
+                    this.current.pid = pnode.data.id;
+
+                }
+                admin_purview_edit(this.current).then(function (res) {
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.list();
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+
+                }.bind(this));
+
             }
         },
     }

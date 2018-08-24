@@ -31,6 +31,7 @@
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button size="mini" type="primary" @click="purview_edit(scope.row)">权限</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -200,6 +201,9 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
+            },
+            purview_edit(row){
+                this.$router.push({path:'group_purview',query:{edit_group_id:row.id}});
             }
         },
     }

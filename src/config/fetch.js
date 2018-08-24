@@ -1,5 +1,6 @@
 import { baseUrl } from './env'
 import {getStore} from '@/config/mUtils'
+import store from '../store/'
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	type = type.toUpperCase();
@@ -41,13 +42,25 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		}
 		
 		try {
+			store.commit('set_percentage', 2);
+			var time = 0;
+			var interval = setInterval(function(){
+				if (time > 100) {
+					if (interval) clearInterval(interval);
+				}
+				store.commit('add_percentage', 1);
+				time++;
+			},50)
 			const response = await fetch(url, requestConfig);
 			const responseJson = await response.json();
+			if (interval) clearInterval(interval);
+			store.commit('set_percentage', 0);
 			return responseJson
 		} catch (error) {
 			throw new Error(error)
 		}
 	} else {
+
 		return new Promise((resolve, reject) => {
 			let requestObj;
 			if (window.XMLHttpRequest) {

@@ -1,6 +1,6 @@
 <template>
     <div class="fillcontain">
-        404
+
     </div>
 </template>
 
@@ -17,6 +17,7 @@
             headTop,
         },
         created(){
+
         },
         mounted(){
 

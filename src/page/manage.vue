@@ -7,21 +7,15 @@
 					<div style="background: rgb(255, 208, 75);height: 5px;"></div>
 
 
-					<el-submenu index="3">
-						<template slot="title"><i class="iconfont el-icon-cc">&#xe655;</i>后台用户管理</template>
-						<el-menu-item index="admin_user">用户管理</el-menu-item>
-						<el-menu-item index="admin_group">用户组管理</el-menu-item>
+					<el-submenu  v-for="(item, index) in menu" :index="item.uri" :key="item.id">
+						<template slot="title"><i class="iconfont el-icon-cc" v-html="item.ico"></i>{{item.name}}</template>
+						<template v-if="item.children">
+							<el-menu-item v-for="item in item.children" :index="item.uri" :key="item.id">{{item.name}}</el-menu-item>
+						</template>
 
 					</el-submenu>
 
-					<el-submenu index="5">
-						<template slot="title"><i class="el-icon-setting"></i>开发者设置</template>
-						<el-menu-item index="admin_purview">权限管理</el-menu-item>
-						<el-menu-item index="config">参数配置</el-menu-item>
 
-
-
-					</el-submenu>
 				</el-menu>
 			</el-col>
 			<el-col :span="20" style="height: 100%;overflow: auto;">
@@ -34,7 +28,32 @@
 </template>
 
 <script>
+	import {get_menu} from '@/api/getDataEarth'
     export default {
+		data(){
+			return {
+				menu:[]
+			}
+
+		},
+		created(){
+			this.get_menu();
+		},
+		methods: {
+			get_menu(){
+				get_menu().then(function (res) {
+					if (res.code == this.$store.state.constant.status_success) {
+						this.menu = res.data;
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'warning'
+						});
+					}
+
+				}.bind(this));
+			},
+		},
 		computed: {
 			defaultActive: function(){
 				return this.$route.path.replace('/', '');
