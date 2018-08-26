@@ -81,7 +81,7 @@ const routes = [
 			{
 				path: '/group_purview',
 				component: group_purview,
-				meta: ['后台管理', '用户组权限'],
+				meta: ['后台管理', '权限组权限'],
 			},
 
 //{#replace2#}

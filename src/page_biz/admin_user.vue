@@ -19,7 +19,7 @@
                     style="width: 100%">
                 <el-table-column label="用户名" prop="user_name"></el-table-column>
                 <el-table-column label="显示名" prop="show_name"></el-table-column>
-                <el-table-column label="用户组" prop="group_name"></el-table-column>
+                <el-table-column label="权限组" prop="group_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">

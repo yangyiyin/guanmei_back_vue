@@ -21,7 +21,7 @@
             </div>
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">所属组织:</span>
+                <span class="pre_info" style="font-size: 14px;">权限组:</span>
                 <el-select v-model="group_id" placeholder="类型">
                     <el-option
                             v-for="item in groups"
