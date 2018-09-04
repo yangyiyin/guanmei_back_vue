@@ -21,7 +21,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_group_edit,admin_group_info} from '@/api/getDataEarth'
+    import {sales_order_edit,sales_order_info} from '@/api/getDatasales_order'
     export default {
         data(){
             return {
@@ -46,13 +46,13 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
-                if (vm.id && vm.id > 0) {
-                    vm.get_info();
-                } else {
-                    vm.init();
-                }
+            if (vm.id && vm.id > 0) {
+                vm.get_info();
+            } else {
+                vm.init();
+            }
 
-            })
+        })
         },
         methods: {
 
@@ -61,7 +61,7 @@
                 this.name = '';
             },
             get_info() {
-                admin_group_info({id:this.id}).then(function (res) {
+                sales_order_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.name = res.data.name;
                     } else {
@@ -93,13 +93,13 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    admin_group_edit({id:this.id,name:this.name}).then(function (res) {
+                    sales_order_edit({id:this.id,name:this.name}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'admin_group',query:{}});
+                            this.$router.push({path:'sales_order',query:{}});
                         } else {
                             this.$message({
                                 message: res.msg,
@@ -121,7 +121,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     @import '../style/mixin';
     .search_item{
 

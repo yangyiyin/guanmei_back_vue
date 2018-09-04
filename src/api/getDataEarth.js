@@ -30,3 +30,11 @@ export const admin_purview_sort = data => fetch('/guanmei/admin_purview/sort', d
 export const get_menu = data => fetch('/guanmei/admin_purview/get_menu', data, 'POST').then(check_login);
 export const admin_log_list = data => fetch('/guanmei/admin_log/index', data, 'POST').then(check_login);
 
+export const admin_orgnize_tree = data => fetch('/guanmei/admin_orgnize/tree', data, 'POST').then(check_login);
+export const admin_orgnize_all_list = data => fetch('/guanmei/admin_orgnize/all_list', data, 'POST').then(check_login);
+export const admin_orgnize_edit = data => fetch('/guanmei/admin_orgnize/edit', data, 'POST').then(check_login);
+export const admin_orgnize_verify = data => fetch('/guanmei/admin_orgnize/verify', data, 'POST').then(check_login);
+export const admin_orgnize_del = data => fetch('/guanmei/admin_orgnize/del', data, 'POST').then(check_login);
+export const admin_orgnize_info = data => fetch('/guanmei/admin_orgnize/info', data, 'POST').then(check_login);
+export const admin_orgnize_sort = data => fetch('/guanmei/admin_orgnize/sort', data, 'POST').then(check_login);
+

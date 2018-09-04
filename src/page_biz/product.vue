@@ -3,35 +3,50 @@
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
 
+            <el-select v-model="cid" placeholder="类型">
+                <el-option
+                        v-for="item in categories"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="名称"
-                    v-model="name"
+                    placeholder="型号"
+                    v-model="code"
                     clearable>
             </el-input>
+
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_admin_group(0)">新增组</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_product(0)">新增帽子型号</el-button>
 
         </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+
+                <el-table-column label="型号" prop="code"></el-table-column>
+                <!--<el-table-column label="示例" prop="img">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<img style="width: 30px;border-radius: 30rpx;" v-bind:src="scope.row.img"/>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column label="排序">
                     <template slot-scope="scope">
                         {{scope.row.sort}}
                         <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
                     </template>
                 </el-table-column>
+                <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="goto_edit_admin_group(scope.row.id)">编辑</el-button>
-                        <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>-->
+                        <el-button size="mini" @click="goto_edit_product(scope.row.id)">编辑</el-button>
+                        <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
+                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
-                        <el-button size="mini" type="primary" @click="purview_edit(scope.row)">权限</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -62,7 +77,8 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_group_list,admin_group_del,admin_group_verify,admin_group_sort} from '@/api/getDataEarth'
+    import {product_list,product_del,product_verify,product_sort} from '@/api/getDataproduct'
+    import {product_category_all_list} from '@/api/getDataproduct_category'
     export default {
         data(){
             return {
@@ -72,15 +88,20 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current:{},
-                name:'',
-                loadingBtn:-1
+//                remark:'',
+//                choose_categories:[],
+//                categories:[],
+                code:'',
+                cid:'',
+                loadingBtn:-1,
+                categories:[]
             }
         },
         components: {
             headTop,
         },
         created(){
-
+            this.list();
         },
         mounted(){
 
@@ -89,17 +110,29 @@
             next(vm => {
                 // 通过 `vm` 访问组件实例
                 vm.list();
+                vm.get_product_category_all_list();
         })
         },
         methods: {
             list() {
-                admin_group_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
+                product_list({page:this.currentPage,page_size:this.limit,code:this.code,cid:this.cid}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
                     }
                 }.bind(this));
 
+            },
+            get_product_category_all_list(){
+                return product_category_all_list().then(function(res){
+                    return new Promise(function(resolve,reject){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.categories = res.data
+                        }
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this));
             },
             handleCurrentChange(val){
                 this.currentPage = val;
@@ -118,8 +151,8 @@
                 this.currentPage = 1;
                 this.list();
             },
-            goto_edit_admin_group(id) {
-                this.$router.push({path:'add_admin_group',query:{id:id}});
+            goto_edit_product(id) {
+                this.$router.push({path:'add_product',query:{id:id}});
             },
             verify(scope, status) {
 
@@ -130,7 +163,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    admin_group_verify({id:item.id,status:status}).then(function(res){
+                    product_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -158,7 +191,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    admin_group_del({id:item.id}).then(function(res){
+                    product_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.tableData.splice(index,1);
                             this.count --;
@@ -181,7 +214,7 @@
                 this.current = row;
             },
             sort() {
-                admin_group_sort({
+                product_sort({
                     id:this.current.id,
                     sort:this.current.sort
 
@@ -201,9 +234,6 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
-            },
-            purview_edit(row){
-                this.$router.push({path:'group_purview',query:{edit_group_id:row.id}});
             }
         },
     }

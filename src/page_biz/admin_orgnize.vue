@@ -10,17 +10,17 @@
                     <!--clearable>-->
             <!--</el-input>-->
 
-            <el-select v-model="type" placeholder="类型">
-                <el-option
-                        v-for="item in types"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                </el-option>
-            </el-select>
+            <!--<el-select v-model="type" placeholder="类型">-->
+                <!--<el-option-->
+                        <!--v-for="item in types"-->
+                        <!--:key="item.id"-->
+                        <!--:label="item.name"-->
+                        <!--:value="item.id">-->
+                <!--</el-option>-->
+            <!--</el-select>-->
 
-            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_admin_purview(0)">新增顶级权限</el-button>
+            <!--<el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>-->
+            <el-button  type="primary" @click="goto_edit_admin_orgnize(0)">新增部门</el-button>
 
         </div>
         <div class="table_container">
@@ -45,7 +45,7 @@
                 <!--</el-table-column>-->
                 <!--<el-table-column label="操作" width="300">-->
                     <!--<template slot-scope="scope">-->
-                        <!--<el-button size="mini" @click="goto_edit_admin_purview(scope.row.id)">编辑</el-button>-->
+                        <!--<el-button size="mini" @click="goto_edit_admin_orgnize(scope.row.id)">编辑</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>-->
                         <!--<el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>-->
@@ -74,13 +74,12 @@
                     draggable
                     :expand-on-click-node="false">
                   <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span>{{ node.label }}    <el-tag v-if="data.type==1" size="mini">菜单</el-tag></span>
-
+                        <span>{{ node.label }}   </span>
                     <span>
 
-                        <i class="iconfont" @click="goto_edit_admin_purview(data.id, 'modify')">&#xe604;</i>
+                        <i class="iconfont" @click="goto_edit_admin_orgnize(data.id, 'modify')">&#xe604;</i>
                         &nbsp;
-                        <i class="iconfont" @click="goto_edit_admin_purview(data.id, 'add')">&#xe6b7;</i>
+                        <i class="iconfont" @click="goto_edit_admin_orgnize(data.id, 'add')">&#xe6b7;</i>
                           &nbsp;
                         <i class="iconfont" @click="del(node, data)">&#xe600;</i>
                     </span>
@@ -105,7 +104,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_purview_tree,admin_purview_del,admin_purview_verify,admin_purview_sort,admin_purview_edit} from '@/api/getDataEarth'
+    import {admin_orgnize_tree,admin_orgnize_del,admin_orgnize_verify,admin_orgnize_sort,admin_orgnize_edit} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -118,11 +117,6 @@
                 current:{},
                 name:'',
                 loadingBtn:-1,
-                type:0,
-                types:[
-                    {id:0,name:'普通权限'},
-                    {id:1,name:'菜单权限'}
-                ],
 
 
             }
@@ -144,7 +138,7 @@
         },
         methods: {
             list() {
-                admin_purview_tree({page:this.currentPage,page_size:this.limit,name:this.name, type:this.type}).then(function(res){
+                admin_orgnize_tree({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tree_data = res.data;
                     }
@@ -155,8 +149,8 @@
                 this.currentPage = 1;
                 this.list();
             },
-            goto_edit_admin_purview(id, action) {
-                this.$router.push({path:'add_admin_purview',query:{id:id,action:action}});
+            goto_edit_admin_orgnize(id, action) {
+                this.$router.push({path:'add_admin_orgnize',query:{id:id,action:action}});
             },
             verify(scope, status) {
 
@@ -167,7 +161,7 @@
                 }).then(function(){
                     var item = scope.row;
                     this.loadingBtn = scope.$index;
-                    admin_purview_verify({id:item.id,status:status}).then(function(res){
+                    admin_orgnize_verify({id:item.id,status:status}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
                             item.status = status;
                             this.$message({
@@ -190,12 +184,12 @@
             },
             del(node, item) {
 
-                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除该条数据,并解除该部门的用户关联, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    admin_purview_del({id:item.id}).then(function(res){
+                    admin_orgnize_del({id:item.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
 
                             const parent = node.parent;
@@ -218,7 +212,7 @@
 
             },
             sort() {
-                admin_purview_sort({
+                admin_orgnize_sort({
                     id:this.current.id,
                     sort:this.current.sort
 
@@ -260,7 +254,7 @@
                     this.current.pid = pnode.data.id;
 
                 }
-                admin_purview_edit(this.current).then(function (res) {
+                admin_orgnize_edit(this.current).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.$message({
                             message: res.msg,

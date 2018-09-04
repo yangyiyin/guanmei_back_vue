@@ -109,7 +109,7 @@
     }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     @import '../style/mixin';
     .search_item{
 

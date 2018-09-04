@@ -10,6 +10,18 @@
                 </el-input>
             </div>
 
+            <div class="search_item">
+                <el-input clearable placeholder="请输入数量" v-model="sum" style="width: 350px">
+                    <template slot="prepend">数量(kg)</template>
+                </el-input>
+            </div>
+
+            <div class="search_item">
+                <el-input clearable placeholder="请输入存放位置" v-model="place" style="width: 350px">
+                    <template slot="prepend">存放位置</template>
+                </el-input>
+            </div>
+
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -21,7 +33,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_group_edit,admin_group_info} from '@/api/getDataEarth'
+    import {storage_edit,storage_info} from '@/api/getDatastorage'
     export default {
         data(){
             return {
@@ -46,13 +58,13 @@
                 // 通过 `vm` 访问组件实例
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
-                if (vm.id && vm.id > 0) {
-                    vm.get_info();
-                } else {
-                    vm.init();
-                }
+            if (vm.id && vm.id > 0) {
+                vm.get_info();
+            } else {
+                vm.init();
+            }
 
-            })
+        })
         },
         methods: {
 
@@ -61,7 +73,7 @@
                 this.name = '';
             },
             get_info() {
-                admin_group_info({id:this.id}).then(function (res) {
+                storage_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
                         this.name = res.data.name;
                     } else {
@@ -93,13 +105,13 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    admin_group_edit({id:this.id,name:this.name}).then(function (res) {
+                    storage_edit({id:this.id,name:this.name}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'admin_group',query:{}});
+                            this.$router.push({path:'storage',query:{}});
                         } else {
                             this.$message({
                                 message: res.msg,
@@ -121,7 +133,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     @import '../style/mixin';
     .search_item{
 

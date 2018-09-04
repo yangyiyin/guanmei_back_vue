@@ -56,7 +56,9 @@
 		},
 		computed: {
 			defaultActive: function(){
-				return this.$route.path.replace('/', '');
+				var index = this.$route.path.replace('/', '');
+				index = index.replace('add_', '');
+				return index;
 			}
 		},
     }

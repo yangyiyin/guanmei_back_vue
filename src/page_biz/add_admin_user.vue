@@ -32,6 +32,18 @@
                 </el-select>
             </div>
 
+            <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;">部门:</span>
+                <el-select v-model="orgnizes" multiple placeholder="请选择">
+                    <el-option
+                            v-for="item in parents"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
 
@@ -42,7 +54,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_user_edit,admin_user_info,admin_group_all_list} from '@/api/getDataEarth'
+    import {admin_user_edit,admin_user_info,admin_group_all_list,admin_orgnize_all_list} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -52,7 +64,9 @@
                 show_name:'',
                 password:'',
                 group_id:'',
-                groups : []
+                groups : [],
+                parents:[],
+                orgnizes:null
             }
 
         },
@@ -72,20 +86,11 @@
                 vm.id = to.query.id ? to.query.id : 0;
 //                console.log(vm.id )
             if (vm.id && vm.id > 0) {
-                admin_group_all_list().then(function(res){
-                    if (res.code == vm.$store.state.constant.status_success) {
-                        vm.groups = res.data;
-                    }
-
-                });
-                vm.get_info();
+                vm.get_all_group_list();
+                vm.get_all_orgnize_list().then(vm.get_info);
             } else {
-                admin_group_all_list().then(function(res){
-                    if (res.code == vm.$store.state.constant.status_success) {
-                        vm.groups = res.data;
-                        vm.init();
-                    }
-                });
+                vm.get_all_group_list().then(vm.get_all_orgnize_list).then(vm.init);
+
             }
 
         })
@@ -97,7 +102,32 @@
                 this.user_name = '';
                 this.show_name = '';
                 this.password = '';
-                this.group_id = this.groups[0].id;
+                this.group_id = '';
+                this.orgnizes = [];
+            },
+            get_all_group_list(){
+                return admin_group_all_list().then(function(res){
+                    return new Promise(function(resolve,reject){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.groups = res.data
+                        }
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this));
+            },
+            get_all_orgnize_list(){
+
+                return admin_orgnize_all_list().then(function(res){
+                    return new Promise(function(resolve,reject){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.parents = res.data
+
+                        }
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this));
             },
             get_info() {
                 admin_user_info({id:this.id}).then(function (res) {
@@ -106,6 +136,7 @@
                         this.show_name = res.data.show_name;
                         this.password = '';
                         this.group_id = res.data.group_id;
+                        this.orgnizes = res.data.orgnizes;
                     } else {
                         this.$message({
                             message: res.msg,
@@ -116,7 +147,6 @@
                 }.bind(this));
             },
             submit: function () {
-
                 if (!this.user_name) {
                     var error_msg = '请填写账号';
                 }
@@ -130,9 +160,11 @@
                 }
 
                 if (!this.group_id) {
-                    var error_msg = '请选择组织';
+                    var error_msg = '请选择组';
                 }
-
+                if (!this.orgnizes.length) {
+                    var error_msg = '请选择部门';
+                }
                 if (error_msg) {
                     this.$message({
                         type: 'warning',
@@ -147,7 +179,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    admin_user_edit({id:this.id,user_name:this.user_name,password:this.password,show_name:this.show_name,group_id:this.group_id}).then(function (res) {
+                    admin_user_edit({id:this.id,user_name:this.user_name,password:this.password,show_name:this.show_name,group_id:this.group_id,orgnizes:this.orgnizes}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
@@ -175,7 +207,7 @@
     }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     @import '../style/mixin';
     .search_item{
 

@@ -5,6 +5,18 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;">类型:</span>
+                <el-select @change="get_all_list" v-model="type" placeholder="类型">
+                    <el-option
+                            v-for="item in types"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+
+            <div class="search_item">
                 <span class="pre_info" style="font-size: 14px;">父类:</span>
                 <el-select v-model="pid" placeholder="类型">
                     <el-option
@@ -16,17 +28,6 @@
                 </el-select>
             </div>
 
-            <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">类型:</span>
-                <el-select v-model="type" placeholder="类型">
-                    <el-option
-                            v-for="item in types"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </div>
 
             <div v-if="type==1" class="search_item">
                 <el-input clearable placeholder="请输入菜单名称" v-model="name" style="width: 350px">
@@ -99,24 +100,10 @@
                 vm.action = to.query.action ? to.query.action : '';
 //                console.log(vm.id )
                 if (vm.id && vm.id > 0) {
-                    admin_purview_all_list().then(function(res){
-                        if (res.code == vm.$store.state.constant.status_success) {
-                            vm.parents = res.data
-                            vm.parents.unshift({id:'0',name:'顶级'});
-                        }
-
-                    });
-                    vm.get_info();
+                    vm.get_info().then(vm.get_all_list);
                 } else {
-                    admin_purview_all_list().then(function(res){
-                        if (res.code == vm.$store.state.constant.status_success) {
-                            vm.parents = res.data
-                            vm.parents.unshift({id:'0',name:'顶级'});
-                        }
-                    });
                     vm.init();
-
-
+                    vm.get_all_list();
                 }
 
             })
@@ -131,30 +118,43 @@
                 this.uri = '';
                 this.ico = '';
             },
-            get_info() {
-                admin_purview_info({id:this.id}).then(function (res) {
+            get_all_list(){
+                admin_purview_all_list({type:this.type}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
-                        if (this.action == 'modify') {
-                            this.pid = res.data.pid
-                            this.type = parseInt(res.data.type);
-                            this.uri = res.data.uri;
-                            this.name = res.data.name;
-                            this.ico = res.data.ico;
-                        } else if(this.action == 'add') {
-                            this.pid = res.data.id
-                            this.type=parseInt(res.data.type);
-                            this.uri = '';
-                            this.name = '';
-                            this.ico = '';
+                        this.parents = res.data
+                        this.parents.unshift({id:'0',name:'顶级'});
+                    }
+                }.bind(this));
+            },
+            get_info() {
+
+                return admin_purview_info({id:this.id}).then(function (res) {
+                    return new Promise(function(resolve,reject){
+
+                        if (res.code == this.$store.state.constant.status_success) {
+                            if (this.action == 'modify') {
+                                this.pid = res.data.pid
+                                this.type = parseInt(res.data.type);
+                                this.uri = res.data.uri;
+                                this.name = res.data.name;
+                                this.ico = res.data.ico;
+                            } else if(this.action == 'add') {
+                                this.pid = res.data.id
+                                this.type=parseInt(res.data.type);
+                                this.uri = '';
+                                this.name = '';
+                                this.ico = '';
+                            }
+                            resolve(res);
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'warning'
+                            });
+                            reject();
                         }
 
-                    } else {
-                        this.$message({
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                    }
-
+                    }.bind(this));
                 }.bind(this));
             },
             submit: function () {
@@ -212,7 +212,7 @@
     }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     @import '../style/mixin';
     .search_item{
 
