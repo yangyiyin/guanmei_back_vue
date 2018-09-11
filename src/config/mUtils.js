@@ -286,3 +286,19 @@ export const check_login = function(res){
 
     });
 }
+
+
+export const beforeAvatarUpload = function(file) {
+    const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
+    const isLt2M = file.size / 1024 / 1024 < 1;
+
+    if (!isJPG) {
+        this.fullscreenLoading = false
+        this.$message.error('图片格式只支持jpg和png!');
+    }
+    if (!isLt2M) {
+        this.fullscreenLoading = false
+        this.$message.error('图片大小不能超过 1MB!');
+    }
+    return  isLt2M;
+}

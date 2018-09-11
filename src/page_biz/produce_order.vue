@@ -10,7 +10,7 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_produce_order(0)">新增生产单管理</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_produce_order(0)">新增生产单</el-button>
 
         </div>
         <div class="table_container">
@@ -121,7 +121,7 @@
                 this.list();
             },
             goto_edit_produce_order(id) {
-                this.$router.push({path:'add_produce_order',query:{id:id}});
+                this.$router.push({path:'add_produce_order',query:{id:id,is_new:1}});
             },
             verify(scope, status) {
 

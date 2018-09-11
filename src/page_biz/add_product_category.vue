@@ -5,7 +5,7 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">名称:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>名称:</span>
 
                 <el-input clearable placeholder="请输入名称" v-model="name" style="width: 350px">
 

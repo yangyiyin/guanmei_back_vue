@@ -5,32 +5,48 @@
 
             <el-input
                     style="display: inline-block;width: 250px;"
-                    placeholder="名称"
-                    v-model="name"
+                    placeholder="编号"
+                    v-model="order_no"
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_sales_order(0)">新增业务单管理</el-button>
+            <el-button style="float: right" type="primary" @click="goto_edit_sales_order(0)">新增业务单</el-button>
 
         </div>
         <div class="table_container">
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="排序">
-                    <template slot-scope="scope">
-                        {{scope.row.sort}}
-                        <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="帽型:" >
+                                <span>{{sub_order.product_cat_name}}:{{sub_order.product_code}}:{{sub_order.color_code}}:数量{{sub_order.sum}}</span>
+                            </el-form-item>
+                            <el-form-item label="进度:" >
+                                <span>{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
+                            </el-form-item>
+                        </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="编号" prop="order_no"></el-table-column>
+                <el-table-column label="制单日期" prop="order_date"></el-table-column>
+                <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
+
+                <el-table-column label="状态">
+                    <template slot-scope="scope">
+
+                        <el-tag v-if="scope.row.status == 1" type="warning">待安排生产</el-tag>
+                        <el-tag v-if="scope.row.status == 2" >已安排生产</el-tag>
+                        <el-tag v-if="scope.row.status == 3" type="success">已完成</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
+                        <el-button v-if="scope.row.status == 1" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
-                        <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button v-if="scope.row.status == 1" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -74,7 +90,7 @@
 //                remark:'',
 //                choose_categories:[],
 //                categories:[],
-                name:'',
+                order_no:'',
                 loadingBtn:-1
             }
         },

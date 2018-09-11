@@ -20,7 +20,7 @@
                 <el-table-column label="名称" prop="name"></el-table-column>
                 <el-table-column label="示例" prop="img">
                     <template slot-scope="scope">
-                        <img style="width: 30px;border-radius: 30rpx;" v-bind:src="scope.row.img"/>
+                        <img @click="show_img=true;show_img_url=scope.row.img"  style="width: 30px;border-radius: 30rpx;cursor: pointer" v-bind:src="scope.row.img"/>
                     </template>
                 </el-table-column>
                 <el-table-column label="排序">
@@ -61,6 +61,11 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :visible.sync="show_img">
+            <img width="100%" :src="show_img_url" alt="">
+        </el-dialog>
+
     </div>
 </template>
 
@@ -80,7 +85,9 @@
 //                choose_categories:[],
 //                categories:[],
                 name:'',
-                loadingBtn:-1
+                loadingBtn:-1,
+                show_img:false,
+                show_img_url:''
             }
         },
         components: {

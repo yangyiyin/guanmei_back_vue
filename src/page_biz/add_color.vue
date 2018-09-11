@@ -6,15 +6,15 @@
 
             <div class="search_item">
                 <el-input clearable placeholder="请输入名称" v-model="name" style="width: 350px">
-                    <template slot="prepend">名称</template>
+                    <template slot="prepend">颜色名称(带编号)</template>
                 </el-input>
             </div>
 
-            <div class="search_item">
-                <el-input clearable placeholder="请输入颜色编号" v-model="code" style="width: 350px">
-                    <template slot="prepend">编号</template>
-                </el-input>
-            </div>
+            <!--<div class="search_item">-->
+                <!--<el-input clearable placeholder="请输入颜色编号" v-model="code" style="width: 350px">-->
+                    <!--<template slot="prepend">编号</template>-->
+                <!--</el-input>-->
+            <!--</div>-->
             <div class="search_item">
                 <span class="pre_info" style="font-size: 14px;color: #666">选择颜色外观</span>
                 <el-color-picker style="vertical-align: middle" v-model="value"></el-color-picker>
@@ -96,9 +96,9 @@
                     var error_msg = '请填写名称';
                 }
 
-                if (!this.code) {
-                    var error_msg = '请填写编号';
-                }
+//                if (!this.code) {
+//                    var error_msg = '请填写编号';
+//                }
                 if (!this.value) {
                     var error_msg = '请选择颜色外观';
                 }
@@ -116,7 +116,7 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    color_edit({id:this.id,name:this.name,code:this.code,value:this.value}).then(function (res) {
+                    color_edit({id:this.id,name:this.name,value:this.value}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,

@@ -17,8 +17,8 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
-                <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="编码" prop="code"></el-table-column>
+                <el-table-column label="名称(带编号)" prop="name"></el-table-column>
+                <!--<el-table-column label="编码" prop="code"></el-table-column>-->
                 <el-table-column label="外观">
                     <template slot-scope="scope">
                         <div :style="{background: scope.row.value}" style="width:30px;height:30px;vertical-align: middle"></div>

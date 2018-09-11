@@ -2,6 +2,14 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
+            <el-select v-model="type" placeholder="类型">
+                <el-option
+                        v-for="item in types"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
 
             <el-input
                     style="display: inline-block;width: 250px;"
@@ -18,12 +26,19 @@
                     :data="tableData"
                     style="width: 100%">
                 <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="排序">
-                    <template slot-scope="scope">
-                        {{scope.row.sort}}
-                        <el-button size="mini" @click="handleSort(scope.row)">设置</el-button>
-                    </template>
+                <el-table-column label="数量(kg)" prop="sum"></el-table-column>
+                <el-table-column label="存放位置" prop="place"></el-table-column>
+                <el-table-column label="图片" prop="img">
+                <template slot-scope="scope">
+                <img style="width: 40px;border-radius: 40rpx;" v-bind:src="scope.row.img"/>
+                </template>
                 </el-table-column>
+                <!--<el-table-column label="排序">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--{{scope.row.sort}}-->
+                        <!--<el-button size="mini" @click="handleSort(scope.row)">设置</el-button>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
@@ -71,9 +86,8 @@
                 currentPage: 1,
                 dialogFormVisible:false,
                 current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
+                type:-1,
+                types:[{id:-1,name:'全部'},{id:0,name:'主料'},{id:1,name:'装饰、辅料'}],
                 name:'',
                 loadingBtn:-1
             }
@@ -95,7 +109,7 @@
         },
         methods: {
             list() {
-                storage_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
+                storage_list({page:this.currentPage,page_size:this.limit,name:this.name,type:this.type}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);

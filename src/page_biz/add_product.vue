@@ -5,7 +5,7 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">类型:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>类型:</span>
                 <el-select v-model="cid" placeholder="类型">
                     <el-option
                             v-for="item in categories"
@@ -18,7 +18,7 @@
 
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">型号:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>型号:</span>
                 <el-input clearable placeholder="请输入型号" v-model="code" style="width: 350px">
                 </el-input>
             </div>
