@@ -40,11 +40,16 @@
                     <!--</template>-->
                 <!--</el-table-column>-->
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                <el-table-column label="出入库" width="300">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="stock_out(scope.row)">出库</el-button>
+                        <el-button size="mini" @click="stock_in(scope.row)">入库</el-button>
+                        <el-button size="mini" @click="storage_flow_list(scope.row)">查看明细</el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_storage(scope.row.id)">编辑</el-button>
-                        <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -71,20 +76,87 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="'出入库明细--'+current_stock_name" :visible.sync="dialogFormVisible_flow">
+
+            <div class="table_container">
+                <el-table
+                        v-loading="table_flow_loading"
+                        :data="tableData_flow"
+                        style="width: 100%;"
+                        height="500">
+                    <el-table-column label="出入库数量" prop="sum"></el-table-column>
+                    <el-table-column label="生产单id" prop="out_id"></el-table-column>
+                    <el-table-column label="备注" prop="remark"></el-table-column>
+                    <el-table-column label="操作人" prop="opt_show_name"></el-table-column>
+                    <el-table-column label="创建日期" prop="create_time"></el-table-column>
+                </el-table>
+                <div class="Pagination" style="text-align: left;margin-top: 10px;">
+                    <el-pagination
+                            @current-change="handleCurrentChange_flow"
+                            :current-page="currentPage_flow"
+                            :page-size="limit"
+                            layout="total, prev, pager, next"
+                            :total="count_flow"
+                            background>
+                    </el-pagination>
+                </div>
+            </div>
+
+        </el-dialog>
+
+        <el-dialog :title="'出库--'+current.name" :visible.sync="dialogFormVisible_stock_out" width="30%">
+            <el-form :model="current">
+
+                <el-form-item label="出库数量:">
+                    <el-input v-model="current.stock_sum" auto-complete="off"></el-input>
+                </el-form-item>
+                <p style="color: #999">出库数量单位为默认单位,即库存标准单位</p>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible_stock_out = false">取 消</el-button>
+                <el-button type="primary" @click="stock_change(-1)">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-dialog :title="'入库--'+current.name" :visible.sync="dialogFormVisible_stock_in" width="30%">
+            <el-form :model="current">
+
+                <el-form-item label="入库数量:">
+                    <el-input type="number" v-model="current.stock_sum" auto-complete="off"></el-input>
+                </el-form-item>
+                <p style="color: #999">入库数量单位为默认单位,即库存标准单位</p>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible_stock_in = false">取 消</el-button>
+                <el-button type="primary" @click="stock_change(1)">确 定</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {storage_list,storage_del,storage_verify,storage_sort} from '@/api/getDatastorage'
+    import {storage_list,storage_del,storage_verify,storage_sort,storage_flow_list,stock_change} from '@/api/getDatastorage'
     export default {
         data(){
             return {
                 tableData: [],
+                tableData_flow: [],
+                table_flow_loading:false,
                 limit: 10,
                 count: 0,
                 currentPage: 1,
+                count_flow: 0,
+                currentPage_flow: 1,
                 dialogFormVisible:false,
+                dialogFormVisible_flow:false,
+                dialogFormVisible_stock_out:false,
+                dialogFormVisible_stock_in:false,
+                current_stock_id:'',
+                current_stock_name:'',
                 current:{},
                 type:-1,
                 types:[{id:-1,name:'全部'},{id:0,name:'主料'},{id:1,name:'装饰、辅料'}],
@@ -120,6 +192,10 @@
             handleCurrentChange(val){
                 this.currentPage = val;
                 this.list();
+            },
+            handleCurrentChange_flow(val){
+                this.currentPage_flow = val;
+                this.storage_flow_list();
             },
             handleEdit(row){
                 this.dialogFormVisible = true;
@@ -217,6 +293,90 @@
                     }
                 }.bind(this));
                 this.dialogFormVisible = false;
+            },
+            storage_flow_list(row){
+                if (!row) {
+                    var row = {
+                        id:this.current_stock_id
+                    }
+                } else {
+                    this.current_stock_id = row.id;
+                    this.current_stock_name = row.name;
+                }
+                this.dialogFormVisible_flow = true;
+                this.table_flow_loading = true;
+                storage_flow_list({
+                    id:row.id,
+                    page:this.currentPage_flow,
+                    page_size:this.limit
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+
+                        this.tableData_flow = res.data.list;
+                        this.count_flow = parseInt(res.data.count);
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+                    this.table_flow_loading = false;
+                }.bind(this));
+            },
+
+            stock_out(row){
+                this.current = row;
+                this.dialogFormVisible_stock_out = true;
+            },
+            stock_in(row){
+                this.current = row;
+                this.dialogFormVisible_stock_in = true;
+            },
+            stock_change(in_or_out) {
+                if (in_or_out > 0) {//入库
+                    var sum = this.current.stock_sum;
+                } else if (in_or_out < 0) {
+                    var sum = -this.current.stock_sum;
+                } else {
+                    this.$message({
+                        message: '参数错误',
+                        type: 'warning'
+                    });
+                }
+
+                if (sum == 0) {
+                    this.$message({
+                        message: '数量不能为0',
+                        type: 'warning'
+                    });
+                }
+
+                stock_change({
+                    id:this.current.id,
+                    sum:sum
+                }).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.list();
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        if (in_or_out > 0) {//入库
+                            this.dialogFormVisible_stock_in = false;
+                        } else if (in_or_out < 0) {
+                            this.dialogFormVisible_stock_out = false;
+                        }
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'warning'
+                        });
+                    }
+
+                }.bind(this));
+
+
+
             }
         },
     }
@@ -239,4 +399,5 @@
         margin-bottom: 0;
         width: 50%;
     }
+
 </style>

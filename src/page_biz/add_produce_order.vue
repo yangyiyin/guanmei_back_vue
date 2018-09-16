@@ -4,7 +4,7 @@
 
         <div class="table_container" style="padding:20px;">
 
-            <el-steps :active="active" align-center finish-status="success" style="margin-bottom: 20px;">
+            <el-steps v-if="!id" :active="active" align-center finish-status="success" style="margin-bottom: 20px;">
                 <el-step title="选择方式"></el-step>
                 <el-step title="填写生产单信息"></el-step>
                 <el-step title="完成"></el-step>
@@ -60,6 +60,16 @@
                 </div>
 
                 <div class="search_item">
+                    <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>交货日期:</span>
+                    <el-date-picker
+                            v-model="delivery_date"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+
+                <div class="search_item">
                     <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>生产统筹员:</span>
                     <el-input clearable placeholder="请输入生产统筹员姓名" v-model="produce_man" style="width: 350px">
 
@@ -68,7 +78,7 @@
                 <div class="block" v-for="(sub_order, index)  in sub_orders">
                     <div class="search_item">
                         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>帽型:</span>
-                        <el-select v-model="sub_order.product_cat" placeholder="请选择" @change="change_product_cat(sub_order)" value-key="id">
+                        <el-select :disabled="way!=2" v-model="sub_order.product_cat" placeholder="请选择" @change="change_product_cat(sub_order)" value-key="id">
                             <el-option
                                     v-for="item in options.options_product_cat"
                                     :key="item.id"
@@ -76,7 +86,7 @@
                                     :value="item">
                             </el-option>
                         </el-select>
-                        <el-select v-model="sub_order.product" placeholder="请选择"  @change="change_product(sub_order)" value-key="id">
+                        <el-select :disabled="way!=2" v-model="sub_order.product" placeholder="请选择"  @change="change_product(sub_order)" value-key="id">
                             <el-option
                                     v-for="item in sub_order.options_product_cat_product"
                                     :key="item.id"
@@ -91,7 +101,7 @@
                         <div style="display: inline-block;vertical-align: top">
                             <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors">
 
-                                <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color)">
+                                <el-select :disabled="way!=2" v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color)">
                                     <el-option
                                             v-for="item in options.options_color"
                                             :key="item.id"
@@ -99,36 +109,60 @@
                                             :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
-                                <el-input clearable placeholder="数量" type="number" v-model="color.sum" style="width: 120px"></el-input>
+                                <el-input :disabled="way!=2" v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
+                                <el-input :disabled="way!=2" clearable placeholder="数量" type="number" v-model="color.sum" style="width: 120px"></el-input>
                                 <el-tooltip v-if="color.order_codes"  placement="top">
                                     <div slot="content">
-                                        包含订单:<br/>
+                                        包含业务订单:<br/>
                                         <p v-for="(order_code, index)  in color.order_codes">{{order_code}}</p>
                                     </div>
                                     <i class="iconfont">&#xe601;</i>
                                 </el-tooltip>
-                                <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
+                                <!--<el-button v-if="way==2" type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>-->
 
                             </div>
-                            <el-button @click="add_color(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多颜色</el-button>
+                            <!--<el-button v-if="way==2" @click="add_color(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多颜色</el-button>-->
                         </div>
 
                     </div>
 
 
-                    <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材质:</span>
-                        <el-select multiple v-model="sub_order.material" placeholder="请选择" value-key="id">
-                            <el-option
-                                    v-for="item in options.options_material"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item">
-                            </el-option>
-                        </el-select>
-                    </div>
+                    <!--<div class="search_item">-->
+                        <!--<span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材质:</span>-->
+                        <!--<el-select multiple v-model="sub_order.material" placeholder="请选择" value-key="id">-->
+                            <!--<el-option-->
+                                    <!--v-for="item in options.options_material"-->
+                                    <!--:key="item.id"-->
+                                    <!--:label="item.name"-->
+                                    <!--:value="item">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
+                    <!--</div>-->
 
+
+                    <div class="search_item">
+                        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:</span></span>
+                        <div style="display: inline-block;vertical-align: top">
+                            <div style="margin-bottom: 3px;" v-for="(material, index2)  in sub_order.material">
+
+                                <el-select v-model="material.material" value-key="id" placeholder="请选择材料">
+                                    <el-option
+                                            v-for="item in options.options_material"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item">
+                                    </el-option>
+                                </el-select>
+
+                                <el-input clearable placeholder="数量" v-model="material.sum" style="width: 120px"></el-input>
+
+                                <el-button type="danger" @click="del_material(index, index2)" round size="mini">删除</el-button>
+
+                            </div>
+                            <el-button @click="add_material(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多材料</el-button>
+                        </div>
+
+                    </div>
                     <div class="search_item">
                         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>流程:</span>
                         <el-select multiple v-model="sub_order.process" placeholder="请选择" value-key="id" @change="change_process(sub_order)">
@@ -140,7 +174,6 @@
                             </el-option>
                         </el-select>
                     </div>
-
                     <div class="search_item">
                         <span class="pre_info" style="font-size: 14px;">装饰说明:</span>
                         <el-input type="textarea" clearable placeholder="请输入装饰说明" v-model="sub_order.decoration" style="width: 350px;vertical-align: middle"></el-input>
@@ -151,20 +184,20 @@
                         <div style="display: inline-block;vertical-align: top">
                             <div style="margin-bottom: 3px;" v-for="(material_sub, index2)  in sub_order.material_sub">
 
-                                <el-select v-model="material_sub.name" placeholder="请选择装饰/辅料">
+                                <el-select v-model="material_sub.material" value-key="id" placeholder="请选择装饰/辅料">
                                     <el-option
                                             v-for="item in options.options_material_sub"
                                             :key="item.id"
                                             :label="item.name"
-                                            :value="item.name">
+                                            :value="item">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="material_sub.from" placeholder="请选择来源">
+                                <el-select v-model="material_sub.from" value-key="id" placeholder="请选择来源">
                                     <el-option
                                             v-for="item in material_sub_froms"
                                             :key="item.id"
                                             :label="item.name"
-                                            :value="item.name">
+                                            :value="item">
                                     </el-option>
                                 </el-select>
                                 <el-input clearable placeholder="数量" v-model="material_sub.sum" style="width: 120px"></el-input>
@@ -183,7 +216,7 @@
                         <el-upload
 
                                 class="avatar-uploader"
-                                :class="(!sub_order.sample_imgs || sub_order.sample_imgs.length < limit) ? 'show_plus' : 'hide_plus'"
+                                :class="(!sub_order.sample_imgs || sub_order.sample_imgs.length < img_upload_limit) ? 'show_plus' : 'hide_plus'"
                                 :action="upload_url"
                                 multiple
                                 list-type="picture-card"
@@ -192,7 +225,7 @@
                                 :before-upload="beforeAvatarUpload"
                                 :on-preview="handlePictureCardPreview"
                                 :on-exceed="handleExceed"
-                                :limit="limit"
+                                :limit="img_upload_limit"
                                 :on-remove="(file,fileList)=>{return handleRemove(file, fileList,index)}">
                             <i  class="el-icon-plus"></i>
                         </el-upload>
@@ -205,14 +238,17 @@
                         <span class="pre_info" style="font-size: 14px;">样品说明:</span>
                         <el-input  type="textarea" clearable placeholder="请输入样品说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
                     </div>
-                    <i class="iconfont del_block" @click="del_block(index)">&#xe603;</i>
+                    <i class="iconfont del_block" v-if="way==2" @click="del_block(index)">&#xe603;</i>
+                    <el-badge class="mark" :value="index+1" style="position: absolute;bottom: 0;right: 0"/>
                 </div>
 
-                <div class="search_item add_block" @click="add_block"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>增加订单子项</div>
+                <div class="search_item add_block"  v-if="way==2" @click="add_block"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>增加订单子项</div>
 
             </div>
-            <div v-if="active == 2" class="table_container">
-                123
+            <div v-if="active == 2" class="table_container" style="text-align: center">
+                <p>已成功生成如下订单:</p>
+                <p v-for="(order, index)  in success_orders">{{order.order_no}}</p>
+
             </div>
             <el-button v-if="active == 0 && way == 1" type="success" style="margin: 20px auto;display: flex" v-on:click="go_make" :loading="loading">下一步</el-button>
             <el-button v-if="active == 1" type="success" style="margin: 20px auto;display: flex" v-on:click="submit" :loading="loading">提交</el-button>
@@ -235,7 +271,7 @@
                 id:0,
                 tableData: [],
                 table_loading:false,
-                limit: 3,
+                limit: 20,
                 count: 0,
                 currentPage: 1,
                 loading:false,
@@ -247,14 +283,16 @@
                 dialogImageUrl: '',
                 dialogVisible: false,
                 order_date:'',
+                delivery_date:'',
                 produce_man:'',
                 sub_orders:[],
                 file_list:[],
-                limit:3,
+                img_upload_limit:3,
                 options:{
 
                 },
-                material_sub_froms:[{id:1,name:'厂内'},{id:2,name:'客户自带'}]
+                material_sub_froms:[{id:1,name:'厂内'},{id:2,name:'客户自带'}],
+                success_orders:[]
             }
 
         },
@@ -262,7 +300,7 @@
             headTop
         },
         created(){
-
+            this.user_info = JSON.parse(getStore('user_info'));
         },
         mounted(){
 
@@ -320,7 +358,7 @@
 
                 if (this.active == 1 && this.way == 1) {//销售单制单,刷新页面从缓存拿数据
                     var cache_sales_order_selection = JSON.parse(getStore('cache_sales_order_selection'));
-                    console.log(cache_sales_order_selection);
+                    //console.log(cache_sales_order_selection);
                     if (!cache_sales_order_selection) {
                         this.$message({
                             message: '请选择业务订单',
@@ -340,15 +378,17 @@
                     this.multipleSelection = {};
                     setStore('cache_sales_order_selection', '');
                     this.order_date='';
+                    this.delivery_date='';
                     this.produce_man='';
                     this.sub_orders=[];
                     this.handleCurrentChange(1);
                 }
+                this.produce_man=this.user_info.show_name;
 
             },
             get_sales_sub_order_list(){
                 this.table_loading = true;
-                sales_sub_orders({page:this.currentPage,page_size:this.limit}).then(function(res){
+                sales_sub_orders({page:this.currentPage,page_size:this.limit,status:1}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -385,8 +425,8 @@
                     if (this.multipleSelection[i] && this.multipleSelection[i].length) {
                         this.multipleSelection[i].forEach(function(val){
 
-//                            var unique = val.product_cat_id + '|' + val.product_id + '|' + val.color_id + '|' + val.color_code;
-                            var unique = val.product_cat_id + '|' + val.product_id;
+                            var unique = val.product_cat_id + '|' + val.product_id + '|' + val.color_id + '|' + val.color_code;
+                            //var unique = val.product_cat_id + '|' + val.product_id;
 
                             if (!sales_order_selection[unique]) {
                                 sales_order_selection[unique] = {};
@@ -513,7 +553,11 @@
             get_info() {
                 produce_order_info({id:this.id}).then(function (res) {
                     if (res.code == this.$store.state.constant.status_success) {
-                        this.name = res.data.name;
+                        this.order_date = res.data.order_date;
+                        this.delivery_date = res.data.delivery_date;
+                        this.produce_man = res.data.produce_man;
+                        this.sub_orders = res.data.sales_order_sub;
+                        this.gen_options_product_cat_product();
                     } else {
                         this.$message({
                             message: res.msg,
@@ -528,11 +572,13 @@
                 var data = {
                     id:this.id,
                     order_date:this.order_date,
+                    delivery_date:this.delivery_date,
                     produce_man:this.produce_man,
                     sub_orders:this.sub_orders
                 }
                 var error_msg = '';
                 if (!data.order_date) error_msg = '请填写制单日期';
+                if (!data.delivery_date) error_msg = '请填写交货日期';
                 if (!data.produce_man) error_msg = '请填写生产统筹员姓名';
                 if (!data.sub_orders || data.sub_orders.length < 1) error_msg = '请添加订单子项';
 
@@ -540,6 +586,12 @@
                 data.sub_orders.forEach(function(val, index){
 
                     if(!val.material || !val.material.length) error_msg = '第'+(index+1)+'个子项,请选择材料';
+                    val.material.forEach(function(material){
+
+                        if (!material.material.id || !material.sum) {
+                            error_msg = '第'+(index+1)+'个子项,请检查材料是否设置完整';
+                        }
+                    })
                     if(!val.process || !val.process.length) error_msg = '第'+(index+1)+'个子项,请选择流程';
 
                     if(!val.product_cat_id) error_msg = '第'+(index+1)+'个子项,请选择帽型类别';
@@ -572,8 +624,12 @@
                     });
                     return;
                 }
-
-                this.$confirm('确认无误, 将会生产'+order_num+'个订单, 是否继续?', '提示', {
+                if (data.id) {
+                    var tip = '确认无误, 是否继续?';
+                } else {
+                    var tip = '确认无误, 将会生产'+order_num+'个订单, 是否继续?';
+                }
+                this.$confirm(tip, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -585,8 +641,12 @@
                                 message: res.msg,
                                 type: 'success'
                             });
-
-                            this.active = 2;
+                            if (data.id) {
+                                this.$router.replace({path:'produce_order'});
+                            } else {
+                                this.success_orders = res.data;
+                                this.active = 2;
+                            }
                         } else {
                             this.$message({
                                 message: res.msg,
@@ -670,7 +730,14 @@
                 var sub_order = {
                     product_cat:{},
                     product:{},
-                    colors:[],
+                    colors:[
+                        {
+                            color:{  id:'', name:''},
+                            id:'',
+                            name:'',
+                            sum:''
+                        }
+                    ],
                     material:[],
                     decoration:'',
                     material_sub:[],
@@ -695,9 +762,22 @@
             del_color(index1, index2) {
                 this.sub_orders[index1].colors.splice(index2,1);
             },
+
+            add_material(index) {
+                var material = {
+                    material:'',
+                    sum:''
+
+                };
+                this.sub_orders[index].material.push(material);
+            },
+            del_material(index1, index2) {
+                this.sub_orders[index1].material.splice(index2,1);
+            },
+
             add_material_sub(index) {
                 var material_sub = {
-                    name:'',
+                    material:'',
                     from:'',
                     sum:''
 

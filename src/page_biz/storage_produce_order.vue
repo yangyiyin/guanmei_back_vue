@@ -10,7 +10,6 @@
                     clearable>
             </el-input>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_produce_order(0)">新增生产单</el-button>
 
         </div>
         <div class="table_container">
@@ -21,10 +20,22 @@
                     <template slot-scope="props">
                         <el-form  label-position="left" inline class="demo-table-expand">
                             <el-form-item label="帽型:" >
-                                <span>{{props.row.product_cat_name}}-{{props.row.product_code}}-{{props.row.color_code}} 数量{{props.row.sum}};</span>
+                                <span>{{props.row.product_cat_name}}-{{props.row.product_code}}-{{props.row.color_code}} 数量{{props.row.sum}}</span>
                             </el-form-item>
-                            <el-form-item label="流程:" >
-                                <span>{{props.row.process_info}}</span>
+                            <el-form-item label="" >
+                            </el-form-item>
+                            <el-form-item label="材料:" >
+                                <p v-for="(_material,index2) in props.row.material">
+                                    <span>{{_material.material.name}}</span>&nbsp;&nbsp;
+                                    <span>数量:{{_material.sum}}kg</span>
+                                </p>
+                            </el-form-item>
+                            <el-form-item label="装饰/辅料:">
+                                <p v-for="(_material,index2) in props.row.material_sub">
+                                    <span>{{_material.material.name}}</span>&nbsp;&nbsp;
+                                    <span>来源:{{_material.from.name}}</span>&nbsp;&nbsp;
+                                    <span>数量:{{_material.sum}}</span>
+                                </p>
                             </el-form-item>
                         </el-form>
                     </template>
@@ -32,23 +43,20 @@
                 <el-table-column label="编号" prop="order_no"></el-table-column>
 
                 <el-table-column label="制单时间" prop="order_date"></el-table-column>
-                <el-table-column label="进度">
+                <el-table-column label="状态">
                     <template slot-scope="scope">
 
                         <el-tag v-if="scope.row.status == 1 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" type="warning">待提交仓库</el-tag>
                         <el-tag v-if="scope.row.status == 2 && scope.row.process_state_id == 0" >待仓库确认</el-tag>
                         <el-tag v-if="scope.row.status == 3" type="success" >已完成</el-tag>
-                        <el-tag v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0" >{{scope.row.process_state}}</el-tag>
+                        <el-tag v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0" >已确认</el-tag>
 
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status==1 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" size="mini" type="success" @click="submit_storage(scope.row)">提交仓库</el-button>
+                        <el-button v-if="scope.row.status == 2 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" size="mini" type="success" @click="confirm_storage(scope.row)">确认接单</el-button>
                         <el-button v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0" size="mini" type="success" @click="print_barcode(scope.row)">打印条形码({{scope.row.print_count}})</el-button>
-
-                        <el-button v-if="scope.row.status==1 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" size="mini" @click="goto_edit_produce_order(scope.row.id)">编辑</el-button>
-                        <el-button v-if="scope.row.status==1 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -81,15 +89,17 @@
                 <p style="width: 90%;text-align: center;margin: 0 auto">{{order_info}}</p>
             </div>
         </div>
+
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {produce_order_list,produce_order_del,produce_order_verify,produce_order_sort,submit_storage,gen_barcode_html} from '@/api/getDataproduce_order'
-
+    import {storage_produce_order_list, gen_barcode_html} from '@/api/getDataproduce_order'
+    import {confirm_storage} from '@/api/getDatastorage'
     import '@/assets/js/jquery-1.4.4.min';
     import '@/assets/js/jquery.jqprint-0.3';
+
     export default {
         data(){
             return {
@@ -126,7 +136,7 @@
         },
         methods: {
             list() {
-                produce_order_list({page:this.currentPage,page_size:this.limit,order_no:this.order_no}).then(function(res){
+                storage_produce_order_list({page:this.currentPage,page_size:this.limit,order_no:this.order_no}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -134,15 +144,15 @@
                 }.bind(this));
 
             },
-            submit_storage(row) {
-                this.$confirm('确认此操作?', '提示', {
+            confirm_storage(row) {
+                this.$confirm('确认接单,将自动扣减库存,是否继续', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(function(){
-                    submit_storage({produce_order_id:row.id}).then(function(res){
+                    confirm_storage({produce_order_id:row.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
-                            row.status=2;
+                            this.list();
                             this.$message({
                                 type: 'success',
                                 message: res.msg
@@ -153,6 +163,7 @@
                                 message: res.msg
                             });
                         }
+
                     }.bind(this));
                 }.bind(this))
 

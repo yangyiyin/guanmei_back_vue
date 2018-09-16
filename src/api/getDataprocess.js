@@ -10,6 +10,8 @@ export const process_verify = data => fetch('/guanmei/process/verify', data, 'PO
 export const process_del = data => fetch('/guanmei/process/del', data, 'POST').then(check_login);
 export const process_info = data => fetch('/guanmei/process/info', data, 'POST').then(check_login);
 export const process_sort = data => fetch('/guanmei/process/sort', data, 'POST').then(check_login);
+export const survey_order = data => fetch('/guanmei/process/survey_order', data, 'POST').then(check_login);
+export const survey_orgnize = data => fetch('/guanmei/process/survey_orgnize', data, 'POST').then(check_login);
 
 
 

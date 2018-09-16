@@ -26,12 +26,17 @@ const product = r => require.ensure([], () => r(require('@/page_biz/product')), 
 const add_product = r => require.ensure([], () => r(require('@/page_biz/add_product')), 'add_product');
 const _process = r => require.ensure([], () => r(require('@/page_biz/process')), 'process');
 const add_process = r => require.ensure([], () => r(require('@/page_biz/add_process')), 'add_process');
+const process_produce_order = r => require.ensure([], () => r(require('@/page_biz/process_produce_order')), 'process_produce_order');
+const process_saoyisao = r => require.ensure([], () => r(require('@/page_biz/process_saoyisao')), 'process_saoyisao');
+const process_survey = r => require.ensure([], () => r(require('@/page_biz/process_survey')), 'process_survey');
+const storage_produce_order = r => require.ensure([], () => r(require('@/page_biz/storage_produce_order')), 'storage_produce_order');
 const storage = r => require.ensure([], () => r(require('@/page_biz/storage')), 'storage');
 const add_storage = r => require.ensure([], () => r(require('@/page_biz/add_storage')), 'add_storage');
 const produce_order = r => require.ensure([], () => r(require('@/page_biz/produce_order')), 'produce_order');
 const add_produce_order = r => require.ensure([], () => r(require('@/page_biz/add_produce_order')), 'add_produce_order');
 const sales_order = r => require.ensure([], () => r(require('@/page_biz/sales_order')), 'sales_order');
 const add_sales_order = r => require.ensure([], () => r(require('@/page_biz/add_sales_order')), 'add_sales_order');
+
 //{#replace1#}
 
 const routes = [
@@ -120,6 +125,10 @@ const routes = [
 {path: '/add_product',component: add_product,meta: ['设置', '设置帽子型号'],},
 {path: '/process',component: _process,meta: ['设置', '流程管理'],},
 {path: '/add_process',component: add_process,meta: ['设置', '设置流程'],},
+{path: '/process_produce_order',component: process_produce_order,meta: ['交接单', '订单交接'],},
+{path: '/process_saoyisao',component: process_saoyisao,meta: ['交接单', '扫码交接'],},
+{path: '/process_survey',component: process_survey,meta: ['流程概况', '概况'],},
+{path: '/storage_produce_order',component: storage_produce_order,meta: ['仓库', '生产单管理'],},
 {path: '/storage',component: storage,meta: ['仓库', '库存管理'],},
 {path: '/add_storage',component: add_storage,meta: ['仓库', '设置库存'],},
 {path: '/produce_order',component: produce_order,meta: ['生产单', '生产单管理'],},

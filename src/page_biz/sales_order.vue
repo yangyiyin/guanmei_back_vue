@@ -21,7 +21,10 @@
                     <template slot-scope="props">
                         <el-form  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline class="demo-table-expand">
                             <el-form-item label="帽型:" >
-                                <span>{{sub_order.product_cat_name}}:{{sub_order.product_code}}:{{sub_order.color_code}}:数量{{sub_order.sum}}</span>
+                                <span>{{sub_order.product_cat_name}}-{{sub_order.product_code}}-{{sub_order.color_code}} 数量{{sub_order.sum}}</span>
+                                <el-tag size="mini" v-if="sub_order.status == 1" type="warning">待安排生产</el-tag>
+                                <el-tag size="mini" v-if="sub_order.status == 2" >已安排生产</el-tag>
+                                <el-tag size="mini" v-if="sub_order.status == 3" type="success">已完成</el-tag>
                             </el-form-item>
                             <el-form-item label="进度:" >
                                 <span>{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>

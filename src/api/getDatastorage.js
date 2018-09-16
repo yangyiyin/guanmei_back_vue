@@ -10,6 +10,9 @@ export const storage_verify = data => fetch('/guanmei/storage/verify', data, 'PO
 export const storage_del = data => fetch('/guanmei/storage/del', data, 'POST').then(check_login);
 export const storage_info = data => fetch('/guanmei/storage/info', data, 'POST').then(check_login);
 export const storage_sort = data => fetch('/guanmei/storage/sort', data, 'POST').then(check_login);
+export const confirm_storage = data => fetch('/guanmei/storage/confirm_storage', data, 'POST').then(check_login);
+export const storage_flow_list = data => fetch('/guanmei/storage_flow/index', data, 'POST').then(check_login);
+export const stock_change = data => fetch('/guanmei/storage/stock_change', data, 'POST').then(check_login);
 
 
 
