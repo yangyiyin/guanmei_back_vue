@@ -43,6 +43,11 @@
 			get_menu(){
 				get_menu().then(function (res) {
 					if (res.code == this.$store.state.constant.status_success) {
+						res.data.forEach(function(ele){
+							ele.children.forEach(function(e){
+								e.uri = e.uri.replace('menu_', '');
+							})
+						})
 						this.menu = res.data;
 					} else {
 						this.$message({
