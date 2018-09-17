@@ -77,7 +77,8 @@
                 ico:'',
                 types:[
                     {id:0,name:'普通权限'},
-                    {id:1,name:'菜单权限'}
+                    {id:1,name:'菜单权限'},
+                    {id:2,name:'app菜单权限'},
                 ],
                 parents:[{id:'0',name:'顶级'}],
             }

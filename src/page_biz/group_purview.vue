@@ -33,8 +33,10 @@
                     :expand-on-click-node="false">
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span>{{ node.label }}
+                    <el-tag v-if="data.type==2" size="mini">app菜单</el-tag>
                     <el-tag v-if="data.type==1" size="mini">菜单</el-tag>
                         <el-tag v-if="data.type==0" size="mini">功能</el-tag>
+
                     </span>
 
 
@@ -125,8 +127,18 @@
                 this.list();
             },
             submit_group_purview() {
+                var purviews_arr = [];
 
-                var purviews = this.$refs.tree.getCheckedKeys().join(',');
+                this.$refs.tree.getCheckedNodes().forEach(function(ele){
+
+                    if (!ele.children || !ele.children.length) {
+
+                        purviews_arr.push(ele.uri_md5);
+                    }
+                });
+
+                var purviews = purviews_arr.join(',');
+                //var purviews = this.$refs.tree.getCheckedKeys().join(',');
                 var purviews_half = this.$refs.tree.getHalfCheckedKeys().join(',');
                 admin_group_edit({id:this.edit_group_id,purviews:purviews,purviews_half:purviews_half}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {

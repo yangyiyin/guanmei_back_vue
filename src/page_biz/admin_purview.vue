@@ -24,57 +24,20 @@
 
         </div>
         <div class="table_container">
-            <!--<el-table-->
-                    <!--:data="tableData"-->
-                    <!--style="width: 100%">-->
-                <!--<el-table-column label="名称" prop="name"></el-table-column>-->
-                <!--<el-table-column label="是否菜单">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<span v-if="scope.row.type == 1">是</span>-->
-                        <!--<span v-if="scope.row.type == 0">否</span>-->
-
-
-                    <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column label="创建日期" prop="create_time"></el-table-column>-->
-                <!--<el-table-column label="排序">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--{{scope.row.sort}}-->
-                        <!--<el-button size="mini" @click="handleSort(scope.row)">设置</el-button>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column label="操作" width="300">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<el-button size="mini" @click="goto_edit_admin_purview(scope.row.id)">编辑</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>-->
-                        <!--<el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
-            <!--</el-table>-->
-            <!--<div class="Pagination" style="text-align: left;margin-top: 10px;">-->
-                <!--<el-pagination-->
-                        <!--@current-change="handleCurrentChange"-->
-                        <!--:current-page="currentPage"-->
-                        <!--:page-size="limit"-->
-                        <!--layout="total, prev, pager, next"-->
-                        <!--:total="count"-->
-                        <!--background>-->
-                <!--</el-pagination>-->
-            <!--</div>-->
-
             <el-tree
 
                     :data="tree_data"
                     :show-checkbox="false"
                     node-key="uri_md5"
                     ref="tree"
-                    default-expand-all
                     @node-drop="handleDrop"
                     draggable
                     :expand-on-click-node="false">
                   <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span>{{ node.label }}    <el-tag v-if="data.type==1" size="mini">菜单</el-tag></span>
+                    <span>{{ node.label }}
+                    <el-tag v-if="data.type==1" size="mini">菜单</el-tag>
+                        <el-tag v-if="data.type==2" size="mini">app菜单</el-tag>
+                    </span>
 
                     <span>
 
@@ -121,7 +84,8 @@
                 type:0,
                 types:[
                     {id:0,name:'普通权限'},
-                    {id:1,name:'菜单权限'}
+                    {id:1,name:'菜单权限'},
+                    {id:2,name:'app菜单权限'},
                 ],
 
 

@@ -23,19 +23,19 @@
                 </el-input>
             </div>
 
-            <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;">示例图片(帽子正面图):</span>
-                <el-upload
+            <!--<div class="search_item">-->
+                <!--<span class="pre_info" style="font-size: 14px;">示例图片(帽子正面图):</span>-->
+                <!--<el-upload-->
 
-                        class="avatar-uploader"
-                        :action="upload_url"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                    <img v-if="img" :src="img" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload></el-input>
-            </div>
+                        <!--class="avatar-uploader"-->
+                        <!--:action="upload_url"-->
+                        <!--:show-file-list="false"-->
+                        <!--:on-success="handleAvatarSuccess"-->
+                        <!--:before-upload="beforeAvatarUpload">-->
+                    <!--<img v-if="img" :src="img" class="avatar">-->
+                    <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                <!--</el-upload></el-input>-->
+            <!--</div>-->
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
 

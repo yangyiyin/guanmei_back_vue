@@ -27,6 +27,11 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column label="类型">
+                    <template slot-scope="scope">
+                        {{scope.row.category.name}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="型号" prop="code"></el-table-column>
                 <!--<el-table-column label="示例" prop="img">-->
                     <!--<template slot-scope="scope">-->
