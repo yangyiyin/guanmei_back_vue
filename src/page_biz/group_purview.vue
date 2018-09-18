@@ -131,10 +131,13 @@
 
                 this.$refs.tree.getCheckedNodes().forEach(function(ele){
 
-                    if (ele.type == 0 && (!ele.children || !ele.children.length)) {
+                    if (ele.type == 0 && ele.children && ele.children.length) {
 
+
+                    } else {
                         purviews_arr.push(ele.uri_md5);
                     }
+
                 });
 
                 var purviews = purviews_arr.join(',');
