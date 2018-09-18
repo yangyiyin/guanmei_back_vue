@@ -38,3 +38,4 @@ export const admin_orgnize_del = data => fetch('/guanmei/admin_orgnize/del', dat
 export const admin_orgnize_info = data => fetch('/guanmei/admin_orgnize/info', data, 'POST').then(check_login);
 export const admin_orgnize_sort = data => fetch('/guanmei/admin_orgnize/sort', data, 'POST').then(check_login);
 
+export const del_app_login_token = data => fetch('/guanmei/admin/del_app_login_token', data, 'POST');

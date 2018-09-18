@@ -36,6 +36,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		if (type == 'POST') {
 			data = data ? data : {};
 			data.token = getStore('token') ? getStore('token') : '';
+			data.client_from = 1;
 			Object.defineProperty(requestConfig, 'body', {
 				value: JSON.stringify(data)
 			})

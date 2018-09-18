@@ -21,12 +21,13 @@
                 <el-table-column label="显示名" prop="show_name"></el-table-column>
                 <el-table-column label="权限组" prop="group_name"></el-table-column>
                 <el-table-column label="创建日期" prop="create_time"></el-table-column>
-                <el-table-column label="操作" width="300">
+                <el-table-column label="操作" width="400">
                     <template slot-scope="scope">
                         <el-button size="mini" @click="goto_edit_admin_user(scope.row.id)">编辑</el-button>
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button size="mini" type="primary" @click="del_app_login_token(scope.row)">app重新登录</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -46,7 +47,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort} from '@/api/getDataEarth'
+    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,del_app_login_token} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -159,6 +160,28 @@
                     }.bind(this));
                 }.bind(this))
 
+            },
+            del_app_login_token(row) {
+                this.$confirm('此操作将删除该用户的app登录信息,需重新输入账号密码登录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    del_app_login_token({uid:row.id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+
+                            this.$message({
+                                type: 'success',
+                                message: res.msg
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
             }
         },
     }
