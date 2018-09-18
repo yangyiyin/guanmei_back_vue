@@ -823,11 +823,11 @@
             change_process(sub_order) {
                 //排序
                 var compare = function (obj1, obj2) {
-                    var val1 = obj1.id;
-                    var val2 = obj2.id;
-                    if (val1 < val2) {
+                    var val1 = parseInt(obj1.sort);
+                    var val2 = parseInt(obj2.sort);
+                    if (val1 > val2) {
                         return -1;
-                    } else if (val1 > val2) {
+                    } else if (val1 < val2) {
                         return 1;
                     } else {
                         return 0;
