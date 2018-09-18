@@ -674,7 +674,7 @@
                     return new Promise(function(resolve,reject){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.options = res.data;
-                            this.options.options_color.push({id:-1,name:'其他'});
+                            this.options.options_color.push({id:'-1',name:'其他'});
                         } else {
                             this.$message({
                                 message: res.msg,
