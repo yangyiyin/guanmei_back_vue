@@ -1,12 +1,11 @@
 <template>
     <div class="fillcontain">
-
+        <head-top></head-top>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
-    import {cixi_list,entity_cixi_edit,entity_categories} from '@/api/getDataEarth'
     export default {
         data(){
             return {
