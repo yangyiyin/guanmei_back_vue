@@ -131,7 +131,7 @@
 
                 this.$refs.tree.getCheckedNodes().forEach(function(ele){
 
-                    if (!ele.children || !ele.children.length) {
+                    if (ele.type == 0 && (!ele.children || !ele.children.length)) {
 
                         purviews_arr.push(ele.uri_md5);
                     }
