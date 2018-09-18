@@ -22,12 +22,9 @@
                 </el-input>
             </div>
 
-
-            <!--<div class="search_item">-->
-                <!--<el-input clearable placeholder="请输入图标代码" v-model="img" style="width: 350px">-->
-                    <!--<template slot="prepend">图标</template>-->
-                <!--</el-input>-->
-            <!--</div>-->
+            <div class="search_item">
+                <el-checkbox v-model="is_process_orgnize">是否为流程部门</el-checkbox>
+            </div>
 
             <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
 
@@ -50,6 +47,7 @@
                 name:'',
                 img:'',
                 parents:[{id:'0',name:'顶级'}],
+                is_process_orgnize:true,
             }
 
         },
@@ -109,10 +107,12 @@
                             this.pid = res.data.pid
                             this.name = res.data.name;
                             this.img = res.data.img;
+                            this.is_process_orgnize = res.data.type == 1 ? true : false;
                         } else if(this.action == 'add') {
                             this.pid = res.data.id
                             this.name = '';
                             this.img = '';
+                            this.is_process_orgnize = true;
                         }
 
                     } else {
@@ -148,7 +148,8 @@
                     if (this.action == 'add') {
                         this.id = '';
                     }
-                    admin_orgnize_edit({id:this.id,name:this.name,pid:this.pid,img:this.img}).then(function (res) {
+                    var type = this.is_process_orgnize ? 1 : 2;
+                    admin_orgnize_edit({id:this.id,name:this.name,pid:this.pid,img:this.img,type:type}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
