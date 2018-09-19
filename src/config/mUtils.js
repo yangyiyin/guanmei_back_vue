@@ -288,17 +288,17 @@ export const check_login = function(res){
 }
 
 
-export const beforeAvatarUpload = function(file) {
+export const beforeAvatarUpload = function(file, _this) {
     const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
-    const isLt2M = file.size / 1024 / 1024 < 1;
+    const isLt2M = file.size / 1024 / 1024 < 2;
 
     if (!isJPG) {
-        this.fullscreenLoading = false
-        this.$message.error('图片格式只支持jpg和png!');
+        _this.fullscreenLoading = false
+        _this.$message.error('图片格式只支持jpg和png!');
     }
     if (!isLt2M) {
-        this.fullscreenLoading = false
-        this.$message.error('图片大小不能超过 1MB!');
+        _this.fullscreenLoading = false
+        _this.$message.error('图片大小不能超过 2MB!');
     }
-    return  isLt2M;
+    return  isJPG && isLt2M;
 }

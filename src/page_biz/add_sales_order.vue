@@ -382,7 +382,7 @@
                 }
             },
             beforeAvatarUpload(file) {
-                return beforeAvatarUpload(file);
+                return beforeAvatarUpload(file, this);
             },
             handleExceed(){
                 this.$message({
@@ -530,4 +530,5 @@
         border-color: #409EFF;
         color: #409EFF;
     }
+
 </style>

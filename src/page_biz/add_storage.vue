@@ -183,7 +183,7 @@
             },
 
             beforeAvatarUpload(file) {
-                return beforeAvatarUpload(file);
+                return beforeAvatarUpload(file, this);
             }
 
         }

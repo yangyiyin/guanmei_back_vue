@@ -26,7 +26,21 @@
                                 <el-tag size="mini" v-if="sub_order.status == 2" >已安排生产</el-tag>
                                 <el-tag size="mini" v-if="sub_order.status == 3" type="success">已完成</el-tag>
                             </el-form-item>
-                            <el-form-item label="进度:" >
+
+                            <el-form-item label="材质:" >
+                                <span v-for="(material, index)  in sub_order.material">{{material.name}};</span>
+                            </el-form-item>
+                            <el-form-item label="装饰说明:" >
+                                <span>{{sub_order.decoration}}</span>
+                            </el-form-item>
+                            <el-form-item label="样品图:" >
+                                <img width="80" v-for="(img, index)  in sub_order.sample_imgs" :src="img">
+                            </el-form-item>
+                            <el-form-item label="样品说明:" >
+                                <span>{{props.row.sample_info}}</span>
+                            </el-form-item>
+
+                            <el-form-item label="当前进度:" >
                                 <span>{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
                             </el-form-item>
                         </el-form>
@@ -44,6 +58,7 @@
                         <el-tag v-if="scope.row.status == 3" type="success">已完成</el-tag>
                     </template>
                 </el-table-column>
+
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.status == 1" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>

@@ -22,6 +22,23 @@
                             <el-form-item label="帽型:" >
                                 <span>{{props.row.product_cat_name}}-{{props.row.product_code}}-{{props.row.color_code}} 数量{{props.row.sum}};</span>
                             </el-form-item>
+
+                            <el-form-item label="材质:" >
+                                <span v-for="(material, index)  in props.row.material">{{material.name}};</span>
+                            </el-form-item>
+                            <el-form-item label="装饰/辅料:" >
+                                <span v-for="(material_sub, index)  in props.row.material_sub">{{material_sub.name}};</span>
+                            </el-form-item>
+                            <el-form-item label="装饰说明:" >
+                                <span>{{props.row.decoration}}</span>
+                            </el-form-item>
+                            <el-form-item label="样品图:" >
+                                <img width="80" v-for="(img, index)  in props.row.sample_imgs" :src="img">
+                            </el-form-item>
+                            <el-form-item label="样品说明:" >
+                                <span>{{props.row.sample_info}}</span>
+                            </el-form-item>
+
                             <el-form-item label="流程:" >
                                 <span>{{props.row.process_info}}</span>
                             </el-form-item>

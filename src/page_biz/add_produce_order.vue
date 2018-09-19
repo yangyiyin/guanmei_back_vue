@@ -27,6 +27,27 @@
                             type="selection"
                             width="55">
                     </el-table-column>
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-form  label-position="left" inline class="demo-table-expand">
+                                <el-form-item label="材质:" >
+                                    <span v-for="(material, index)  in props.row.material">{{material.name}};</span>
+                                </el-form-item>
+                                <el-form-item label="装饰说明:" >
+                                    <span>{{props.row.decoration}}</span>
+                                </el-form-item>
+                                <el-form-item label="样品图:" >
+                                    <img width="80" v-for="(img, index)  in props.row.sample_imgs_final" :src="img">
+                                </el-form-item>
+                                <el-form-item label="样品说明:" >
+                                    <span>{{props.row.sample_info}}</span>
+                                </el-form-item>
+                                <el-form-item label="流程:" >
+                                    <span v-for="(process, index)  in props.row.process"><span v-if="index!=0">-></span>{{process.name}}</span>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="帽型" prop="product_cat_name"></el-table-column>
                     <el-table-column label="型号" prop="product_code"></el-table-column>
                     <el-table-column label="颜色" prop="color_code"></el-table-column>
@@ -718,7 +739,7 @@
                 }
             },
             beforeAvatarUpload(file) {
-                return beforeAvatarUpload(file);
+                return beforeAvatarUpload(file, this);
             },
             handleExceed(){
                 this.$message({
@@ -900,5 +921,10 @@
     .add_block:hover{
         border-color: #409EFF;
         color: #409EFF;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 45%;
     }
 </style>
