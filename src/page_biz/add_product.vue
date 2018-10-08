@@ -48,6 +48,7 @@
     import headTop from '../components/headTop'
     import {product_edit,product_info} from '@/api/getDataproduct'
     import {product_category_all_list} from '@/api/getDataproduct_category'
+    import {beforeAvatarUpload} from '@/config/mUtils'
     export default {
         data(){
             return {

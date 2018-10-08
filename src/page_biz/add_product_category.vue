@@ -37,6 +37,7 @@
 <script>
     import headTop from '../components/headTop'
     import {product_category_edit,product_category_info} from '@/api/getDataproduct_category'
+    import {beforeAvatarUpload} from '@/config/mUtils'
     export default {
         data(){
             return {
