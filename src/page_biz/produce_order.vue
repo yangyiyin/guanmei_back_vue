@@ -19,7 +19,7 @@
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
-                        <el-form  label-position="left" inline class="demo-table-expand">
+                        <el-form  style="border: 1px dashed #ddd;margin-top: 5px;padding: 0 5px;" label-position="left" inline class="demo-table-expand">
                             <el-form-item label="帽型:" >
                                 <span>{{props.row.product_cat_name}}-{{props.row.product_code}}-{{props.row.color_code}} 数量{{props.row.sum}};</span>
                             </el-form-item>
@@ -40,8 +40,11 @@
                                 <span>{{props.row.sample_info}}</span>
                             </el-form-item>
 
-                            <el-form-item label="流程:" >
+                            <el-form-item label="流程:" style="width: 100%">
                                 <span>{{props.row.process_info}}</span>
+                            </el-form-item>
+                            <el-form-item label="所属业务单:" >
+                                <span>{{props.row.sales_order_nos}}</span>
                             </el-form-item>
                         </el-form>
                     </template>

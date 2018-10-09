@@ -77,7 +77,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog :title="'出入库明细--'+current_stock_name" :visible.sync="dialogFormVisible_flow">
+        <el-dialog :title="'出入库明细--'+current_stock_name" :visible.sync="dialogFormVisible_flow" width="80%">
 
             <div class="table_container">
                 <el-table
@@ -86,7 +86,7 @@
                         style="width: 100%;"
                         height="500">
                     <el-table-column label="出入库数量" prop="sum"></el-table-column>
-                    <el-table-column label="生产单id" prop="out_id"></el-table-column>
+                    <el-table-column label="生产单号" prop="out_code"></el-table-column>
                     <el-table-column label="备注" prop="remark"></el-table-column>
                     <el-table-column label="操作人" prop="opt_show_name"></el-table-column>
                     <el-table-column label="创建日期" prop="create_time"></el-table-column>
@@ -111,6 +111,9 @@
                 <el-form-item label="出库数量:">
                     <el-input v-model="current.stock_sum" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="备注:">
+                    <el-input v-model="current.remark" auto-complete="off"></el-input>
+                </el-form-item>
                 <p style="color: #999">出库数量单位为默认单位,即库存标准单位</p>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -125,6 +128,9 @@
 
                 <el-form-item label="入库数量:">
                     <el-input type="number" v-model="current.stock_sum" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="备注:">
+                    <el-input v-model="current.remark" auto-complete="off"></el-input>
                 </el-form-item>
                 <p style="color: #999">入库数量单位为默认单位,即库存标准单位</p>
             </el-form>
@@ -353,7 +359,8 @@
 
                 stock_change({
                     id:this.current.id,
-                    sum:sum
+                    sum:sum,
+                    remark:this.current.remark
                 }).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.list();

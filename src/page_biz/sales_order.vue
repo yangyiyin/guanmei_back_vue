@@ -19,12 +19,13 @@
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
-                        <el-form  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline class="demo-table-expand">
+                        <el-form style="border: 1px dashed #ddd;margin-top: 5px;padding: 0 5px;"  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline class="demo-table-expand">
                             <el-form-item label="帽型:" >
                                 <span>{{sub_order.product_cat_name}}-{{sub_order.product_code}}-{{sub_order.color_code}} 数量{{sub_order.sum}}</span>
                                 <el-tag size="mini" v-if="sub_order.status == 1" type="warning">待安排生产</el-tag>
                                 <el-tag size="mini" v-if="sub_order.status == 2" >已安排生产</el-tag>
                                 <el-tag size="mini" v-if="sub_order.status == 3" type="success">已完成</el-tag>
+                                <el-tag size="mini" v-if="sub_order.status == 4" type="danger">生成单已删除</el-tag>
                             </el-form-item>
 
                             <el-form-item label="材质:" >
@@ -37,18 +38,21 @@
                                 <img width="80" v-for="(img, index)  in sub_order.sample_imgs" :src="img">
                             </el-form-item>
                             <el-form-item label="样品说明:" >
-                                <span>{{props.row.sample_info}}</span>
+                                <span>{{sub_order.sample_info}}</span>
                             </el-form-item>
 
                             <el-form-item label="当前进度:" >
-                                <span>{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
+                                <span style="font-weight: bold;color: #000">{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
                             </el-form-item>
+
+
                         </el-form>
                     </template>
                 </el-table-column>
                 <el-table-column label="编号" prop="order_no"></el-table-column>
                 <el-table-column label="制单日期" prop="order_date"></el-table-column>
                 <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
+                <el-table-column label="业务员" prop="sales_man"></el-table-column>
 
                 <el-table-column label="状态">
                     <template slot-scope="scope">
@@ -56,6 +60,7 @@
                         <el-tag v-if="scope.row.status == 1" type="warning">待安排生产</el-tag>
                         <el-tag v-if="scope.row.status == 2" >已安排生产</el-tag>
                         <el-tag v-if="scope.row.status == 3" type="success">已完成</el-tag>
+                        <el-tag v-if="scope.row.status == 4" type="danger">生成单已删除</el-tag>
                     </template>
                 </el-table-column>
 

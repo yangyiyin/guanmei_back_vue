@@ -5,6 +5,13 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>单号:</span>
+                <el-input clearable placeholder="请输入单号" v-model="order_no" style="width: 350px">
+
+                </el-input>
+            </div>
+
+            <div class="search_item">
                 <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>制单日期:</span>
                 <el-date-picker
                         v-model="order_date"
@@ -166,6 +173,7 @@
                 order_date:'',
                 delivery_date:'',
                 custom_name:'',
+                order_no:'',
                 sales_man:'',
                 sub_orders:[],
                 file_list:[],
@@ -211,6 +219,7 @@
                 this.order_date='';
                 this.delivery_date='';
                 this.custom_name='';
+                this.order_no='';
                 this.sales_man=this.user_info.show_name;
                 this.sub_orders=[];
 
@@ -221,6 +230,7 @@
                     this.order_date = sales_order_edit_data.order_date;
                     this.delivery_date=sales_order_edit_data.delivery_date;
                     this.custom_name=sales_order_edit_data.custom_name;
+                    this.order_no=sales_order_edit_data.order_no;
                     this.sales_man=sales_order_edit_data.sales_man ? sales_order_edit_data.sales_man : this.sales_man;
                     this.sub_orders=sales_order_edit_data.sub_orders;
                 }
@@ -231,6 +241,7 @@
                         this.order_date = res.data.order_date;
                         this.delivery_date = res.data.delivery_date;
                         this.custom_name = res.data.custom_name;
+                        this.order_no = res.data.order_no;
                         this.sales_man = res.data.sales_man;
                         this.sub_orders = res.data.sales_order_sub;
                         this.gen_options_product_cat_product();
@@ -271,13 +282,16 @@
                     order_date:this.order_date,
                     delivery_date:this.delivery_date,
                     custom_name:this.custom_name,
+                    order_no:this.order_no,
                     sales_man:this.sales_man,
                     sub_orders:this.sub_orders
                 }
                 var error_msg = '';
+                if (!data.order_no) error_msg = '请输入单号';
                 if (!data.order_date) error_msg = '请填写制单日期';
                 if (!data.delivery_date) error_msg = '请填写交货日期';
                 if (!data.custom_name) error_msg = '请填写客户姓名';
+
                 if (!data.sales_man) error_msg = '请填写业务员姓名';
                 if (!data.sub_orders || data.sub_orders.length < 1) error_msg = '请添加订单子项';
 
@@ -326,6 +340,7 @@
                                 order_date:data.order_date,
                                 delivery_date:data.delivery_date,
                                 custom_name:data.custom_name,
+                                order_no:data.order_no,
                                 sales_man:data.sales_man,
                                 sub_orders : data.sub_orders
                             }
