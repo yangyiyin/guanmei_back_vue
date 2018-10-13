@@ -279,7 +279,7 @@
                         this.order_date = res.data.order_date;
                         this.delivery_date = res.data.delivery_date;
                         this.custom_name = res.data.custom_name;
-                        this.order_no = res.data.order_no;
+                        this.order_no = res.data.custom_order_no;
                         this.sales_man = res.data.sales_man;
                         this.sub_orders = res.data.sales_order_sub;
                         this.gen_options_product_cat_product();
