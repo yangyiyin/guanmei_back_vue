@@ -24,7 +24,8 @@
                             </el-form-item>
 
                             <el-form-item label="材质:" >
-                                <span v-for="(material, index)  in props.row.material">{{material.name}};</span>
+                                <span v-for="(material, index)  in props.row.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
+
                             </el-form-item>
                             <el-form-item label="装饰/辅料:" >
                                 <span v-for="(material_sub, index)  in props.row.material_sub">{{material_sub.name}};</span>

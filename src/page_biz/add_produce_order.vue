@@ -447,7 +447,7 @@
                 }
                 this.sub_orders = cache_sales_order_selection;
                 this.gen_options_product_cat_product();
-
+                this.gen_material_color();
             }
 
             next();
@@ -471,7 +471,7 @@
                     }
                     this.sub_orders = cache_sales_order_selection;
                     this.gen_options_product_cat_product();
-//                    console.log(this.sub_orders);
+                    this.gen_material_color();
                 }
                 if (this.active == 0 && this.way == 1) {//选择销售单制单,拉取销售单列表
                     this.get_sales_sub_order_list();

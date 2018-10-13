@@ -29,7 +29,7 @@
                             </el-form-item>
 
                             <el-form-item label="材质:" >
-                                <span v-for="(material, index)  in sub_order.material">{{material.name}};</span>
+                                <span v-for="(material, index)  in sub_order.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
                             </el-form-item>
                             <el-form-item label="装饰说明:" >
                                 <span>{{sub_order.decoration}}</span>
