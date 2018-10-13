@@ -5,7 +5,7 @@
         <div class="table_container" style="padding:20px">
 
             <div class="search_item">
-                <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>单号:</span>
+                <span class="pre_info" style="font-size: 14px;"><i style="color:red;"></i>客户单号:</span>
                 <el-input clearable placeholder="请输入单号" v-model="order_no" style="width: 350px">
 
                 </el-input>
@@ -88,16 +88,49 @@
                 </div>
 
 
+                <!--<div class="search_item">-->
+                    <!--<span class="pre_info" style="font-size: 14px;">材质:</span>-->
+                    <!--<el-select multiple v-model="sub_order.material" placeholder="请选择" value-key="id">-->
+                        <!--<el-option-->
+                                <!--v-for="item in options.options_material"-->
+                                <!--:key="item.id"-->
+                                <!--:label="item.name"-->
+                                <!--:value="item">-->
+                        <!--</el-option>-->
+                    <!--</el-select>-->
+                <!--</div>-->
+
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">材质:</span>
-                    <el-select multiple v-model="sub_order.material" placeholder="请选择" value-key="id">
-                        <el-option
-                                v-for="item in options.options_material"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item">
-                        </el-option>
-                    </el-select>
+                    <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:</span></span>
+                    <div style="display: inline-block;vertical-align: top">
+                        <div style="margin-bottom: 3px;" v-for="(material, index2)  in sub_order.material">
+
+                            <el-select v-model="material.material" value-key="id" placeholder="请选择材料" @change="change_material(material)">
+                                <el-option
+                                        v-for="item in options.options_material"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+
+                            <el-select v-model="material.sub" value-key="id" placeholder="请选择颜色">
+                                <el-option
+                                        v-for="item in material.sub_options"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+
+                            <el-input clearable placeholder="数量" v-model="material.num" style="width: 120px"></el-input>
+
+                            <el-button type="danger" @click="del_material(index, index2)" round size="mini">删除</el-button>
+
+                        </div>
+                        <el-button @click="add_material(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多材料</el-button>
+                    </div>
+
                 </div>
 
                 <div class="search_item">
@@ -145,6 +178,11 @@
                     <span class="pre_info" style="font-size: 14px;">样品说明:</span>
                     <el-input  type="textarea" clearable placeholder="请输入样品说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
                 </div>
+                <div class="search_item">
+                    <span class="pre_info" style="font-size: 14px;">客户款式/型号:</span>
+                    <el-input clearable placeholder="请输入客户款式" v-model="sub_order.custom_model" style="width: 350px;vertical-align: middle"></el-input>
+                </div>
+
                 <i class="iconfont del_block" @click="del_block(index)">&#xe603;</i>
             </div>
 
@@ -161,7 +199,7 @@
 <script>
     import headTop from '../components/headTop'
     import {sales_order_edit,sales_order_info,init_select_options} from '@/api/getDatasales_order'
-    import {beforeAvatarUpload,setStore,getStore} from '@/config/mUtils'
+    import {beforeAvatarUpload,setStore,getStore,deepCopy} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -245,6 +283,7 @@
                         this.sales_man = res.data.sales_man;
                         this.sub_orders = res.data.sales_order_sub;
                         this.gen_options_product_cat_product();
+                        this.gen_material_color();
                     } else {
                         this.$message({
                             message: res.msg,
@@ -287,7 +326,6 @@
                     sub_orders:this.sub_orders
                 }
                 var error_msg = '';
-                if (!data.order_no) error_msg = '请输入单号';
                 if (!data.order_date) error_msg = '请填写制单日期';
                 if (!data.delivery_date) error_msg = '请填写交货日期';
                 if (!data.custom_name) error_msg = '请填写客户姓名';
@@ -304,6 +342,17 @@
                         val.colors.forEach(function(color){
                             if (!color.id || !color.name || !color.sum) {
                                 error_msg = '第'+(index+1)+'个子项,请检查颜色是否设置完整';
+                            }
+                        })
+                    }
+
+                    if(!val.material || !val.material.length) {
+                        error_msg = '第'+(index+1)+'个子项,请添加材料'
+                    } else {
+                        val.material.forEach(function(item){
+
+                            if (!item.material || !item.sub || !item.num) {
+                                error_msg = '第'+(index+1)+'个子项,请检查材料是否设置完整';
                             }
                         })
                     }
@@ -414,7 +463,8 @@
                     decoration:'',
                     process:[],
                     sample_imgs:[],
-                    sample_info:''
+                    sample_info:'',
+                    custom_model:'',
                 };
                 this.sub_orders.push(sub_order);
             },
@@ -458,6 +508,36 @@
                     }.bind(this));
                 }.bind(this))
             },
+
+            change_material(material) {
+
+                material.sub_options = [];
+                material.sub = {};
+                this.options.options_material_colors.forEach(function(val){
+                    if (val.cid == material.material.id) {
+                        material.sub_options = deepCopy(val.options);
+                        material.sub = (material.sub_options && material.sub_options.length) ? material.sub_options[0] : {};
+                    }
+                }.bind(this));
+
+            },
+            gen_material_color(){
+                this.sub_orders.forEach(function (sub_order) {
+
+                    sub_order.material.forEach(function(val1){
+                        this.options.options_material_colors.forEach(function(val){
+
+                            if (val.cid == val1.material.id) {
+                                val1.sub_options = deepCopy(val.options);
+                            }
+
+                        }.bind(this));
+
+                    }.bind(this))
+
+                }.bind(this))
+            },
+
             change_product(sub_order) {
                 sub_order.product_id = sub_order.product.id;
                 sub_order.product_name = sub_order.product.name;
@@ -482,7 +562,19 @@
                 //console.log(sub_order.process.sort(compare));
                 sub_order.process = sub_order.process.sort(compare);
 
-            }
+            },
+            add_material(index) {
+                var material = {
+                    material:[],
+                    sub:[],
+                    num:''
+
+                };
+                this.sub_orders[index].material.push(material);
+            },
+            del_material(index1, index2) {
+                this.sub_orders[index1].material.splice(index2,1);
+            },
         }
     }
 </script>

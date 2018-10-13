@@ -25,8 +25,22 @@
             <el-table
                     :data="tableData"
                     style="width: 100%">
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form  v-for="(sub, index)  in props.row.subs" style="border-bottom: 1px dashed #ddd;margin-top: 5px;padding: 0 5px;" label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="颜色:" >
+                                <span>{{sub.color_name}}</span>
+                            </el-form-item>
+                            <el-form-item label="数量:" >
+                                <span>{{sub.sum}}</span>
+                            </el-form-item>
+
+                        </el-form>
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="数量(kg)" prop="sum"></el-table-column>
+                <el-table-column label="总数量(默认单位)" prop="sum"></el-table-column>
                 <el-table-column label="存放位置" prop="place"></el-table-column>
                 <el-table-column label="图片" prop="img">
                 <template slot-scope="scope">
@@ -80,12 +94,24 @@
         <el-dialog :title="'出入库明细--'+current_stock_name" :visible.sync="dialogFormVisible_flow" width="80%">
 
             <div class="table_container">
+                <el-select v-model="flow_sub_id" placeholder="颜色">
+                    <el-option
+                            v-for="item in current.subs"
+                            :key="item.id"
+                            :label="item.color_name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+
+                <el-button type="primary" icon="el-icon-search" @click="search_flow">搜索</el-button>
+
                 <el-table
                         v-loading="table_flow_loading"
                         :data="tableData_flow"
                         style="width: 100%;"
                         height="500">
                     <el-table-column label="出入库数量" prop="sum"></el-table-column>
+                    <el-table-column  v-if="current.type==0" label="颜色" prop="color_name"></el-table-column>
                     <el-table-column label="生产单号" prop="out_code"></el-table-column>
                     <el-table-column label="备注" prop="remark"></el-table-column>
                     <el-table-column label="操作人" prop="opt_show_name"></el-table-column>
@@ -107,6 +133,16 @@
 
         <el-dialog :title="'出库--'+current.name" :visible.sync="dialogFormVisible_stock_out" width="30%">
             <el-form :model="current">
+                <el-form-item v-if="current.type==0" label="选择颜色:">
+                    <el-select style="width: 100%" v-model="current.stock_sub_id" >
+                        <el-option
+                                v-for="item in current.subs"
+                                :key="item.id"
+                                :label="item.color_name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
 
                 <el-form-item label="出库数量:">
                     <el-input v-model="current.stock_sum" auto-complete="off"></el-input>
@@ -125,7 +161,16 @@
 
         <el-dialog :title="'入库--'+current.name" :visible.sync="dialogFormVisible_stock_in" width="30%">
             <el-form :model="current">
-
+                <el-form-item  v-if="current.type==0" label="选择颜色:">
+                    <el-select style="width: 100%" v-model="current.stock_sub_id" >
+                        <el-option
+                                v-for="item in current.subs"
+                                :key="item.id"
+                                :label="item.color_name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="入库数量:">
                     <el-input type="number" v-model="current.stock_sum" auto-complete="off"></el-input>
                 </el-form-item>
@@ -146,6 +191,7 @@
 <script>
     import headTop from '../components/headTop'
     import {storage_list,storage_del,storage_verify,storage_sort,storage_flow_list,stock_change} from '@/api/getDatastorage'
+    import {deepCopy} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -167,7 +213,8 @@
                 type:-1,
                 types:[{id:-1,name:'全部'},{id:0,name:'主料'},{id:1,name:'装饰、辅料'}],
                 name:'',
-                loadingBtn:-1
+                loadingBtn:-1,
+                flow_sub_id:'0'
             }
         },
         components: {
@@ -201,6 +248,9 @@
             },
             handleCurrentChange_flow(val){
                 this.currentPage_flow = val;
+                this.storage_flow_list();
+            },
+            search_flow(){
                 this.storage_flow_list();
             },
             handleEdit(row){
@@ -306,6 +356,12 @@
                         id:this.current_stock_id
                     }
                 } else {
+                    this.flow_sub_id = '0';
+                    this.current = deepCopy(row);
+                    if (this.current.subs) {
+                        this.current.subs.unshift({id:'0',color_name:'全部'});
+                    }
+
                     this.current_stock_id = row.id;
                     this.current_stock_name = row.name;
                 }
@@ -313,6 +369,7 @@
                 this.table_flow_loading = true;
                 storage_flow_list({
                     id:row.id,
+                    sub_id:this.flow_sub_id,
                     page:this.currentPage_flow,
                     page_size:this.limit
                 }).then(function(res){
@@ -348,18 +405,32 @@
                         message: '参数错误',
                         type: 'warning'
                     });
+                    return;
+                }
+                if (this.current.type == 1) {
+                    this.current.stock_sub_id = 0;
+                }
+                if (this.current.type == 0 && !this.current.stock_sub_id) {
+                    this.$message({
+                        message: '请选择颜色',
+                        type: 'warning'
+                    });
+                    return;
                 }
 
-                if (sum == 0) {
+                if (!sum || sum == 0) {
                     this.$message({
                         message: '数量不能为0',
                         type: 'warning'
                     });
+                    return;
                 }
 
                 stock_change({
                     id:this.current.id,
+                    name:this.current.name,
                     sum:sum,
+                    sub_id:this.current.stock_sub_id,
                     remark:this.current.remark
                 }).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {

@@ -13,6 +13,7 @@ export const storage_sort = data => fetch('/guanmei/storage/sort', data, 'POST')
 export const confirm_storage = data => fetch('/guanmei/storage/confirm_storage', data, 'POST').then(check_login);
 export const storage_flow_list = data => fetch('/guanmei/storage_flow/index', data, 'POST').then(check_login);
 export const stock_change = data => fetch('/guanmei/storage/stock_change', data, 'POST').then(check_login);
+export const material_colors = data => fetch('/guanmei/color/material_colors', data, 'POST').then(check_login);
 
 
 

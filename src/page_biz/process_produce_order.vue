@@ -39,7 +39,7 @@
                                 <span>{{props.row.sample_info}}</span>
                             </el-form-item>
 
-                            <el-form-item label="流程:" >
+                            <el-form-item label="流程:" style="width: 100%">
                                 <span>{{props.row.process_info}}</span>
                             </el-form-item>
                         </el-form>
@@ -57,8 +57,8 @@
                 </el-table-column>
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0" size="mini" type="success" @click="process_order(scope.row)">接单</el-button>
-
+                        <el-button v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0 && scope.row.can_handover_order" size="mini" type="success" @click="process_order(scope.row)">接单</el-button>
+                        <el-tag v-if="scope.row.has_handover_order" type="success" >已接单</el-tag>
                     </template>
                 </el-table-column>
             </el-table>

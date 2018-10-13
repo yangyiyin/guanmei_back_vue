@@ -116,13 +116,13 @@
                     type: 'warning'
                 }).then(function(){
                     this.loading = true;
-                    color_edit({id:this.id,name:this.name,value:this.value,type:1}).then(function (res) {
+                    color_edit({id:this.id,name:this.name,value:this.value,type:2}).then(function (res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
                             });
-                            this.$router.push({path:'color',query:{}});
+                            this.$router.push({path:'color_material',query:{}});
                         } else {
                             this.$message({
                                 message: res.msg,

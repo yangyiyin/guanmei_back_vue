@@ -44,7 +44,7 @@
                                 <span>{{props.row.process_info}}</span>
                             </el-form-item>
                             <el-form-item label="所属业务单:" >
-                                <span>{{props.row.sales_order_nos}}</span>
+                                <span >{{props.row.sales_order_nos}}</span>
                             </el-form-item>
                         </el-form>
                     </template>

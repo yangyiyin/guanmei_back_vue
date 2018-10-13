@@ -302,3 +302,18 @@ export const beforeAvatarUpload = function(file, _this) {
     }
     return  isJPG && isLt2M;
 }
+
+export const deepCopy = function(obj){
+    if(typeof obj != 'object'){
+        return obj;
+    }
+    if (obj instanceof Array) {
+        var newobj = [];
+    } else {
+        var newobj = {};
+    }
+    for ( var attr in obj) {
+        newobj[attr] = deepCopy(obj[attr]);
+    }
+    return newobj;
+}

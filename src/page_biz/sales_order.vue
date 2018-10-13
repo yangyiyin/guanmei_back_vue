@@ -49,7 +49,13 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="编号" prop="order_no"></el-table-column>
+                <el-table-column label="编号" prop="order_no">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.custom_order_no"> {{scope.row.order_no}}({{scope.row.custom_order_no}})</span>
+                        <span v-if="!scope.row.custom_order_no"> {{scope.row.order_no}}</span>
+
+                    </template>
+                </el-table-column>
                 <el-table-column label="制单日期" prop="order_date"></el-table-column>
                 <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
                 <el-table-column label="业务员" prop="sales_man"></el-table-column>

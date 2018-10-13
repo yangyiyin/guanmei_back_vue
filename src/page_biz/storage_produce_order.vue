@@ -27,7 +27,7 @@
                             <el-form-item label="材料:" >
                                 <p v-for="(_material,index2) in props.row.material">
                                     <span>{{_material.material.name}}</span>&nbsp;&nbsp;
-                                    <span>数量:{{_material.sum}}kg</span>
+                                    <span>数量:{{_material.sum}}(默认单位)</span>
                                 </p>
                             </el-form-item>
                             <el-form-item label="装饰/辅料:">

@@ -121,7 +121,6 @@
                         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>颜色:</span>
                         <div style="display: inline-block;vertical-align: top">
                             <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors">
-
                                 <el-select :disabled="way!=2" v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color)">
                                     <el-option
                                             v-for="item in options.options_color"
@@ -161,12 +160,48 @@
                     <!--</div>-->
 
 
+                    <!--<div class="search_item">-->
+                        <!--<span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:</span></span>-->
+                        <!--<div style="display: inline-block;vertical-align: top">-->
+                            <!--<div style="margin-bottom: 3px;" v-for="(material, index2)  in sub_order.material">-->
+
+                                <!--<el-select v-model="material.material" value-key="id" placeholder="请选择材料">-->
+                                    <!--<el-option-->
+                                            <!--v-for="item in options.options_material"-->
+                                            <!--:key="item.id"-->
+                                            <!--:label="item.name"-->
+                                            <!--:value="item">-->
+                                    <!--</el-option>-->
+                                <!--</el-select>-->
+
+                                <!--<el-input clearable placeholder="数量" v-model="material.num" style="width: 120px"></el-input>-->
+
+                                <!--<el-button type="danger" @click="del_material(index, index2)" round size="mini">删除</el-button>-->
+
+                            <!--</div>-->
+                            <!--<el-button @click="add_material(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多材料</el-button>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
                     <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:</span></span>
+                        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:
+                          <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
+                            <div slot="content">
+                                <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data">
+                                    订单{{index}}:
+                                    <span v-if="sub_sub_order.material && sub_sub_order.material.length" v-for="(_material, index2) in sub_sub_order.material" >
+                                        <div style="border-bottom: 1px dashed #999;margin: 5px;display: inline-block;">名称:{{_material.material.name}};颜色:{{_material.sub.name}};数量:{{_material.num}}</div>
+                                    </span>
+                                </p>
+                            </div>
+                            <i class="iconfont">&#xe601;</i>
+                        </el-tooltip>
+                        </span>
+                        </span>
                         <div style="display: inline-block;vertical-align: top">
                             <div style="margin-bottom: 3px;" v-for="(material, index2)  in sub_order.material">
 
-                                <el-select v-model="material.material" value-key="id" placeholder="请选择材料">
+                                <el-select v-model="material.material" value-key="id" placeholder="请选择材料" @change="change_material(material)">
                                     <el-option
                                             v-for="item in options.options_material"
                                             :key="item.id"
@@ -175,7 +210,16 @@
                                     </el-option>
                                 </el-select>
 
-                                <el-input clearable placeholder="数量" v-model="material.sum" style="width: 120px"></el-input>
+                                <el-select v-model="material.sub" value-key="id" placeholder="请选择颜色">
+                                    <el-option
+                                            v-for="item in material.sub_options"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item">
+                                    </el-option>
+                                </el-select>
+
+                                <el-input clearable placeholder="数量" v-model="material.num" style="width: 120px"></el-input>
 
                                 <el-button type="danger" @click="del_material(index, index2)" round size="mini">删除</el-button>
 
@@ -184,6 +228,7 @@
                         </div>
 
                     </div>
+
                     <div class="search_item">
                         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>流程:</span>
                         <el-select multiple v-model="sub_order.process" placeholder="请选择" value-key="id" @change="change_process(sub_order)">
@@ -196,7 +241,19 @@
                         </el-select>
                     </div>
                     <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;">装饰说明:</span>
+                        <span class="pre_info" style="font-size: 14px;">装饰说明:<span>
+                             <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
+                            <div slot="content">
+                                <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data" style="border-bottom: 1rpx dashed #999">
+                                    订单{{index}}:装饰说明:{{sub_sub_order.decoration}};
+
+                                </p>
+                            </div>
+                            <i class="iconfont">&#xe601;</i>
+                        </el-tooltip>
+                        </span>
+
+                        </span>
                         <el-input type="textarea" clearable placeholder="请输入装饰说明" v-model="sub_order.decoration" style="width: 350px;vertical-align: middle"></el-input>
                     </div>
 
@@ -232,7 +289,21 @@
                     </div>
 
                     <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;">样品图片:</span>
+                        <span class="pre_info" style="font-size: 14px;">样品图片:
+
+                          <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
+                            <div slot="content">
+                                <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data">
+                                    订单{{index}}:
+                                    <span v-if="sub_sub_order.sample_imgs_final && sub_sub_order.sample_imgs_final.length" v-for="(img, index2) in sub_sub_order.sample_imgs_final" >
+                                        <img style="margin: 5px;display: inline-block;width: 50px;" :src="img"/>
+                                    </span>
+                                </p>
+                            </div>
+                            <i class="iconfont">&#xe601;</i>
+                        </el-tooltip>
+
+                        </span>
 
                         <el-upload
 
@@ -256,7 +327,17 @@
                     </div>
 
                     <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;">样品说明:</span>
+                        <span class="pre_info" style="font-size: 14px;">样品说明:
+                           <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
+                            <div slot="content">
+                                <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data" style="border-bottom: 1rpx dashed #999">
+                                    订单{{index}}:样品说明:{{sub_sub_order.sample_info}};
+
+                                </p>
+                            </div>
+                            <i class="iconfont">&#xe601;</i>
+                        </el-tooltip>
+                        </span>
                         <el-input  type="textarea" clearable placeholder="请输入样品说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
                     </div>
                     <i class="iconfont del_block" v-if="way==2" @click="del_block(index)">&#xe603;</i>
@@ -285,7 +366,7 @@
     import headTop from '../components/headTop'
     import {produce_order_edit,produce_order_info} from '@/api/getDataproduce_order'
     import {sales_order_edit,sales_order_info,init_select_options,sales_sub_orders} from '@/api/getDatasales_order'
-    import {beforeAvatarUpload,setStore,getStore} from '@/config/mUtils'
+    import {beforeAvatarUpload,setStore,getStore,deepCopy} from '@/config/mUtils'
     export default {
         data(){
             return {
@@ -366,6 +447,7 @@
                 }
                 this.sub_orders = cache_sales_order_selection;
                 this.gen_options_product_cat_product();
+
             }
 
             next();
@@ -389,7 +471,7 @@
                     }
                     this.sub_orders = cache_sales_order_selection;
                     this.gen_options_product_cat_product();
-
+//                    console.log(this.sub_orders);
                 }
                 if (this.active == 0 && this.way == 1) {//选择销售单制单,拉取销售单列表
                     this.get_sales_sub_order_list();
@@ -444,10 +526,20 @@
                 for (var i in this.multipleSelection) {
                     if (!sales_order_selection) sales_order_selection = {};
                     if (this.multipleSelection[i] && this.multipleSelection[i].length) {
-                        this.multipleSelection[i].forEach(function(val){
+                        this.multipleSelection[i].forEach(function(val, index){
 
                             var unique = val.product_cat_id + '|' + val.product_id + '|' + val.color_id + '|' + val.color_code;
                             //var unique = val.product_cat_id + '|' + val.product_id;
+
+                            //判断流程是否存在并一致
+                            var extra_id = index;
+                            if (val.process) {
+                                extra_id = '';
+                                val.process.forEach(function(val1){
+                                    extra_id += '|'+val1.id;
+                                })
+                            }
+                            unique += extra_id;
 
                             if (!sales_order_selection[unique]) {
                                 sales_order_selection[unique] = {};
@@ -460,7 +552,8 @@
                                     order_codes:[],//主业务员单号
                                     order_sub_ids:[],//业务子单号
                                     order_sub:[],//业务子单
-                                    data:{}//业务单数据
+                                    data:{},//业务单数据
+                                    sales_order_sub_diff_data:[],//业务单数据
 
                                 };
                             }
@@ -474,12 +567,21 @@
                                 sales_order_selection[unique][color_unique].order_codes.push(val.sales_order.order_no);
                             }
 
-                            if (sales_order_selection[unique][color_unique].data.product_id) {
+                            if (sales_order_selection[unique][color_unique].data.product_id) {//合并
                                 sales_order_selection[unique][color_unique].data.sum = parseInt(sales_order_selection[unique][color_unique].data.sum) + parseInt(val.sum);
-                            } else {
-                                sales_order_selection[unique][color_unique].data = val;
-                            }
+                                //合并情况下,其他杂项清空
+                                sales_order_selection[unique][color_unique].data.material = [];
+                                sales_order_selection[unique][color_unique].data.material_sub = [];
+                                sales_order_selection[unique][color_unique].data.decoration = '';
+                                sales_order_selection[unique][color_unique].data.sample_imgs = [];
+                                sales_order_selection[unique][color_unique].data.sample_imgs_final = [];
+                                sales_order_selection[unique][color_unique].data.sample_info = '';
+                                sales_order_selection[unique][color_unique].data.custom_model = '';
 
+                            } else {
+                                sales_order_selection[unique][color_unique].data = deepCopy(val);
+                            }
+                            sales_order_selection[unique][color_unique].sales_order_sub_diff_data.push(val);
                         })
 
                     }
@@ -508,6 +610,7 @@
                             block.colors=[
                                 {color:{id:block.color_id,name:block.color_code},id:block.color_id,name:block.color_code,sum:block.sum,order_codes:sales_order_selection[i][j].order_codes,order_sub:sales_order_selection[i][j].order_sub}
                             ];
+                            block.sales_order_sub_diff_data = deepCopy(sales_order_selection[i][j].sales_order_sub_diff_data);
                         }
                     }
                     data.push(block);
@@ -579,6 +682,7 @@
                         this.produce_man = res.data.produce_man;
                         this.sub_orders = res.data.sales_order_sub;
                         this.gen_options_product_cat_product();
+                        this.gen_material_color();
                     } else {
                         this.$message({
                             message: res.msg,
@@ -606,13 +710,16 @@
                 var order_num = 0;
                 data.sub_orders.forEach(function(val, index){
 
-                    if(!val.material || !val.material.length) error_msg = '第'+(index+1)+'个子项,请选择材料';
-                    val.material.forEach(function(material){
+                    if(!val.material || !val.material.length) {
+                        error_msg = '第'+(index+1)+'个子项,请添加材料'
+                    } else {
+                        val.material.forEach(function(item){
 
-                        if (!material.material.id || !material.sum) {
-                            error_msg = '第'+(index+1)+'个子项,请检查材料是否设置完整';
-                        }
-                    })
+                            if (!item.material || !item.sub || !item.num) {
+                                error_msg = '第'+(index+1)+'个子项,请检查材料是否设置完整';
+                            }
+                        })
+                    }
                     if(!val.process || !val.process.length) error_msg = '第'+(index+1)+'个子项,请选择流程';
 
                     if(!val.product_cat_id) error_msg = '第'+(index+1)+'个子项,请选择帽型类别';
@@ -833,6 +940,36 @@
                     }.bind(this));
                 }.bind(this))
             },
+
+            change_material(material) {
+
+                material.sub_options = [];
+                material.sub = {};
+                this.options.options_material_colors.forEach(function(val){
+                    if (val.cid == material.material.id) {
+                        material.sub_options = deepCopy(val.options);
+                        material.sub = (material.sub_options && material.sub_options.length) ? material.sub_options[0] : {};
+                    }
+                }.bind(this));
+
+            },
+            gen_material_color(){
+                this.sub_orders.forEach(function (sub_order) {
+
+                    sub_order.material.forEach(function(val1){
+                        this.options.options_material_colors.forEach(function(val){
+
+                            if (val.cid == val1.material.id) {
+                                val1.sub_options = deepCopy(val.options);
+                            }
+
+                        }.bind(this));
+
+                    }.bind(this))
+
+                }.bind(this))
+            },
+
             change_product(sub_order) {
                 sub_order.product_id = sub_order.product.id;
                 sub_order.product_name = sub_order.product.name;

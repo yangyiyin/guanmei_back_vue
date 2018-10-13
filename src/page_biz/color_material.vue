@@ -103,7 +103,7 @@
         },
         methods: {
             list() {
-                color_list({page:this.currentPage,page_size:this.limit,name:this.name,type:1}).then(function(res){
+                color_list({page:this.currentPage,page_size:this.limit,name:this.name,type:2}).then(function(res){
                     if (res.code == this.$store.state.constant.status_success) {
                         this.tableData = res.data.list;
                         this.count = parseInt(res.data.count);
@@ -129,7 +129,7 @@
                 this.list();
             },
             goto_edit_color(id) {
-                this.$router.push({path:'add_color',query:{id:id}});
+                this.$router.push({path:'add_color_material',query:{id:id}});
             },
             verify(scope, status) {
 

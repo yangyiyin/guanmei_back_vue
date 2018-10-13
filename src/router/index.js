@@ -19,7 +19,9 @@ const admin_log = r => require.ensure([], () => r(require('@/page_biz/admin_log'
 const admin_orgnize = r => require.ensure([], () => r(require('@/page_biz/admin_orgnize')), 'admin_orgnize');
 const add_admin_orgnize = r => require.ensure([], () => r(require('@/page_biz/add_admin_orgnize')), 'add_admin_orgnize');
 const color = r => require.ensure([], () => r(require('@/page_biz/color')), 'color');
+const color_material = r => require.ensure([], () => r(require('@/page_biz/color_material')), 'color_material');
 const add_color = r => require.ensure([], () => r(require('@/page_biz/add_color')), 'add_color');
+const add_color_material = r => require.ensure([], () => r(require('@/page_biz/add_color_material')), 'add_color_material');
 const product_category = r => require.ensure([], () => r(require('@/page_biz/product_category')), 'product_category');
 const add_product_category = r => require.ensure([], () => r(require('@/page_biz/add_product_category')), 'add_product_category');
 const product = r => require.ensure([], () => r(require('@/page_biz/product')), 'product');
@@ -119,6 +121,8 @@ const routes = [
 
 {path: '/color',component: color,meta: ['设置', '颜色'],},
 {path: '/add_color',component: add_color,meta: ['设置', '设置颜色'],},
+{path: '/color_material',component: color_material,meta: ['设置', '颜色'],},
+{path: '/add_color_material',component: add_color_material,meta: ['设置', '设置颜色'],},
 {path: '/product_category',component: product_category,meta: ['设置', '帽子种类管理'],},
 {path: '/add_product_category',component: add_product_category,meta: ['设置', '设置帽子种类'],},
 {path: '/product',component: product,meta: ['设置', '帽子型号管理'],},
