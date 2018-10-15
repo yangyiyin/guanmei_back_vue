@@ -45,13 +45,19 @@
                             <el-form-item label="流程:" style="width: 100%">
                                 <span>{{props.row.process_info}}</span>
                             </el-form-item>
-                            <el-form-item label="所属业务单:" >
-                                <span >{{props.row.sales_order_nos}}</span>
-                            </el-form-item>
+                            <!--<el-form-item label="所属业务单:" >-->
+                                <!--<span >{{props.row.sales_order_nos}}</span>-->
+                            <!--</el-form-item>-->
                         </el-form>
                     </template>
                 </el-table-column>
                 <el-table-column label="编号" prop="order_no"></el-table-column>
+                <el-table-column label="包含业务单">
+                    <template slot-scope="scope">
+
+                       <span style="cursor: pointer;text-decoration: underline" @click="dialog_sales_order_visible = true;current=scope.row">{{scope.row.sales_order_nos}}</span>
+                    </template>
+                </el-table-column>
 
                 <el-table-column label="制单时间" prop="order_date"></el-table-column>
                 <el-table-column label="进度">
@@ -96,6 +102,21 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="包含业务单" :visible.sync="dialog_sales_order_visible" width="30%">
+            <el-table
+                    :data="current.sales_sub_orders"
+                    style="width: 100%">
+
+                <el-table-column label="编号" prop="order_code"></el-table-column>
+                <el-table-column label="客户款式" prop="custom_model"></el-table-column>
+           </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialog_sales_order_visible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+
+
         <div style="display: none">
             <div id="print" width="90%">
                 <img :src="barcode_url" style='width: 90%;margin: 10px auto;display: block'/>
@@ -120,6 +141,7 @@
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
+                dialog_sales_order_visible:false,
                 current:{},
 //                remark:'',
 //                choose_categories:[],
