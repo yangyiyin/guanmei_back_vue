@@ -68,7 +68,7 @@
                     <div style="display: inline-block;vertical-align: top">
                         <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors">
 
-                            <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color)">
+                            <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)">
                                 <el-option
                                         v-for="item in options.options_color"
                                         :key="item.id"
@@ -103,32 +103,36 @@
                 <div class="search_item">
                     <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:</span></span>
                     <div style="display: inline-block;vertical-align: top">
-                        <div style="margin-bottom: 3px;" v-for="(material, index2)  in sub_order.material">
+                        <template v-if="sub_order.material && sub_order.material.length" v-for="(material_obj, index3)  in sub_order.material">
+                            <div style="font-size: 14px;color: #000;margin: 5px;background: #eee;width: 50px;text-align: center;">{{material_obj.belong_color.name}}:</div>
+                            <div style="margin-bottom: 3px;" v-for="(material, index2)  in material_obj.data">
 
-                            <el-select v-model="material.material" value-key="id" placeholder="请选择材料" @change="change_material(material)">
-                                <el-option
-                                        v-for="item in options.options_material"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item">
-                                </el-option>
-                            </el-select>
+                                <el-select v-model="material.material" value-key="id" placeholder="请选择材料" @change="change_material(material)">
+                                    <el-option
+                                            v-for="item in options.options_material"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item">
+                                    </el-option>
+                                </el-select>
 
-                            <el-select v-model="material.sub" value-key="id" placeholder="请选择颜色">
-                                <el-option
-                                        v-for="item in material.sub_options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item">
-                                </el-option>
-                            </el-select>
+                                <el-select v-model="material.sub" value-key="id" placeholder="请选择颜色">
+                                    <el-option
+                                            v-for="item in material.sub_options"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item">
+                                    </el-option>
+                                </el-select>
 
-                            <el-input clearable placeholder="数量" v-model="material.num" style="width: 120px"></el-input>
+                                <el-input clearable placeholder="数量" v-model="material.num" style="width: 120px"></el-input>
 
-                            <el-button type="danger" @click="del_material(index, index2)" round size="mini">删除</el-button>
 
-                        </div>
-                        <el-button @click="add_material(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多材料</el-button>
+                                <el-button type="danger" @click="del_material(material_obj, index2)" round size="mini">删除</el-button>
+
+                            </div>
+                            <el-button @click="add_material(material_obj)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多材料</el-button>
+                        </template>
                     </div>
 
                 </div>
@@ -262,7 +266,7 @@
                 this.sub_orders=[];
 
                 //草稿中获取
-                var sales_order_edit_data = getStore('sales_order_edit_data');
+                var sales_order_edit_data = getStore('sales_order_edit_data_20181016');
                 sales_order_edit_data = JSON.parse(sales_order_edit_data);
                 if (sales_order_edit_data) {
                     this.order_date = sales_order_edit_data.order_date;
@@ -349,12 +353,21 @@
                     if(!val.material || !val.material.length) {
                         error_msg = '第'+(index+1)+'个子项,请添加材料'
                     } else {
-                        val.material.forEach(function(item){
 
-                            if (!item.material || !item.sub || !item.num) {
-                                error_msg = '第'+(index+1)+'个子项,请检查材料是否设置完整';
-                            }
-                        })
+                            val.material.forEach(function(_item){
+
+                                if (!_item.data || !_item.data.length) {
+                                    error_msg = '第' + (index + 1) + '个子项,请检查材料是否添加完整';
+                                } else {
+                                    _item.data.forEach(function(item) {
+                                        if (!item.material || !item.sub || !item.num) {
+                                            error_msg = '第' + (index + 1) + '个子项,请检查材料是否设置完整';
+                                        }
+                                    })
+                                }
+                            })
+
+
                     }
 
                     var sample_imgs = [];
@@ -393,7 +406,7 @@
                                 sales_man:data.sales_man,
                                 sub_orders : data.sub_orders
                             }
-                            setStore('sales_order_edit_data', sales_order_edit_data);
+                            setStore('sales_order_edit_data_20181016', sales_order_edit_data);
                             this.$message({
                                 message: res.msg,
                                 type: 'success'
@@ -473,14 +486,29 @@
             },
             add_color(index) {
                 var color = {
+                    _id:new Date(),
                     id:'',
                     name:'',
                     sum:'',
                     color:{}
                 };
                 this.sub_orders[index].colors.push(color);
+
+
+                this.sub_orders[index].material.push({
+                    _id:color._id,
+                    belong_color:{id:color.id,name:color.name},
+                    data:[]
+                });
+
             },
             del_color(index1, index2) {
+
+                this.sub_orders[index1].material.forEach(function(val,i){
+                    if (val._id == this.sub_orders[index1].colors[index2]._id) {
+                        this.sub_orders[index1].material.splice(i,1);
+                    }
+                }.bind(this));
                 this.sub_orders[index1].colors.splice(index2,1);
             },
             change_product_cat(sub_order) {
@@ -524,14 +552,20 @@
             gen_material_color(){
                 this.sub_orders.forEach(function (sub_order) {
 
-                    sub_order.material.forEach(function(val1){
-                        this.options.options_material_colors.forEach(function(val){
+                    sub_order.material.forEach(function(val2){
 
-                            if (val.cid == val1.material.id) {
-                                val1.sub_options = deepCopy(val.options);
-                            }
+                        if (val2.data) {
+                            val2.data.forEach(function(val1){
+                                this.options.options_material_colors.forEach(function(val){
 
-                        }.bind(this));
+                                    if (val.cid == val1.material.id) {
+                                        val1.sub_options = deepCopy(val.options);
+                                    }
+
+                                }.bind(this));
+                            }.bind(this));
+                        }
+
 
                     }.bind(this))
 
@@ -542,9 +576,19 @@
                 sub_order.product_id = sub_order.product.id;
                 sub_order.product_name = sub_order.product.name;
             },
-            change_color(color){
-              color.id = color.color.id;
-              color.name = color.color.name;
+            change_color(color,sub_order){
+                color.id = color.color.id;
+                color.name = color.color.name;
+                if (sub_order.material.length) {
+                    sub_order.material.forEach(function(val){
+                        if (val._id == color._id) {
+                            val.belong_color = {id:color.id,name:color.name};
+                        }
+                    })
+                }
+
+
+
             },
             change_process(sub_order) {
                 //排序
@@ -563,17 +607,18 @@
                 sub_order.process = sub_order.process.sort(compare);
 
             },
-            add_material(index) {
+            add_material(material_obj) {
                 var material = {
                     material:[],
                     sub:[],
                     num:''
 
                 };
-                this.sub_orders[index].material.push(material);
+                material_obj.data.push(material);
+                //console.log(this.sub_orders[index].material);
             },
-            del_material(index1, index2) {
-                this.sub_orders[index1].material.splice(index2,1);
+            del_material(material_obj, index2) {
+                material_obj.data.splice(index2,1);
             },
         }
     }
