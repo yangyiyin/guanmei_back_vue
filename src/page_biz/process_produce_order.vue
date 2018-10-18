@@ -47,7 +47,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="编号" prop="order_no"></el-table-column>
+                <el-table-column label="包含业务单">
+                    <template slot-scope="scope">
 
+                        <span style="cursor: pointer;text-decoration: underline" @click="dialog_sales_order_visible = true;current=scope.row">{{scope.row.sales_order_nos}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="制单时间" prop="order_date"></el-table-column>
                 <el-table-column label="进度">
                     <template slot-scope="scope">
@@ -74,6 +79,19 @@
                 </el-pagination>
             </div>
         </div>
+
+        <el-dialog title="包含业务单" :visible.sync="dialog_sales_order_visible" width="30%">
+            <el-table
+                    :data="current.sales_sub_orders"
+                    style="width: 100%">
+
+                <el-table-column label="编号" prop="order_code"></el-table-column>
+                <el-table-column label="客户款式" prop="custom_model"></el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialog_sales_order_visible = false">取 消</el-button>
+            </div>
+        </el-dialog>
 
         <div style="display: none">
             <div id="print" width="90%">
@@ -107,7 +125,8 @@
                 loadingBtn:-1,
                 print_order_no:'',
                 barcode_url:'',
-                order_info:''
+                order_info:'',
+                dialog_sales_order_visible:false
             }
         },
         components: {

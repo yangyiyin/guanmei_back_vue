@@ -40,7 +40,9 @@
                             <el-form-item label="样品说明:" >
                                 <span>{{sub_order.sample_info}}</span>
                             </el-form-item>
-
+                            <el-form-item label="客户款式:" >
+                                <span>{{sub_order.custom_model}}</span>
+                            </el-form-item>
                             <el-form-item label="当前进度:" >
                                 <span style="font-weight: bold;color: #000">{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
                             </el-form-item>

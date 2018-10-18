@@ -276,6 +276,8 @@
                     this.sales_man=sales_order_edit_data.sales_man ? sales_order_edit_data.sales_man : this.sales_man;
                     this.sub_orders=sales_order_edit_data.sub_orders;
                 }
+
+                this.order_date=(new Date()).toLocaleDateString();
             },
             get_info() {
                 sales_order_info({id:this.id}).then(function (res) {

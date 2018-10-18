@@ -480,7 +480,8 @@
                 if (this.active == 0 && this.way == -1 && this.is_new) {//初始化
                     this.multipleSelection = {};
                     setStore('cache_sales_order_selection', '');
-                    this.order_date='';
+
+                    this.order_date=(new Date()).toLocaleDateString();
                     this.delivery_date='';
                     this.produce_man='';
                     this.sub_orders=[];
