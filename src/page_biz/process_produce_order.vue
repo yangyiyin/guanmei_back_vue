@@ -54,6 +54,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="制单时间" prop="order_date"></el-table-column>
+                <el-table-column label="交货时间" prop="delivery_date"></el-table-column>
                 <el-table-column label="进度">
                     <template slot-scope="scope">
                         <p v-if="scope.row.process_state_id != 999999">当前流程:{{scope.row.process_state}}</p>

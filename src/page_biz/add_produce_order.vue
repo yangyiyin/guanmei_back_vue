@@ -53,7 +53,7 @@
                     <el-table-column label="颜色" prop="color_code"></el-table-column>
                     <el-table-column label="数量" prop="sum"></el-table-column>
                     <el-table-column label="业务单号" prop="sales_order.order_no"></el-table-column>
-                    <el-table-column label="制单时间" prop="sales_order.order_date"></el-table-column>
+                    <el-table-column label="交货时间" prop="sales_order.delivery_date"></el-table-column>
 
                 </el-table>
                 <div class="Pagination" style="text-align: left;margin-top: 10px;">
