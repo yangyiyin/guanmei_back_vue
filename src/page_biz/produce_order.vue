@@ -137,7 +137,7 @@
         data(){
             return {
                 tableData: [],
-                limit: 10,
+                limit: 20,
                 count: 0,
                 currentPage: 1,
                 dialogFormVisible:false,
