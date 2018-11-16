@@ -192,7 +192,7 @@
 
             <div class="search_item add_block" @click="add_block"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>增加订单子项</div>
 
-            <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">提交</el-button>
+            <el-button type="success" style="margin-top: 20px;" v-on:click="submit" :loading="loading">保存</el-button>
 
 
         </div>

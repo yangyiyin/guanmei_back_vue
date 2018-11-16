@@ -65,6 +65,7 @@
                 <el-table-column label="状态">
                     <template slot-scope="scope">
 
+                        <el-tag v-if="scope.row.status == 5" type="warning">草稿，待提交</el-tag>
                         <el-tag v-if="scope.row.status == 1" type="warning">待安排生产</el-tag>
                         <el-tag v-if="scope.row.status == 2" >已安排生产</el-tag>
                         <el-tag v-if="scope.row.status == 3" type="success">已完成</el-tag>
@@ -74,10 +75,10 @@
 
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == 1" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
+                        <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
-                        <!--<el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">上架</el-button>-->
-                        <el-button v-if="scope.row.status == 1" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 5" @click="verify(scope, 1)" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
+                        <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
