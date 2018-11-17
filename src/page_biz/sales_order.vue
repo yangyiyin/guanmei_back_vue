@@ -37,7 +37,7 @@
                             <el-form-item label="样品图:" >
                                 <img width="80" v-for="(img, index)  in sub_order.sample_imgs" :src="img">
                             </el-form-item>
-                            <el-form-item label="样品说明:" >
+                            <el-form-item label="包装说明:" >
                                 <span>{{sub_order.sample_info}}</span>
                             </el-form-item>
                             <el-form-item label="客户款式:" >

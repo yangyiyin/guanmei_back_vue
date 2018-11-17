@@ -38,7 +38,7 @@
                             <el-form-item label="样品图:" >
                                 <img width="80" v-for="(img, index)  in props.row.sample_imgs" :src="img">
                             </el-form-item>
-                            <el-form-item label="样品说明:" >
+                            <el-form-item label="包装说明:" >
                                 <span>{{props.row.sample_info}}</span>
                             </el-form-item>
 

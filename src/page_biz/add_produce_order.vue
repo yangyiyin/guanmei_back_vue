@@ -39,7 +39,7 @@
                                 <el-form-item label="样品图:" >
                                     <img width="80" v-for="(img, index)  in props.row.sample_imgs_final" :src="img">
                                 </el-form-item>
-                                <el-form-item label="样品说明:" >
+                                <el-form-item label="包装说明:" >
                                     <span>{{props.row.sample_info}}</span>
                                 </el-form-item>
                                 <el-form-item label="流程:" >
@@ -327,18 +327,18 @@
                     </div>
 
                     <div class="search_item">
-                        <span class="pre_info" style="font-size: 14px;">样品说明:
+                        <span class="pre_info" style="font-size: 14px;">包装说明:
                            <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
                             <div slot="content">
                                 <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data" style="border-bottom: 1rpx dashed #999">
-                                    订单{{index}}:样品说明:{{sub_sub_order.sample_info}};
+                                    订单{{index}}:包装说明:{{sub_sub_order.sample_info}};
 
                                 </p>
                             </div>
                             <i class="iconfont">&#xe601;</i>
                         </el-tooltip>
                         </span>
-                        <el-input  type="textarea" clearable placeholder="请输入样品说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
+                        <el-input  type="textarea" clearable placeholder="请输入包装说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
                     </div>
                     <i class="iconfont del_block" v-if="way==2" @click="del_block(index)">&#xe603;</i>
                     <el-badge class="mark" :value="index+1" style="position: absolute;bottom: 0;right: 0"/>

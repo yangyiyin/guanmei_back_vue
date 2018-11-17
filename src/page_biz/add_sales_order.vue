@@ -179,8 +179,8 @@
                 </div>
 
                 <div class="search_item">
-                    <span class="pre_info" style="font-size: 14px;">样品说明:</span>
-                    <el-input  type="textarea" clearable placeholder="请输入样品说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
+                    <span class="pre_info" style="font-size: 14px;">包装说明:</span>
+                    <el-input  type="textarea" clearable placeholder="请输入包装说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
                 </div>
                 <div class="search_item">
                     <span class="pre_info" style="font-size: 14px;">客户款式/型号:</span>
@@ -307,7 +307,7 @@
                     return new Promise(function(resolve,reject){
                         if (res.code == this.$store.state.constant.status_success) {
                             this.options = res.data;
-                            this.options.options_color.push({id:'-1',name:'其他'});
+                            this.options.options_color.unshift({id:'-1',name:'其他'});
                         } else {
                             this.$message({
                                 message: res.msg,
