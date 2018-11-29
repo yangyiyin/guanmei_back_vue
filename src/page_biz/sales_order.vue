@@ -43,6 +43,9 @@
                             <el-form-item label="客户款式:" >
                                 <span>{{sub_order.custom_model}}</span>
                             </el-form-item>
+                            <el-form-item label="客户姓名:" >
+                                <span>{{props.row.custom_name}}</span>
+                            </el-form-item>
                             <el-form-item label="当前进度:" >
                                 <span style="font-weight: bold;color: #000">{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
                             </el-form-item>
@@ -76,6 +79,7 @@
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
+                        <el-button size="mini" @click="goto_edit_sales_order(scope.row.id,'clone')">克隆</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <el-button size="mini" v-if="scope.row.status == 5" @click="verify(scope, 1)" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
                         <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
@@ -168,8 +172,8 @@
                 this.currentPage = 1;
                 this.list();
             },
-            goto_edit_sales_order(id) {
-                this.$router.push({path:'add_sales_order',query:{id:id}});
+            goto_edit_sales_order(id,clone) {
+                this.$router.push({path:'add_sales_order',query:{id:id,clone:clone}});
             },
             verify(scope, status) {
 

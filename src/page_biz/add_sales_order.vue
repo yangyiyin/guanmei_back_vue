@@ -208,6 +208,7 @@
         data(){
             return {
                 id:0,
+                clone:false,
                 loading:false,
                 upload_url:this.$store.state.constant.upload_url,
                 dialogImageUrl: '',
@@ -245,6 +246,7 @@
 //                console.log(vm.id )
                 vm.init_select_options().then(function(){
                     if (vm.id && vm.id > 0) {
+                        vm.clone = to.query.clone ? true : false;
                         vm.get_info();
                     } else {
                         vm.init();
@@ -330,6 +332,9 @@
                     order_no:this.order_no,
                     sales_man:this.sales_man,
                     sub_orders:this.sub_orders
+                }
+                if (this.clone) {
+                    data.id = null;
                 }
                 var error_msg = '';
                 if (!data.order_date) error_msg = '请填写制单日期';
