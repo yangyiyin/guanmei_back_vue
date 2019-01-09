@@ -19,7 +19,7 @@
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
-                        <el-form style="border: 1px dashed #ddd;margin-top: 5px;padding: 0 5px;"  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline class="demo-table-expand">
+                        <el-form style="border: 1px dashed #ddd;margin-top: 5px;padding: 0 5px;"  v-for="(sub_order, index)  in props.row.sales_order_sub" label-position="left" inline :key='index' class="demo-table-expand">
                             <el-form-item label="帽型:" >
                                 <span>{{sub_order.product_cat_name}}-{{sub_order.product_code}}-{{sub_order.color_code}} 数量{{sub_order.sum}}</span>
                                 <el-tag size="mini" v-if="sub_order.status == 1" type="warning">待安排生产</el-tag>
@@ -29,15 +29,15 @@
                             </el-form-item>
 
                             <el-form-item label="材质:" >
-                                <span v-for="(material, index)  in sub_order.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
+                                <span v-for="(material, index)  in sub_order.material" :key='index'>{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
                             </el-form-item>
                             <el-form-item label="装饰说明:" >
                                 <span>{{sub_order.decoration}}</span>
                             </el-form-item>
                             <el-form-item label="样品图:" >
-                                <img width="80" v-for="(img, index)  in sub_order.sample_imgs" :src="img">
+                                <img width="80" v-for="(img, index)  in sub_order.sample_imgs" :key='index' :src="img">
                             </el-form-item>
-                            <el-form-item label="包装说明:" >
+                            <el-form-item label="备注说明:" >
                                 <span>{{sub_order.sample_info}}</span>
                             </el-form-item>
                             <el-form-item label="客户款式:" >
@@ -80,6 +80,7 @@
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
                         <el-button size="mini" @click="goto_edit_sales_order(scope.row.id,'clone')">克隆</el-button>
+                        <el-button size="mini" type="success" @click="print_barcode(scope.row)">打印业务单({{scope.row.id}})</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <el-button size="mini" v-if="scope.row.status == 5" @click="verify(scope, 1)" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
                         <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
@@ -108,173 +109,242 @@
                 <el-button type="primary" @click="sort">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- 打印div -->
+        <div style="display: none">
+            <div id="print" width="90%">
+                <img :src="barcode_url" style='width: 90%;margin: 10px auto;display: block'/>
+                <div style="width: 90%;text-align: center;margin: 0 auto">{{print_order_no}}</div>
+                <p style="width: 90%;text-align: center;margin: 0 auto">{{order_info}}</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import headTop from '../components/headTop'
-    import {sales_order_list,sales_order_del,sales_order_verify,sales_order_sort} from '@/api/getDatasales_order'
-    export default {
-        data(){
-            return {
-                tableData: [],
-                limit: 10,
-                count: 0,
-                currentPage: 1,
-                dialogFormVisible:false,
-                current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
-                order_no:'',
-                loadingBtn:-1
-            }
-        },
-        components: {
-            headTop,
-        },
-        created(){
-            this.list();
-        },
-        mounted(){
+import headTop from "../components/headTop";
+import {
+  sales_order_list,
+  sales_order_del,
+  sales_order_verify,
+  sales_order_sort
+} from "@/api/getDatasales_order";
+import "@/assets/js/jquery-1.4.4.min";
+import "@/assets/js/jquery.jqprint-0.3";
+// import { gen_barcode_html } from "@/api/getDataproduce_order";
 
-        },
-        beforeRouteEnter (to, from, next) {
-            next(vm => {
-                // 通过 `vm` 访问组件实例
-                vm.list();
-        })
-        },
-        methods: {
-            list() {
-                sales_order_list({page:this.currentPage,page_size:this.limit,name:this.name}).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.tableData = res.data.list;
-                        this.count = parseInt(res.data.count);
-                    }
-                }.bind(this));
+export default {
+  data() {
+    return {
+      tableData: [],
+      limit: 10,
+      count: 0,
+      currentPage: 1,
+      dialogFormVisible: false,
+      current: {},
+      //                remark:'',
+      //                choose_categories:[],
+      //                categories:[],
+      order_no: "",
+      loadingBtn: -1,
 
-            },
-            handleCurrentChange(val){
-                this.currentPage = val;
-                this.list();
-            },
-            handleEdit(row){
-                this.dialogFormVisible = true;
-                if (row) {
-                    this.current_entity = row;
+      // 临时的
+      barcode_url: "",
+      print_order_no: "",
+      order_info: ""
+    };
+  },
+  components: {
+    headTop
+  },
+  created() {
+    this.list();
+  },
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+      vm.list();
+    });
+  },
+  methods: {
+    list() {
+      sales_order_list({
+        page: this.currentPage,
+        page_size: this.limit,
+        name: this.name
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.tableData = res.data.list;
+            this.count = parseInt(res.data.count);
+          }
+        }.bind(this)
+      );
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.list();
+    },
+    handleEdit(row) {
+      this.dialogFormVisible = true;
+      if (row) {
+        this.current_entity = row;
+      } else {
+        this.current_entity = {};
+      }
+    },
+    search() {
+      this.currentPage = 1;
+      this.list();
+    },
+    goto_edit_sales_order(id, clone) {
+      this.$router.push({
+        path: "add_sales_order",
+        query: { id: id, clone: clone }
+      });
+    },
+    verify(scope, status) {
+      this.$confirm("确认此操作?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          var item = scope.row;
+          this.loadingBtn = scope.$index;
+          sales_order_verify({ id: item.id, status: status })
+            .then(
+              function(res) {
+                if (res.code == this.$store.state.constant.status_success) {
+                  item.status = status;
+                  this.$message({
+                    type: "success",
+                    message: "操作成功"
+                  });
                 } else {
-                    this.current_entity = {};
+                  this.$message({
+                    type: "warning",
+                    message: res.msg
+                  });
                 }
+              }.bind(this)
+            )
+            .finally(
+              function() {
+                this.loadingBtn = -1;
+              }.bind(this)
+            );
+        }.bind(this)
+      );
+    },
+    del(item, index) {
+      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          sales_order_del({ id: item.id }).then(
+            function(res) {
+              if (res.code == this.$store.state.constant.status_success) {
+                this.tableData.splice(index, 1);
+                this.count--;
+                this.$message({
+                  type: "success",
+                  message: "操作成功"
+                });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.msg
+                });
+              }
+            }.bind(this)
+          );
+        }.bind(this)
+      );
+    },
+    handleSort(row) {
+      this.dialogFormVisible = true;
+      this.current = row;
+    },
+    sort() {
+      sales_order_sort({
+        id: this.current.id,
+        sort: this.current.sort
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.dialogFormVisible = false;
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "warning"
+            });
+          }
+        }.bind(this)
+      );
+      this.dialogFormVisible = false;
+    },
 
-            },
-            search() {
-                this.currentPage = 1;
-                this.list();
-            },
-            goto_edit_sales_order(id,clone) {
-                this.$router.push({path:'add_sales_order',query:{id:id,clone:clone}});
-            },
-            verify(scope, status) {
-
-                this.$confirm('确认此操作?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    var item = scope.row;
-                    this.loadingBtn = scope.$index;
-                    sales_order_verify({id:item.id,status:status}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            item.status = status;
-                            this.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this)).finally(function(){
-                        this.loadingBtn = -1;
-                    }.bind(this));
-                }.bind(this));
-
-
-
-            },
-            del(item, index) {
-
-                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    sales_order_del({id:item.id}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            this.tableData.splice(index,1);
-                            this.count --;
-                            this.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this));
-                }.bind(this))
-
-            },
-            handleSort(row){
-                this.dialogFormVisible = true;
-                this.current = row;
-            },
-            sort() {
-                sales_order_sort({
-                    id:this.current.id,
-                    sort:this.current.sort
-
-                }).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.dialogFormVisible = false;
-                        this.$message({
-                            type: 'success',
-                            message: '操作成功'
-                        });
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                    }
-                }.bind(this));
-                this.dialogFormVisible = false;
-            }
-        },
+    // 打印
+    print_barcode(row) {
+      console.log(row);
+      // return;
+      this.print_order_no = row.order_no;
+      this.order_info = "礼帽-58/60-牛仔蓝58 数量352";
+      this.barcode_url = "http://api.yixsu.com/barcode.png?r=1547022822";
+      setTimeout(function() {
+        $("#print").jqprint();
+        row.id++;
+        console.log(row.id);
+      });
+      // gen_barcode_html({
+      //   code: row.order_no,
+      //   id: row.id
+      // }).then(
+      //   function(res) {
+      //     if (res.code == 100) {
+      //       this.barcode_url = "http://api.yixsu.com/barcode.png?r=1547022822";
+      //       setTimeout(function() {
+      //         $("#print").jqprint();
+      //         row.print_count++;
+      //       });
+      //     } else {
+      //       this.$message({
+      //         showClose: true,
+      //         message: res.msg,
+      //         type: "warning"
+      //       });
+      //     }
+      //   }.bind(this)
+      // );
     }
+  }
+};
 </script>
 
 <style lang="less">
-    @import '../style/mixin';
-    .table_container{
-        padding: 20px;
-    }
-    .demo-table-expand {
-        font-size: 0;
-    }
-    .demo-table-expand label {
-        width: 90px;
-        color: #99a9bf;
-    }
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
+@import "../style/mixin";
+.table_container {
+  padding: 20px;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>

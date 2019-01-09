@@ -25,7 +25,7 @@
                             <el-form-item label="" >
                             </el-form-item>
                             <el-form-item label="材料:" >
-                                <p v-for="(_material,index2) in props.row.material">
+                                <p v-for="(_material,index2) in props.row.material" :key='index2'>
                                     <!--<span>{{_material.material.name}}</span>&nbsp;&nbsp;-->
                                     <!--<span>数量:{{_material.sum}}(默认单位)</span>-->
 
@@ -33,7 +33,7 @@
                                 </p>
                             </el-form-item>
                             <el-form-item label="装饰/辅料:">
-                                <p v-for="(_material,index2) in props.row.material_sub">
+                                <p v-for="(_material,index2) in props.row.material_sub" :key='index2'>
                                     <span>{{_material.material.name}}</span>&nbsp;&nbsp;
                                     <span>来源:{{_material.from.name}}</span>&nbsp;&nbsp;
                                     <span>数量:{{_material.sum}}</span>
@@ -96,229 +96,256 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
-    import {storage_produce_order_list, gen_barcode_html} from '@/api/getDataproduce_order'
-    import {confirm_storage} from '@/api/getDatastorage'
-    import '@/assets/js/jquery-1.4.4.min';
-    import '@/assets/js/jquery.jqprint-0.3';
+import headTop from "../components/headTop";
+import {
+  storage_produce_order_list,
+  gen_barcode_html
+} from "@/api/getDataproduce_order";
+import { confirm_storage } from "@/api/getDatastorage";
+import "@/assets/js/jquery-1.4.4.min";
+import "@/assets/js/jquery.jqprint-0.3";
 
-    export default {
-        data(){
-            return {
-                tableData: [],
-                limit: 10,
-                count: 0,
-                currentPage: 1,
-                dialogFormVisible:false,
-                current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
-                order_no:'',
-                loadingBtn:-1,
-                print_order_no:'',
-                barcode_url:'',
-                order_info:''
-            }
-        },
-        components: {
-            headTop,
-        },
-        created(){
-            this.list();
-        },
-        mounted(){
-
-        },
-        beforeRouteEnter (to, from, next) {
-            next(vm => {
-                // 通过 `vm` 访问组件实例
-                vm.list();
-        })
-        },
-        methods: {
-            list() {
-                storage_produce_order_list({page:this.currentPage,page_size:this.limit,order_no:this.order_no}).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.tableData = res.data.list;
-                        this.count = parseInt(res.data.count);
-                    }
-                }.bind(this));
-
-            },
-            confirm_storage(row) {
-                this.$confirm('确认接单,将自动扣减库存,是否继续', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    confirm_storage({produce_order_id:row.id}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            this.list();
-                            this.$message({
-                                type: 'success',
-                                message: res.msg
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-
-                    }.bind(this));
-                }.bind(this))
-
-            },
-            handleCurrentChange(val){
-                this.currentPage = val;
+export default {
+  data() {
+    return {
+      tableData: [],
+      limit: 10,
+      count: 0,
+      currentPage: 1,
+      dialogFormVisible: false,
+      current: {},
+      //                remark:'',
+      //                choose_categories:[],
+      //                categories:[],
+      order_no: "",
+      loadingBtn: -1,
+      print_order_no: "",
+      barcode_url: "",
+      order_info: ""
+    };
+  },
+  components: {
+    headTop
+  },
+  created() {
+    this.list();
+  },
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+      vm.list();
+    });
+  },
+  methods: {
+    list() {
+      storage_produce_order_list({
+        page: this.currentPage,
+        page_size: this.limit,
+        order_no: this.order_no
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.tableData = res.data.list;
+            this.count = parseInt(res.data.count);
+          }
+        }.bind(this)
+      );
+    },
+    confirm_storage(row) {
+      this.$confirm("确认接单,将自动扣减库存,是否继续", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          confirm_storage({ produce_order_id: row.id }).then(
+            function(res) {
+              if (res.code == this.$store.state.constant.status_success) {
                 this.list();
-            },
-            handleEdit(row){
-                this.dialogFormVisible = true;
-                if (row) {
-                    this.current_entity = row;
+                this.$message({
+                  type: "success",
+                  message: res.msg
+                });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.msg
+                });
+              }
+            }.bind(this)
+          );
+        }.bind(this)
+      );
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.list();
+    },
+    handleEdit(row) {
+      this.dialogFormVisible = true;
+      if (row) {
+        this.current_entity = row;
+      } else {
+        this.current_entity = {};
+      }
+    },
+    search() {
+      this.currentPage = 1;
+      this.list();
+    },
+    goto_edit_produce_order(id) {
+      if (id) {
+        this.$router.push({
+          path: "add_produce_order",
+          query: { id: id, active: 1, way: 1 }
+        });
+      } else {
+        this.$router.push({
+          path: "add_produce_order",
+          query: { id: id, is_new: 1 }
+        });
+      }
+    },
+    verify(scope, status) {
+      this.$confirm("确认此操作?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          var item = scope.row;
+          this.loadingBtn = scope.$index;
+          produce_order_verify({ id: item.id, status: status })
+            .then(
+              function(res) {
+                if (res.code == this.$store.state.constant.status_success) {
+                  item.status = status;
+                  this.$message({
+                    type: "success",
+                    message: "操作成功"
+                  });
                 } else {
-                    this.current_entity = {};
+                  this.$message({
+                    type: "warning",
+                    message: res.msg
+                  });
                 }
-
-            },
-            search() {
-                this.currentPage = 1;
-                this.list();
-            },
-            goto_edit_produce_order(id) {
-                if (id) {
-                    this.$router.push({path:'add_produce_order',query:{id:id,active:1,way:1}});
-                } else {
-                    this.$router.push({path:'add_produce_order',query:{id:id,is_new:1}});
-                }
-
-            },
-            verify(scope, status) {
-
-                this.$confirm('确认此操作?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    var item = scope.row;
-                    this.loadingBtn = scope.$index;
-                    produce_order_verify({id:item.id,status:status}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            item.status = status;
-                            this.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this)).finally(function(){
-                        this.loadingBtn = -1;
-                    }.bind(this));
-                }.bind(this));
-
-
-
-            },
-            del(item, index) {
-
-                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    produce_order_del({id:item.id}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            this.tableData.splice(index,1);
-                            this.count --;
-                            this.$message({
-                                type: 'success',
-                                message: '操作成功'
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this));
-                }.bind(this))
-
-            },
-            handleSort(row){
-                this.dialogFormVisible = true;
-                this.current = row;
-            },
-            sort() {
-                produce_order_sort({
-                    id:this.current.id,
-                    sort:this.current.sort
-
-                }).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.dialogFormVisible = false;
-                        this.$message({
-                            type: 'success',
-                            message: '操作成功'
-                        });
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                    }
-                }.bind(this));
-                this.dialogFormVisible = false;
-            },
-            print_barcode(row) {
-                this.print_order_no = row.order_no;
-                this.order_info =row.product_cat_name + '-' + row.product_code+ '-' +row.color_code + ' ' + '数量'+row.sum;
-                gen_barcode_html({
-                    code:row.order_no,
-                    id:row.id
-
-                }).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.barcode_url = res.data;
-                        setTimeout(function(){
-                            $("#print").jqprint();
-                            row.print_count++;
-                        });
-
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: res.msg,
-                            type: 'warning'
-                        });
-                    }
-                }.bind(this));
-            }
-        },
+              }.bind(this)
+            )
+            .finally(
+              function() {
+                this.loadingBtn = -1;
+              }.bind(this)
+            );
+        }.bind(this)
+      );
+    },
+    del(item, index) {
+      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          produce_order_del({ id: item.id }).then(
+            function(res) {
+              if (res.code == this.$store.state.constant.status_success) {
+                this.tableData.splice(index, 1);
+                this.count--;
+                this.$message({
+                  type: "success",
+                  message: "操作成功"
+                });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.msg
+                });
+              }
+            }.bind(this)
+          );
+        }.bind(this)
+      );
+    },
+    handleSort(row) {
+      this.dialogFormVisible = true;
+      this.current = row;
+    },
+    sort() {
+      produce_order_sort({
+        id: this.current.id,
+        sort: this.current.sort
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.dialogFormVisible = false;
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "warning"
+            });
+          }
+        }.bind(this)
+      );
+      this.dialogFormVisible = false;
+    },
+    print_barcode(row) {
+      this.print_order_no = row.order_no;
+      this.order_info =
+        row.product_cat_name +
+        "-" +
+        row.product_code +
+        "-" +
+        row.color_code +
+        " " +
+        "数量" +
+        row.sum;
+      gen_barcode_html({
+        code: row.order_no,
+        id: row.id
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.barcode_url = res.data;
+            setTimeout(function() {
+              $("#print").jqprint();
+              row.print_count++;
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "warning"
+            });
+          }
+        }.bind(this)
+      );
     }
+  }
+};
 </script>
 
 <style lang="less">
-    @import '../style/mixin';
-    .table_container{
-        padding: 20px;
-    }
-    .demo-table-expand {
-        font-size: 0;
-    }
-    .demo-table-expand label {
-        width: 90px;
-        color: #99a9bf;
-    }
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
+@import "../style/mixin";
+.table_container {
+  padding: 20px;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>

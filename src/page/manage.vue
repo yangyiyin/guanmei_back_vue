@@ -28,55 +28,55 @@
 </template>
 
 <script>
-	import {get_menu} from '@/api/getDataEarth'
-    export default {
-		data(){
-			return {
-				menu:[]
-			}
-
-		},
-		created(){
-			this.get_menu();
-		},
-		methods: {
-			get_menu(){
-				get_menu().then(function (res) {
-					if (res.code == this.$store.state.constant.status_success) {
-						res.data.forEach(function(ele){
-							ele.children.forEach(function(e){
-								e.uri = e.uri.replace('menu_', '');
-							})
-						})
-						this.menu = res.data;
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'warning'
-						});
-					}
-
-				}.bind(this));
-			},
-		},
-		computed: {
-			defaultActive: function(){
-				var index = this.$route.path.replace('/', '');
-				index = index.replace('add_', '');
-				return index;
-			}
-		},
+import { get_menu } from "@/api/getDataEarth";
+export default {
+  data() {
+    return {
+      menu: []
+    };
+  },
+  created() {
+    this.get_menu();
+  },
+  methods: {
+    get_menu() {
+      get_menu().then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            res.data.forEach(function(ele) {
+              ele.children.forEach(function(e) {
+                e.uri = e.uri.replace("menu_", "");
+              });
+            });
+            this.menu = res.data;
+          } else {
+            this.$message({
+              message: res.msg,
+              type: "warning"
+            });
+          }
+        }.bind(this)
+      );
     }
+  },
+  computed: {
+    defaultActive: function() {
+      var index = this.$route.path.replace("/", "");
+      index = index.replace("add_", "");
+      return index;
+    }
+  }
+};
 </script>
 
 
 <style lang="less" scoped>
-	@import '../style/mixin';
-	.iconfont{
-		vertical-align: middle;
-		margin-right: 5px;
-		width: 24px;
-		text-align: center;
-		font-size: 18px;
-	}
+@import "../style/mixin";
+.iconfont {
+  vertical-align: middle;
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
 </style>
