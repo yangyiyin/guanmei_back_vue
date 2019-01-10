@@ -4,11 +4,21 @@
         <div class="table_container" style="padding-bottom: 0">
 
             <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="编号"
-                    v-model="order_no"
-                    clearable>
+                style="display: inline-block;width: 250px;"
+                placeholder="编号"
+                v-model="order_no"
+                clearable>
             </el-input>
+            <el-date-picker
+              v-model="dateTime"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions">
+            </el-date-picker>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_sales_order(0)">新增业务单</el-button>
 
@@ -54,7 +64,8 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="编号" prop="order_no">
+                <el-table-column label="编号" type="index" width="50" :index="typeIndex" align="center"></el-table-column>
+                <el-table-column label="业务单号" prop="order_no">
                     <template slot-scope="scope">
                         <span v-if="scope.row.custom_order_no"> {{scope.row.order_no}}({{scope.row.custom_order_no}})</span>
                         <span v-if="!scope.row.custom_order_no"> {{scope.row.order_no}}</span>
@@ -147,6 +158,40 @@ export default {
       //                categories:[],
       order_no: "",
       loadingBtn: -1,
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
+      dateTime: "",
+      startDate: "",
+      endDate: "",
 
       // 临时的
       barcode_url: "",
@@ -172,6 +217,7 @@ export default {
       sales_order_list({
         page: this.currentPage,
         page_size: this.limit,
+        order_no: this.order_no,
         name: this.name
       }).then(
         function(res) {
@@ -194,7 +240,30 @@ export default {
         this.current_entity = {};
       }
     },
+    // 时间转换 start
+    formatTen(num) {
+      return num > 9 ? num + "" : "0" + num;
+    },
+    formatDate(date) {
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      var hour = date.getHours();
+      var minute = date.getMinutes();
+      var second = date.getSeconds();
+      return year + "-" + this.formatTen(month) + "-" + this.formatTen(day);
+    },
+    // 时间转换 end
     search() {
+      if (!this.dateTime) {
+        this.$message.error("请选择日期！");
+        return;
+      }
+      this.startDate = this.formatDate(this.dateTime[0]);
+      this.endDate = this.formatDate(this.dateTime[1]);
+      console.log(this.startDate, "开始日期");
+      console.log(this.endDate, "结束日期");
+
       this.currentPage = 1;
       this.list();
     },
@@ -291,6 +360,10 @@ export default {
         }.bind(this)
       );
       this.dialogFormVisible = false;
+    },
+    // 序号根据数据增加
+    typeIndex(index) {
+      return index + (this.currentPage - 1) * 10 + 1;
     },
 
     // 打印
