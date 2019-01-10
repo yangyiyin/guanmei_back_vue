@@ -11,7 +11,8 @@ let routerMode = 'hash';
 let baseImgPath;
 
 if (process.env.NODE_ENV == 'development') {
-	baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
+	// baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
+	baseUrl = '//api.88plus.net/index.php';
     baseImgPath = '/img/';
 }else{
 	baseUrl = '//api.yixsu.com/index.php';
