@@ -21,6 +21,7 @@
             </el-date-picker>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_sales_order(0)">新增业务单</el-button>
+            <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
 
         </div>
         <div class="table_container">
@@ -121,6 +122,19 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
+            <p>
+                您即将导出订单数据,条件为:[编号:{{order_no?order_no:'无限制'}}]。
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
+                <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
         <!-- 打印div -->
         <div style="display: none">
             <div id="print" width="90%">
@@ -142,6 +156,7 @@ import {
 } from "@/api/getDatasales_order";
 import "@/assets/js/jquery-1.4.4.min";
 import "@/assets/js/jquery.jqprint-0.3";
+import {getStore} from '@/config/mUtils'
 // import { gen_barcode_html } from "@/api/getDataproduce_order";
 
 export default {
@@ -152,6 +167,7 @@ export default {
       count: 0,
       currentPage: 1,
       dialogFormVisible: false,
+        dialogFormVisibleDaochu: false,
       current: {},
       //                remark:'',
       //                choose_categories:[],
@@ -398,7 +414,10 @@ export default {
       //     }
       //   }.bind(this)
       // );
-    }
+    },
+      daochu() {
+          window.open(this.$store.state.constant.sales_order_excel_out + '?client_from=1&order_no=' + this.order_no+'&token=' + (getStore('token') ? getStore('token') : ''));
+      },
   }
 };
 </script>

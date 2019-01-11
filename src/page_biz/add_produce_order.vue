@@ -760,7 +760,7 @@
                 if (data.id) {
                     var tip = '确认无误, 是否继续?';
                 } else {
-                    var tip = '确认无误, 将会生产'+order_num+'个订单, 是否继续?';
+                    var tip = '确认无误, 将会生产'+order_num+'个子订单, 是否继续?';
                 }
                 this.$confirm(tip, '提示', {
                     confirmButtonText: '确定',
