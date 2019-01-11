@@ -36,7 +36,7 @@
                             <el-form-item label="样品图:" >
                                 <img width="80" v-for="(img, index)  in props.row.sample_imgs" :src="img">
                             </el-form-item>
-                            <el-form-item label="包装说明:" >
+                            <el-form-item label="备注说明:" >
                                 <span>{{props.row.sample_info}}</span>
                             </el-form-item>
 
@@ -105,106 +105,115 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
-    import {process_produce_order,process_order} from '@/api/getDataproduce_order'
+import headTop from "../components/headTop";
+import {
+  process_produce_order,
+  process_order
+} from "@/api/getDataproduce_order";
 
-    import '@/assets/js/jquery-1.4.4.min';
-    import '@/assets/js/jquery.jqprint-0.3';
-    export default {
-        data(){
-            return {
-                tableData: [],
-                limit: 10,
-                count: 0,
-                currentPage: 1,
-                dialogFormVisible:false,
-                current:{},
-//                remark:'',
-//                choose_categories:[],
-//                categories:[],
-                order_no:'',
-                loadingBtn:-1,
-                print_order_no:'',
-                barcode_url:'',
-                order_info:'',
-                dialog_sales_order_visible:false
-            }
-        },
-        components: {
-            headTop,
-        },
-        created(){
-            this.list();
-        },
-        mounted(){
-
-        },
-        beforeRouteEnter (to, from, next) {
-            next(vm => {
-                // 通过 `vm` 访问组件实例
-                vm.list();
-        })
-        },
-        methods: {
-            list() {
-                process_produce_order({page:this.currentPage,page_size:this.limit,order_no:this.order_no}).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.tableData = res.data.list;
-                        this.count = parseInt(res.data.count);
-                    }
-                }.bind(this));
-
-            },
-            process_order(row) {
-                this.$confirm('接单之后,流程将流转到下一阶段,确认此操作?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(function(){
-                    process_order({produce_order_id:row.id}).then(function(res){
-                        if (res.code == this.$store.state.constant.status_success) {
-                            this.list();
-                            this.$message({
-                                type: 'success',
-                                message: res.msg
-                            });
-                        } else {
-                            this.$message({
-                                type: 'warning',
-                                message: res.msg
-                            });
-                        }
-                    }.bind(this));
-                }.bind(this))
-
-            },
-            handleCurrentChange(val){
-                this.currentPage = val;
+import "@/assets/js/jquery-1.4.4.min";
+import "@/assets/js/jquery.jqprint-0.3";
+export default {
+  data() {
+    return {
+      tableData: [],
+      limit: 10,
+      count: 0,
+      currentPage: 1,
+      dialogFormVisible: false,
+      current: {},
+      //                remark:'',
+      //                choose_categories:[],
+      //                categories:[],
+      order_no: "",
+      loadingBtn: -1,
+      print_order_no: "",
+      barcode_url: "",
+      order_info: "",
+      dialog_sales_order_visible: false
+    };
+  },
+  components: {
+    headTop
+  },
+  created() {
+    this.list();
+  },
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+      vm.list();
+    });
+  },
+  methods: {
+    list() {
+      process_produce_order({
+        page: this.currentPage,
+        page_size: this.limit,
+        order_no: this.order_no
+      }).then(
+        function(res) {
+          if (res.code == this.$store.state.constant.status_success) {
+            this.tableData = res.data.list;
+            this.count = parseInt(res.data.count);
+          }
+        }.bind(this)
+      );
+    },
+    process_order(row) {
+      this.$confirm("接单之后,流程将流转到下一阶段,确认此操作?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(
+        function() {
+          process_order({ produce_order_id: row.id }).then(
+            function(res) {
+              if (res.code == this.$store.state.constant.status_success) {
                 this.list();
-            },
-            search() {
-                this.currentPage = 1;
-                this.list();
-            }
-        },
+                this.$message({
+                  type: "success",
+                  message: res.msg
+                });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.msg
+                });
+              }
+            }.bind(this)
+          );
+        }.bind(this)
+      );
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.list();
+    },
+    search() {
+      this.currentPage = 1;
+      this.list();
     }
+  }
+};
 </script>
 
 <style lang="less">
-    @import '../style/mixin';
-    .table_container{
-        padding: 20px;
-    }
-    .demo-table-expand {
-        font-size: 0;
-    }
-    .demo-table-expand label {
-        width: 90px;
-        color: #99a9bf;
-    }
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
+@import "../style/mixin";
+.table_container {
+  padding: 20px;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
