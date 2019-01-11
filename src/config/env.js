@@ -14,12 +14,7 @@ if (process.env.NODE_ENV == 'development') {
 	// baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
 	baseUrl = '//api.88plus.net/index.php';
     baseImgPath = '/img/';
-}
-else if (process.env.NODE_ENV == 'local') {
-    baseUrl = '//www.myweb.com/git-res/earth_php/index.php';
-    baseImgPath = '/img/';
-}
-else{
+}else{
 	baseUrl = '//api.yixsu.com/index.php';
     baseImgPath = '//elm.cangdu.org/img/';
 }

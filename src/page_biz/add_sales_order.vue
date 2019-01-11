@@ -4,7 +4,7 @@
     <div class="table_container" style="padding:20px">
       <!-- 客户单号 -->
       <div class="search_item">
-        <span class="pre_info" style="font-size: 14px;"><i style="color:red;"></i>客户单号:</span>
+        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>客户单号:</span>
         <el-input clearable placeholder="请输入单号" v-model="order_no" style="width: 350px">
         </el-input>
       </div>
@@ -68,7 +68,7 @@
           <div style="display: inline-block;vertical-align: top">
             <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors" :key='index2'>
 
-              <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)">
+              <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px">
                 <el-option
                     v-for="item in options.options_color"
                     :key="item.id"
@@ -77,6 +77,34 @@
                 </el-option>
               </el-select>
               <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
+
+              <el-select v-model="sub_order.sizes[index2].size" placeholder="请选择尺寸" @change="change_size(sub_order.sizes[index2],sub_order)" value-key="id" style="width:160px">
+                  <el-option
+                          v-for="item in options.options_color"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item">
+                  </el-option>
+              </el-select>
+
+              <el-select v-model="sub_order.Gos[index2].Go" placeholder="请选择去向" @change="change_Go(sub_order.Gos[index2],sub_order)" value-key="id" style="width:160px">
+                  <el-option
+                          v-for="item in options.options_color"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item">
+                  </el-option>
+              </el-select>
+
+              <el-select v-model="sub_order.models[index2].model" placeholder="请选择型号" @change="change_model(sub_order.models[index2],sub_order)" value-key="id" style="width:160px">
+                  <el-option
+                          v-for="item in options.options_color"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item">
+                  </el-option>
+              </el-select>
+
               <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 120px"></el-input>
 
               <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
@@ -187,7 +215,7 @@
         <!-- 备注说明 -->
         <div class="search_item">
             <span class="pre_info" style="font-size: 14px;">备注说明:</span>
-            <el-input  type="textarea" clearable placeholder="请输入包装说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
+            <el-input  type="textarea" clearable placeholder="请输入备注说明" v-model="sub_order.sample_info" style="width: 350px;vertical-align: middle"></el-input>
         </div>
 
         <!-- 客户款式/型号 -->
@@ -238,6 +266,9 @@ export default {
           product_cat: {},
           product: {},
           colors: [],
+          sizes: [],
+          Gos: [],
+          models: [],
           material: [],
           raw_material: "",
           decoration: "",
@@ -252,7 +283,10 @@ export default {
       limit: 3,
       type: 0,
       types: [{ id: 0, name: "主料" }, { id: 1, name: "装饰、辅料" }],
-      options: {}
+      options: {
+        options_product_cat: [],
+        options_process: []
+      }
     };
   },
   components: {
@@ -291,6 +325,9 @@ export default {
           product_cat: {},
           product: {},
           colors: [],
+          sizes: [],
+          Gos: [],
+          models: [],
           material: [],
           raw_material: "",
           decoration: "",
@@ -315,6 +352,7 @@ export default {
           : this.sales_man;
         this.sub_orders = sales_order_edit_data.sub_orders;
       }
+      console.log(sales_order_edit_data, "草稿中获取");
 
       this.order_date = new Date().toLocaleDateString();
     },
@@ -331,7 +369,7 @@ export default {
             this.sub_orders = res.data.sales_order_sub;
             this.gen_options_product_cat_product();
             this.gen_material_color();
-            console.log(this.sub_orders);
+            console.log(this.sub_orders, "get_info--sub_orders");
           } else {
             this.$message({
               message: res.msg,
@@ -380,6 +418,7 @@ export default {
         data.id = null;
       }
       var error_msg = "";
+      if (!data.order_no) error_msg = "请填写客户单号";
       if (!data.order_date) error_msg = "请填写制单日期";
       if (!data.delivery_date) error_msg = "请填写交货日期";
       if (!data.custom_name) error_msg = "请填写客户姓名";
@@ -464,7 +503,7 @@ export default {
                     sales_man: data.sales_man,
                     sub_orders: data.sub_orders
                   };
-                  console.log(sales_order_edit_data);
+                  // console.log(sales_order_edit_data);
                   setStore(
                     "sales_order_edit_data_20181016",
                     sales_order_edit_data
@@ -560,7 +599,25 @@ export default {
         sum: "",
         color: {}
       };
+      var size = {
+        id: "",
+        name: "",
+        size: {}
+      };
+      var Go = {
+        id: "",
+        name: "",
+        Go: {}
+      };
+      var model = {
+        id: "",
+        name: "",
+        model: {}
+      };
       this.sub_orders[index].colors.push(color);
+      this.sub_orders[index].sizes.push(size);
+      this.sub_orders[index].Gos.push(Go);
+      this.sub_orders[index].models.push(model);
 
       this.sub_orders[index].material.push({
         _id: color._id,
@@ -653,6 +710,7 @@ export default {
       sub_order.product_name = sub_order.product.name;
     },
     change_color(color, sub_order) {
+      console.log(color, "change_color");
       color.id = color.color.id;
       color.name = color.color.name;
       if (sub_order.material.length) {
@@ -662,6 +720,21 @@ export default {
           }
         });
       }
+    },
+    change_size(sizes, sub_order) {
+      console.log(sizes, "change_size");
+      sizes.id = sizes.size.id;
+      sizes.name = sizes.size.name;
+    },
+    change_Go(Gos, sub_order) {
+      console.log(Gos, "change_Go");
+      Gos.id = Gos.Go.id;
+      Gos.name = Gos.Go.name;
+    },
+    change_model(models, sub_order) {
+      console.log(models, "model");
+      models.id = models.model.id;
+      models.name = models.model.name;
     },
     change_process(sub_order) {
       //排序

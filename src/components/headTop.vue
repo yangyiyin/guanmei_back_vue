@@ -1,36 +1,30 @@
 <template>
-    <div>
+    <div class="header_container">
 
-        <div class="header_container" style="">
-
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="item">{{item}}</el-breadcrumb-item>
-            </el-breadcrumb>
-            <!--<el-dropdown @command="handleCommand" menu-align='start'>-->
-            <!--&lt;!&ndash;<img :src="avatar" class="avator">&ndash;&gt;-->
-            <!--<p style="height: 50px;line-height:50px;text-align: center;margin-right: 20px;cursor: pointer"><i class="iconfont">&#xe625;</i>{{user_info.show_name}}</p>-->
-            <!--<el-dropdown-menu slot="dropdown">-->
-            <!--<el-dropdown-item command="show_edit_password">修改密码</el-dropdown-item>-->
-            <!--<el-dropdown-item command="singout">退出</el-dropdown-item>-->
-            <!--</el-dropdown-menu>-->
-            <!--</el-dropdown>-->
-            <!--<el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%">-->
-            <!--<el-form >-->
-            <!--<el-form-item label="密码">-->
-            <!--<el-input v-model="password" auto-complete="off"></el-input>-->
-            <!--</el-form-item>-->
-            <!--</el-form>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-            <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-            <!--<el-button type="primary" @click="edit_password">确 定</el-button>-->
-            <!--</div>-->
-            <!--</el-dialog>-->
-        </div>
-        <div  style="height:60px;">
-        </div>
+		<el-breadcrumb separator="/">
+			<el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
+			<el-breadcrumb-item v-for="(item, index) in $route.meta" :key="item">{{item}}</el-breadcrumb-item>
+		</el-breadcrumb>
+		<!--<el-dropdown @command="handleCommand" menu-align='start'>-->
+			<!--&lt;!&ndash;<img :src="avatar" class="avator">&ndash;&gt;-->
+			<!--<p style="height: 50px;line-height:50px;text-align: center;margin-right: 20px;cursor: pointer"><i class="iconfont">&#xe625;</i>{{user_info.show_name}}</p>-->
+			<!--<el-dropdown-menu slot="dropdown">-->
+				<!--<el-dropdown-item command="show_edit_password">修改密码</el-dropdown-item>-->
+				<!--<el-dropdown-item command="singout">退出</el-dropdown-item>-->
+			<!--</el-dropdown-menu>-->
+		<!--</el-dropdown>-->
+		<!--<el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%">-->
+			<!--<el-form >-->
+				<!--<el-form-item label="密码">-->
+					<!--<el-input v-model="password" auto-complete="off"></el-input>-->
+				<!--</el-form-item>-->
+			<!--</el-form>-->
+			<!--<div slot="footer" class="dialog-footer">-->
+				<!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
+				<!--<el-button type="primary" @click="edit_password">确 定</el-button>-->
+			<!--</div>-->
+		<!--</el-dialog>-->
     </div>
-
 </template>
 
 <script>
@@ -99,7 +93,7 @@
     }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 	@import '../style/mixin';
 	.header_container{
 		background-color: #EFF2F7;
@@ -108,9 +102,6 @@
 		justify-content: space-between;
 		align-items: center;
 		padding-left: 20px;
-        position: fixed;
-        z-index: 2;
-        width: 100%;
 	}
 	.avator{
 		.wh(36px, 36px);
