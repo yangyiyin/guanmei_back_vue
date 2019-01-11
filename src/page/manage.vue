@@ -1,6 +1,6 @@
 <template>
 	<div class="manage_page fillcontain">
-		<el-header style="background: #4190F3;height:8%">
+		<el-header style="background: #4190F3;height:8%;overflow: hidden">
 			<p style="line-height:60px;font-size: 24px;color: #fff;float: left">
 				冠美帽业管理系统
 			</p>
