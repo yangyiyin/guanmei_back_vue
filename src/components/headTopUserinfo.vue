@@ -89,7 +89,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 	@import '../style/mixin';
 	.header_container{
 		background-color: #EFF2F7;

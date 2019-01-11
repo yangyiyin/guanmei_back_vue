@@ -216,9 +216,7 @@ export default {
       dialogFormVisible_stock_in: false,
       current_stock_id: "",
       current_stock_name: "",
-      current: {
-        subs: []
-      },
+      current: {},
       type: -1,
       types: [
         { id: -1, name: "全部" },

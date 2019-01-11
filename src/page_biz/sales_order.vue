@@ -21,6 +21,7 @@
             </el-date-picker>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button style="float: right" type="primary" @click="goto_edit_sales_order(0)">新增业务单</el-button>
+            <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
 
         </div>
         <div class="table_container">
@@ -64,12 +65,12 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <!-- <el-table-column label="编号" type="index" width="50" :index="typeIndex" align="center"></el-table-column> -->
-                <el-table-column label="编号" prop="order_no">
+                <el-table-column label="编号" type="index" width="50" :index="typeIndex" align="center"></el-table-column>
+                <el-table-column label="业务单号" prop="order_no">
                     <template slot-scope="scope">
-                        <!-- <span v-if="scope.row.custom_order_no"> {{scope.row.order_no}}({{scope.row.custom_order_no}})</span>
-                        <span v-if="!scope.row.custom_order_no"> {{scope.row.order_no}}</span> -->
-                        <span>{{scope.row.custom_order_no}}</span>
+                        <span v-if="scope.row.custom_order_no"> {{scope.row.order_no}}({{scope.row.custom_order_no}})</span>
+                        <span v-if="!scope.row.custom_order_no"> {{scope.row.order_no}}</span>
+
                     </template>
                 </el-table-column>
                 <el-table-column label="制单日期" prop="order_date"></el-table-column>
@@ -121,6 +122,19 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
+            <p>
+                您即将导出订单数据,条件为:[编号:{{order_no?order_no:'无限制'}}]。
+            </p>
+            <p>
+                特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
+                <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
         <!-- 打印div -->
         <div style="display: none">
             <div id="print" width="90%">
@@ -142,6 +156,7 @@ import {
 } from "@/api/getDatasales_order";
 import "@/assets/js/jquery-1.4.4.min";
 import "@/assets/js/jquery.jqprint-0.3";
+import {getStore} from '@/config/mUtils'
 // import { gen_barcode_html } from "@/api/getDataproduce_order";
 
 export default {
@@ -152,6 +167,7 @@ export default {
       count: 0,
       currentPage: 1,
       dialogFormVisible: false,
+        dialogFormVisibleDaochu: false,
       current: {},
       //                remark:'',
       //                choose_categories:[],
@@ -362,9 +378,9 @@ export default {
       this.dialogFormVisible = false;
     },
     // 序号根据数据增加
-    // typeIndex(index) {
-    //   return index + (this.currentPage - 1) * 10 + 1;
-    // },
+    typeIndex(index) {
+      return index + (this.currentPage - 1) * 10 + 1;
+    },
 
     // 打印
     print_barcode(row) {
@@ -398,7 +414,10 @@ export default {
       //     }
       //   }.bind(this)
       // );
-    }
+    },
+      daochu() {
+          window.open(this.$store.state.constant.sales_order_excel_out + '?client_from=1&order_no=' + this.order_no+'&token=' + (getStore('token') ? getStore('token') : ''));
+      },
   }
 };
 </script>
