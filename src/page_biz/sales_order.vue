@@ -65,12 +65,16 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="编号" type="index" width="50" :index="typeIndex" align="center"></el-table-column>
-                <el-table-column label="业务单号" prop="order_no">
+                <!-- <el-table-column label="编号" type="index" width="50" :index="typeIndex" align="center"></el-table-column> -->
+                <!-- <el-table-column label="业务单号" prop="order_no">
                     <template slot-scope="scope">
                         <span v-if="scope.row.custom_order_no"> {{scope.row.order_no}}({{scope.row.custom_order_no}})</span>
                         <span v-if="!scope.row.custom_order_no"> {{scope.row.order_no}}</span>
-
+                    </template>
+                </el-table-column> -->
+                <el-table-column label="编号" prop="order_no">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.custom_order_no}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="制单日期" prop="order_date"></el-table-column>
@@ -156,7 +160,7 @@ import {
 } from "@/api/getDatasales_order";
 import "@/assets/js/jquery-1.4.4.min";
 import "@/assets/js/jquery.jqprint-0.3";
-import {getStore} from '@/config/mUtils'
+import { getStore } from "@/config/mUtils";
 // import { gen_barcode_html } from "@/api/getDataproduce_order";
 
 export default {
@@ -167,7 +171,7 @@ export default {
       count: 0,
       currentPage: 1,
       dialogFormVisible: false,
-        dialogFormVisibleDaochu: false,
+      dialogFormVisibleDaochu: false,
       current: {},
       //                remark:'',
       //                choose_categories:[],
@@ -415,9 +419,15 @@ export default {
       //   }.bind(this)
       // );
     },
-      daochu() {
-          window.open(this.$store.state.constant.sales_order_excel_out + '?client_from=1&order_no=' + this.order_no+'&token=' + (getStore('token') ? getStore('token') : ''));
-      },
+    daochu() {
+      window.open(
+        this.$store.state.constant.sales_order_excel_out +
+          "?client_from=1&order_no=" +
+          this.order_no +
+          "&token=" +
+          (getStore("token") ? getStore("token") : "")
+      );
+    }
   }
 };
 </script>
