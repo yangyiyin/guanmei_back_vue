@@ -69,7 +69,7 @@
             <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors" :key='index2'>
               <div> 
                 <el-row class="colorOptions">
-                  <el-col :span="6">
+                  <el-col :span="5">
                     <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px;">
                       <el-option
                           v-for="item in options.options_color"
@@ -80,19 +80,23 @@
                     </el-select>
                     <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
                   </el-col>
-                  <el-col :span="18">
+                  <el-col :span="19">
                     <div v-for="(item, idx)  in sub_order.color_options" :key='idx'>
-                      <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 120px"></el-input>
-                      <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 120px"></el-input>
-                      <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 120px"></el-input>
-                      <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 120px"></el-input>
-                      <el-button type="danger" @click="del_color_options(index, idx)" round size="mini">删除</el-button>
+                      <el-col :span='22'>
+                        <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 140px"></el-input>
+                        <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 140px"></el-input>
+                        <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 140px"></el-input>
+                        <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 135px"></el-input>
+                      </el-col>
+                      <el-col :span='2' style="text-align:center;">
+                        <el-button type="danger" @click="del_color_options(index, idx)" round size="mini">删除</el-button>
+                      </el-col>
                     </div>
+                    <el-col :span='20' style="text-align:center;">
+                        <el-button @click="add_color_options(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加</el-button>
+                    </el-col>
                   </el-col>
                 
-                  <el-col :span='24' style="text-align:center;">
-                    <el-button @click="add_color_options(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加</el-button>
-                  </el-col>
                 </el-row>
                 <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
               </div>
@@ -581,7 +585,8 @@ export default {
         go: ""
       };
       this.sub_orders[index].color_options.push(color_option);
-      console.log(this.sub_orders[index].color_options);
+      console.log(index, "index");
+      console.log(this.sub_orders[index].color_options, "color_options");
     },
     del_color_options(index1, index2) {
       this.sub_orders[index1].material.forEach(
