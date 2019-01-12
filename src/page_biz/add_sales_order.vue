@@ -67,48 +67,35 @@
           <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>颜色:</span>
           <div style="display: inline-block;vertical-align: top">
             <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors" :key='index2'>
-
-              <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px">
-                <el-option
-                    v-for="item in options.options_color"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item">
-                </el-option>
-              </el-select>
-              <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
-
-              <el-select v-model="sub_order.sizes[index2].size" placeholder="请选择尺寸" @change="change_size(sub_order.sizes[index2],sub_order)" value-key="id" style="width:160px">
-                  <el-option
+              <div> 
+                <el-row class="colorOptions">
+                  <el-col :span="6">
+                    <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px;">
+                      <el-option
                           v-for="item in options.options_color"
                           :key="item.id"
                           :label="item.name"
                           :value="item">
-                  </el-option>
-              </el-select>
-
-              <el-select v-model="sub_order.Gos[index2].Go" placeholder="请选择去向" @change="change_Go(sub_order.Gos[index2],sub_order)" value-key="id" style="width:160px">
-                  <el-option
-                          v-for="item in options.options_color"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item">
-                  </el-option>
-              </el-select>
-
-              <el-select v-model="sub_order.models[index2].model" placeholder="请选择型号" @change="change_model(sub_order.models[index2],sub_order)" value-key="id" style="width:160px">
-                  <el-option
-                          v-for="item in options.options_color"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item">
-                  </el-option>
-              </el-select>
-
-              <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 120px"></el-input>
-
-              <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
-
+                      </el-option>
+                    </el-select>
+                    <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
+                  </el-col>
+                  <el-col :span="18">
+                    <div v-for="(item, idx)  in sub_order.color_options" :key='idx'>
+                      <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 120px"></el-input>
+                      <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 120px"></el-input>
+                      <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 120px"></el-input>
+                      <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 120px"></el-input>
+                      <el-button type="danger" @click="del_color_options(index, idx)" round size="mini">删除</el-button>
+                    </div>
+                  </el-col>
+                
+                  <el-col :span='24' style="text-align:center;">
+                    <el-button @click="add_color_options(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加</el-button>
+                  </el-col>
+                </el-row>
+                <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
+              </div>
             </div>
             <el-button @click="add_color(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加更多颜色</el-button>
           </div>
@@ -266,9 +253,6 @@ export default {
           product_cat: {},
           product: {},
           colors: [],
-          sizes: [],
-          Gos: [],
-          models: [],
           material: [],
           raw_material: "",
           decoration: "",
@@ -276,7 +260,8 @@ export default {
           sample_imgs: [],
           sample_info: "",
           custom_model: "",
-          options_product_cat_product: []
+          options_product_cat_product: [],
+          color_options: []
         }
       ],
       file_list: [],
@@ -325,9 +310,6 @@ export default {
           product_cat: {},
           product: {},
           colors: [],
-          sizes: [],
-          Gos: [],
-          models: [],
           material: [],
           raw_material: "",
           decoration: "",
@@ -335,7 +317,8 @@ export default {
           sample_imgs: [],
           sample_info: "",
           custom_model: "",
-          options_product_cat_product: []
+          options_product_cat_product: [],
+          color_options: []
         }
       ];
 
@@ -591,6 +574,25 @@ export default {
     // del_block(index) {
     //   this.sub_orders.splice(index, 1);
     // },
+    add_color_options(index) {
+      var color_option = {
+        size: "",
+        model: "",
+        go: ""
+      };
+      this.sub_orders[index].color_options.push(color_option);
+      console.log(this.sub_orders[index].color_options);
+    },
+    del_color_options(index1, index2) {
+      this.sub_orders[index1].material.forEach(
+        function(val, i) {
+          if (val._id == this.sub_orders[index1].color_options[index2]._id) {
+            this.sub_orders[index1].material.splice(i, 1);
+          }
+        }.bind(this)
+      );
+      this.sub_orders[index1].color_options.splice(index2, 1);
+    },
     add_color(index) {
       var color = {
         _id: new Date(),
@@ -599,25 +601,15 @@ export default {
         sum: "",
         color: {}
       };
-      var size = {
-        id: "",
-        name: "",
-        size: {}
-      };
-      var Go = {
-        id: "",
-        name: "",
-        Go: {}
-      };
-      var model = {
-        id: "",
-        name: "",
-        model: {}
-      };
       this.sub_orders[index].colors.push(color);
-      this.sub_orders[index].sizes.push(size);
-      this.sub_orders[index].Gos.push(Go);
-      this.sub_orders[index].models.push(model);
+
+      this.sub_orders[index].color_options = [
+        {
+          size: "",
+          model: "",
+          go: ""
+        }
+      ];
 
       this.sub_orders[index].material.push({
         _id: color._id,
@@ -721,21 +713,6 @@ export default {
         });
       }
     },
-    change_size(sizes, sub_order) {
-      console.log(sizes, "change_size");
-      sizes.id = sizes.size.id;
-      sizes.name = sizes.size.name;
-    },
-    change_Go(Gos, sub_order) {
-      console.log(Gos, "change_Go");
-      Gos.id = Gos.Go.id;
-      Gos.name = Gos.Go.name;
-    },
-    change_model(models, sub_order) {
-      console.log(models, "model");
-      models.id = models.model.id;
-      models.name = models.model.name;
-    },
     change_process(sub_order) {
       //排序
       var compare = function(obj1, obj2) {
@@ -792,7 +769,7 @@ export default {
   padding: 10px;
   padding-top: 0;
   border: 1px dashed #aaa;
-  width: 800px;
+  width: 1100px;
   position: relative;
 }
 
@@ -803,6 +780,14 @@ export default {
   padding: 5px;
   width: 120px;
   text-align: center;
+}
+.colorOptions {
+  margin: 10px 0;
+  padding: 10px;
+  padding-top: 0;
+  border: 1px dashed #aaa;
+  width: 820px;
+  // position: relative;
 }
 // .del_block {
 //   position: absolute;
