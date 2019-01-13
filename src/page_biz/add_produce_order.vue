@@ -71,6 +71,11 @@
             <div v-if="active == 1" class="table_container">
 
                 <div class="search_item">
+                    <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>生产单自定义名称:</span>
+                    <el-input clearable placeholder="请输入自定义名称" v-model="set_name" style="width: 350px"></el-input>
+                </div>
+
+                <div class="search_item">
                     <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>制单日期:</span>
                     <el-date-picker
                             v-model="order_date"
@@ -400,6 +405,7 @@ export default {
       order_date: "",
       delivery_date: "",
       produce_man: "",
+        set_name: "",
       sub_orders: [],
       file_list: [],
       img_upload_limit: 3,
@@ -503,10 +509,12 @@ export default {
         this.order_date = new Date().toLocaleDateString();
         this.delivery_date = "";
         this.produce_man = "";
+        this.set_name = "";
         this.sub_orders = [];
         this.handleCurrentChange(1);
       }
       this.produce_man = this.user_info.show_name;
+      this.set_name = new Date().toLocaleDateString()+'生产单';
     },
     get_sales_sub_order_list() {
       this.table_loading = true;
@@ -779,6 +787,7 @@ export default {
             this.order_date = res.data.order_date;
             this.delivery_date = res.data.delivery_date;
             this.produce_man = res.data.produce_man;
+            this.set_name = res.data.set_name;
             this.sub_orders = res.data.sales_order_sub;
             this.gen_options_product_cat_product();
             this.gen_material_color();
@@ -797,12 +806,15 @@ export default {
         order_date: this.order_date,
         delivery_date: this.delivery_date,
         produce_man: this.produce_man,
+          set_name: this.set_name,
         sub_orders: this.sub_orders
       };
       var error_msg = "";
-      if (!data.order_date) error_msg = "请填写制单日期";
+        if (!data.set_name) error_msg = "请填写生产单自定义名称";
+        if (!data.order_date) error_msg = "请填写制单日期";
       if (!data.delivery_date) error_msg = "请填写交货日期";
       if (!data.produce_man) error_msg = "请填写生产统筹员姓名";
+
       if (!data.sub_orders || data.sub_orders.length < 1)
         error_msg = "请添加订单子项";
 
