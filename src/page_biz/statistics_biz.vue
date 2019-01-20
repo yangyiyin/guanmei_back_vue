@@ -122,7 +122,8 @@
                         trigger: 'axis',
                         position: function (pt) {
                             return [pt[0], '10%'];
-                        }
+                        },
+                        formatter:'{b0}<br/>{a0}: {c0}%<br />{a1}: {c1}%'
                     },
                     title: {
                         left: 'center',
@@ -144,7 +145,12 @@
                     },
                     yAxis: {
                         type: 'value',
-                        boundaryGap: [0, '100%']
+                        boundaryGap: [0, '100%'],
+                        axisLabel: {
+                            show: true,
+                            interval: 'auto',
+                            formatter: '{value}%'
+                        },
                     },
                     dataZoom: [{
                         type: 'inside',
