@@ -315,6 +315,7 @@
                     if (res.code == this.$store.state.constant.status_success) {
                         this.current.is_config = true;
                         this.dialogFormVisible = false;
+//                        this.change_year(this.cur_year);
                     } else {
                         this.$message({
                             type: 'warning',

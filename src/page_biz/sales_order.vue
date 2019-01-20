@@ -356,7 +356,7 @@
             salesOrder
         },
         created() {
-            this.list();
+//            this.list();
         },
         mounted() {},
         beforeRouteEnter(to, from, next) {

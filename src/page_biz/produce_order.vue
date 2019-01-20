@@ -292,7 +292,7 @@
             headTop
         },
         created() {
-            this.list();
+//            this.list();
         },
         mounted() {},
         beforeRouteEnter(to, from, next) {
@@ -506,6 +506,7 @@
                         '&end_time='+(this.dateTime?this.dateTime[1]:'')+
                         '&start_time_create='+(this.dateTime_create?this.dateTime_create[0]:'')+
                         '&end_time_create='+(this.dateTime_create?this.dateTime_create[1]:'')+
+                                '&list_type=1'+
                         "&token=" +
                         (getStore("token") ? getStore("token") : "")
                 );
