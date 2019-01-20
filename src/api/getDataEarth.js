@@ -7,6 +7,7 @@ import {check_login} from '@/config/mUtils'
 
 export const config_list = data => fetch('/guanmei/config/index', data, 'POST').then(check_login);
 export const config_edit = data => fetch('/guanmei/config/edit', data, 'POST').then(check_login);
+export const config_value = data => fetch('/guanmei/config/value', data, 'POST').then(check_login);
 export const admin_user_list = data => fetch('/guanmei/admin_user/index', data, 'POST').then(check_login);
 export const admin_user_edit = data => fetch('/guanmei/admin_user/edit', data, 'POST').then(check_login);
 export const admin_user_verify = data => fetch('/guanmei/admin_user/verify', data, 'POST').then(check_login);
@@ -37,5 +38,6 @@ export const admin_orgnize_verify = data => fetch('/guanmei/admin_orgnize/verify
 export const admin_orgnize_del = data => fetch('/guanmei/admin_orgnize/del', data, 'POST').then(check_login);
 export const admin_orgnize_info = data => fetch('/guanmei/admin_orgnize/info', data, 'POST').then(check_login);
 export const admin_orgnize_sort = data => fetch('/guanmei/admin_orgnize/sort', data, 'POST').then(check_login);
+export const get_month_data_by_year = data => fetch('/guanmei/statistics_biz/get_month_data_by_year', data, 'POST').then(check_login);
 
 export const del_app_login_token = data => fetch('/guanmei/admin/del_app_login_token', data, 'POST');

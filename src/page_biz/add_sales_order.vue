@@ -66,38 +66,46 @@
         <div class="search_item">
           <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>颜色:</span>
           <div style="display: inline-block;vertical-align: top">
-            <div style="margin-bottom: 3px;" v-for="(color, index2)  in sub_order.colors" :key='index2'>
-              <div> 
-                <el-row class="colorOptions">
-                  <el-col :span="5">
-                    <el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px;">
-                      <el-option
-                          v-for="item in options.options_color"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item">
-                      </el-option>
-                    </el-select>
-                    <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 120px"></el-input>
-                  </el-col>
-                  <el-col :span="19">
-                    <div v-for="(item, idx)  in sub_order.color_options" :key='idx'>
-                      <el-col :span='22'>
+            <div style="padding: 10px;" v-for="(color, index2)  in sub_order.colors" :key='index2'>
+              <div>
+                <div style="display: inline-block;border: 1px dashed #999;padding: 10px;position: relative">
+                  <div style="position:absolute;right: 0;top:0;padding: 3px;background: rgb(65, 144, 243);font-size: 10px;color: #fff">颜色{{index2+1}}</div>
+                  <i style="color:red;">*</i><el-select v-model="color.color" placeholder="请选择" value-key="id" @change="change_color(color,sub_order)" style="width:160px;">
+                    <el-option
+                            v-for="item in options.options_color"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item">
+                    </el-option>
+                  </el-select>
+                  <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 220px"></el-input>
+
+                  <div style="vertical-align: top;margin-top: 10px;">
+                    <p style="font-size: 12px;color: #333"><i style="color:red;">*</i>详细信息:</p>
+                    <div style="text-align: center;">
+                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">尺寸:</div>
+                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">型号:</div>
+                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">去向:</div>
+                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">数量:</div>
+                      <div v-for="(item, idx)  in color.color_details" :key='idx' style="margin-top: 5px;">
+
                         <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 140px"></el-input>
                         <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 140px"></el-input>
                         <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 140px"></el-input>
-                        <el-input type="number" clearable placeholder="数量" v-model="color.sum" style="width: 135px"></el-input>
-                      </el-col>
-                      <el-col :span='2' style="text-align:center;">
-                        <el-button type="danger" @click="del_color_options(index, idx)" round size="mini">删除</el-button>
-                      </el-col>
+                        <el-input type="number" clearable placeholder="数量" v-model="item.sum" style="width: 135px"></el-input>
+
+                        <el-button type="danger" @click="del_color_detail(color, idx)" round size="mini"><i class="iconfont" style="font-size: 10px;margin-right: 0">&#xe603;</i></el-button>
+                        <!--<i class="iconfont" @click="del_color_options(index, idx)" style="cursor:pointer;font-size: 10px;color: red">&#xe603;</i>-->
+                      </div>
+
+                      <el-button @click="add_color_detail(color)" type="danger" round size="mini" style="margin:0 auto;margin-top: 10px;"><i class="iconfont" style="font-size: 10px;margin-right: 0">&#xe658;</i></el-button>
                     </div>
-                    <el-col :span='20' style="text-align:center;">
-                        <el-button @click="add_color_options(index)" type="danger" round size="mini"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>添加</el-button>
-                    </el-col>
-                  </el-col>
-                
-                </el-row>
+
+                  </div>
+                </div>
+
+
+
                 <el-button type="danger" @click="del_color(index, index2)" round size="mini">删除</el-button>
               </div>
             </div>
@@ -264,8 +272,7 @@ export default {
           sample_imgs: [],
           sample_info: "",
           custom_model: "",
-          options_product_cat_product: [],
-          color_options: []
+          options_product_cat_product: []
         }
       ],
       file_list: [],
@@ -321,8 +328,7 @@ export default {
           sample_imgs: [],
           sample_info: "",
           custom_model: "",
-          options_product_cat_product: [],
-          color_options: []
+          options_product_cat_product: []
         }
       ];
 
@@ -356,7 +362,7 @@ export default {
             this.sub_orders = res.data.sales_order_sub;
             this.gen_options_product_cat_product();
             this.gen_material_color();
-            console.log(this.sub_orders, "get_info--sub_orders");
+//            console.log(this.sub_orders, "get_info--sub_orders");
           } else {
             this.$message({
               message: res.msg,
@@ -376,7 +382,7 @@ export default {
             function(resolve, reject) {
               if (res.code == this.$store.state.constant.status_success) {
                 this.options = res.data;
-                this.options.options_color.unshift({ id: "-1", name: "其他" });
+                this.options.options_color.unshift({ id: "-1", name: "其他颜色(自定义)" });
               } else {
                 this.$message({
                   message: res.msg,
@@ -417,22 +423,28 @@ export default {
       data.sub_orders.forEach(
         function(val, index) {
           if (!val.product_cat_id)
-            error_msg = "第" + (index + 1) + "个子项,请选择帽型类别";
+            error_msg = "请选择帽型类别";
           if (!val.product_id)
-            error_msg = "第" + (index + 1) + "个子项,请选择帽型型号";
+            error_msg = "请选择帽型型号";
           if (!val.colors || !val.colors.length) {
-            error_msg = "第" + (index + 2) + "个子项,请添加颜色";
+            error_msg = "请添加颜色";
           }
-          if (!val.raw_material)
-            error_msg = "第" + (index + 3) + "个子项,请添加材料";
           else {
             val.colors.forEach(function(color) {
-              if (!color.id || !color.name || !color.sum) {
-                error_msg =
-                  "第" + (index + 2) + "个子项,请检查颜色是否设置完整";
+              if (!color.id || !color.name || !color.color_details || !color.color_details.length) {
+                error_msg = "请检查颜色各项及详细是否设置完整";
               }
+              color.color_details.forEach(function(detail) {
+                if (!detail.sum) {
+                  error_msg = "请检查颜色详细信息里的数量是否设置完整";
+                }
+              })
+
+
             });
           }
+
+          if (!val.raw_material) error_msg = "请输入材料";
 
           // if (!val.material || !val.material.length) {
           //   error_msg = "第" + (index + 1) + "个子项,请添加材料";
@@ -470,7 +482,7 @@ export default {
         return;
       }
       //console.log(data);return;
-
+      this.loading = true;
       this.$confirm("确认无误, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -506,14 +518,16 @@ export default {
                     type: "warning"
                   });
                 }
+                this.loading = false;
               }.bind(this)
+
             );
           }.bind(this)
         )
         .catch(() => {})
         .finally(
           function() {
-            this.loading = false;
+//            this.loading = false;
           }.bind(this)
         );
     },
@@ -578,25 +592,35 @@ export default {
     // del_block(index) {
     //   this.sub_orders.splice(index, 1);
     // },
-    add_color_options(index) {
-      var color_option = {
+    add_color_detail(item) {
+      var color_detail = {
         size: "",
         model: "",
-        go: ""
+        go: "",
+        sum:""
       };
-      this.sub_orders[index].color_options.push(color_option);
-      console.log(index, "index");
-      console.log(this.sub_orders[index].color_options, "color_options");
+      if (!item.color_details) {
+//        item.color_details = [];
+//        var new_item = item;
+        this.$set(item,'color_details',[color_detail]);
+      } else {
+        item.color_details.push(color_detail);
+      }
+      console.log(this.sub_orders);
+
+
+//      console.log(index, "index");
+//      console.log(this.sub_orders[index].color_options, "color_options");
     },
-    del_color_options(index1, index2) {
-      this.sub_orders[index1].material.forEach(
-        function(val, i) {
-          if (val._id == this.sub_orders[index1].color_options[index2]._id) {
-            this.sub_orders[index1].material.splice(i, 1);
-          }
-        }.bind(this)
-      );
-      this.sub_orders[index1].color_options.splice(index2, 1);
+    del_color_detail(item, index) {
+      if (item.color_details.length <=1) {
+        this.$message({
+          message: '最后一个不能删除',
+          type: "warning"
+        });
+        return;
+      }
+      item.color_details.splice(index, 1);
     },
     add_color(index) {
       var color = {
@@ -604,17 +628,25 @@ export default {
         id: "",
         name: "",
         sum: "",
-        color: {}
+        color: {},
+        color_details:[
+          {
+            size: "",
+            model: "",
+            go: "",
+            sum:""
+          }
+        ]
       };
       this.sub_orders[index].colors.push(color);
 
-      this.sub_orders[index].color_options = [
-        {
-          size: "",
-          model: "",
-          go: ""
-        }
-      ];
+//      this.sub_orders[index].color_options = [
+//        {
+//          size: "",
+//          model: "",
+//          go: ""
+//        }
+//      ];
 
       this.sub_orders[index].material.push({
         _id: color._id,
@@ -707,7 +739,7 @@ export default {
       sub_order.product_name = sub_order.product.name;
     },
     change_color(color, sub_order) {
-      console.log(color, "change_color");
+//      console.log(color, "change_color");
       color.id = color.color.id;
       color.name = color.color.name;
       if (sub_order.material.length) {
@@ -749,7 +781,10 @@ export default {
   }
 };
 </script>
-<style>
+
+
+<style scoped lang="less">
+@import "../style/mixin";
 .avatar-uploader {
   display: inline-block;
   vertical-align: middle;
@@ -757,10 +792,6 @@ export default {
 .hide_plus .el-upload {
   display: none;
 }
-</style>
-
-<style scoped lang="less">
-@import "../style/mixin";
 .search_item {
   margin-top: 10px;
 }
@@ -780,7 +811,7 @@ export default {
 
 .more_btn {
   font-size: 12px;
-  // background: ;
+
   border-radius: 20px;
   padding: 5px;
   width: 120px;
@@ -792,29 +823,29 @@ export default {
   padding-top: 0;
   border: 1px dashed #aaa;
   width: 820px;
-  // position: relative;
+   position: relative;
 }
-// .del_block {
-//   position: absolute;
-//   top: 10px;
-//   right: 10px;
-//   color: red;
-//   cursor: pointer;
-// }
-// .del_block:hover {
-//   color: rgb(200, 100, 100);
-// }
-// .add_block {
-//   border: 1px dashed #333;
-//   font-size: 12px;
-//   width: 800px;
-//   text-align: center;
-//   padding: 10px;
-//   cursor: pointer;
-//   background: #fafaff;
-// }
-// .add_block:hover {
-//   border-color: #409eff;
-//   color: #409eff;
-// }
+ .del_block {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   color: red;
+   cursor: pointer;
+ }
+ .del_block:hover {
+   color: rgb(200, 100, 100);
+ }
+ .add_block {
+   border: 1px dashed #333;
+   font-size: 12px;
+   width: 800px;
+   text-align: center;
+   padding: 10px;
+   cursor: pointer;
+   background: #fafaff;
+ }
+ .add_block:hover {
+   border-color: #409eff;
+   color: #409eff;
+ }
 </style>

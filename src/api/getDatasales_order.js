@@ -5,6 +5,7 @@ import {check_login} from '@/config/mUtils'
 
 export const sales_order_list = data => fetch('/guanmei/sales_order/index', data, 'POST').then(check_login);
 export const sales_order_all_list = data => fetch('/guanmei/sales_order/all_list', data, 'POST').then(check_login);
+export const sales_order_get_all = data => fetch('/guanmei/sales_order/get_all', data, 'POST').then(check_login);
 export const sales_order_edit = data => fetch('/guanmei/sales_order/edit', data, 'POST').then(check_login);
 export const sales_order_verify = data => fetch('/guanmei/sales_order/verify', data, 'POST').then(check_login);
 export const sales_order_del = data => fetch('/guanmei/sales_order/del', data, 'POST').then(check_login);

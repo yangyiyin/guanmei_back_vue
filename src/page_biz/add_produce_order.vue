@@ -192,12 +192,24 @@
                         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>材料:
                           <el-tooltip v-if="sub_order.sales_order_sub_diff_data && sub_order.sales_order_sub_diff_data.length && sub_order.sales_order_sub_diff_data.length > 1"  placement="top">
                             <div slot="content">
-                                <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data">
+                                <!--<p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data">-->
+                                    <!--订单{{index}}:-->
+                                    <!--<span v-if="sub_sub_order.material && sub_sub_order.material.length" v-for="(_material, index2) in sub_sub_order.material" >-->
+                                        <!--<div style="border-bottom: 1px dashed #999;margin: 5px;display: inline-block;">名称:{{_material.material.name}};颜色:{{_material.sub.name}};数量:{{_material.num}}</div>-->
+                                    <!--</span>-->
+                                <!--</p>-->
+                                 <p v-for="(sub_sub_order, index)  in sub_order.sales_order_sub_diff_data">
                                     订单{{index}}:
-                                    <span v-if="sub_sub_order.material && sub_sub_order.material.length" v-for="(_material, index2) in sub_sub_order.material" >
-                                        <div style="border-bottom: 1px dashed #999;margin: 5px;display: inline-block;">名称:{{_material.material.name}};颜色:{{_material.sub.name}};数量:{{_material.num}}</div>
+                                    <span>
+                                        {{sub_sub_order.raw_material}}
                                     </span>
                                 </p>
+                            </div>
+                            <i class="iconfont">&#xe601;</i>
+                        </el-tooltip>
+                            <el-tooltip v-else placement="top">
+                            <div slot="content">
+                              <p>{{sub_order.raw_material}}</p>
                             </div>
                             <i class="iconfont">&#xe601;</i>
                         </el-tooltip>
@@ -872,6 +884,7 @@ export default {
       } else {
         var tip = "确认无误, 将会生产" + order_num + "个子订单, 是否继续?";
       }
+        this.loading = true;
       this.$confirm(tip, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -879,7 +892,6 @@ export default {
       })
         .then(
           function() {
-            this.loading = true;
             produce_order_edit(data).then(
               function(res) {
                 if (res.code == this.$store.state.constant.status_success) {
@@ -899,6 +911,7 @@ export default {
                     type: "warning"
                   });
                 }
+                  this.loading = false;
               }.bind(this)
             );
           }.bind(this)
@@ -906,7 +919,7 @@ export default {
         .catch(() => {})
         .finally(
           function() {
-            this.loading = false;
+            //this.loading = false;
           }.bind(this)
         );
     },
@@ -1126,18 +1139,17 @@ export default {
 };
 </script>
 
-<style>
-.avatar-uploader {
-  display: inline-block;
-  vertical-align: middle;
-}
-.hide_plus .el-upload {
-  display: none;
-}
-</style>
+
 
 <style scoped lang="less">
 @import "../style/mixin";
+.avatar-uploader {
+    display: inline-block;
+    vertical-align: middle;
+}
+.hide_plus .el-upload {
+    display: none;
+}
 .search_item {
   margin-top: 10px;
 }

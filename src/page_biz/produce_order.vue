@@ -2,26 +2,51 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container" style="padding-bottom: 0">
+            <el-button style="float: right;margin-bottom: 5px;" type="primary" @click="goto_edit_produce_order(0)">新增生产单</el-button>
+            <div style="clear: both"></div>
+            <el-collapse >
+                <el-collapse-item title="条件搜索-可通过相关条件筛选数据" name="1">
+                    <span style="font-size: 14px;">生产单名称:</span>
+                    <el-input
+                            style="display: inline-block;width: 250px;"
+                            placeholder="生产单名称"
+                            v-model="set_name"
+                            clearable>
+                    </el-input>
+                    <p style="margin-top: 5px;">
+                        <span style="font-size: 14px;">制单日期日期:</span>
+                        <el-date-picker
+                                v-model="dateTime_create"
+                                type="daterange"
+                                align="right"
+                                unlink-panels
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                value-format="yyyy-MM-dd"
+                                :picker-options="pickerOptions">
+                        </el-date-picker>
 
-            <el-input
-                    style="display: inline-block;width: 250px;"
-                    placeholder="编号"
-                    v-model="order_no"
-                    clearable>
-            </el-input>
-            <el-date-picker
-                    v-model="dateTime"
-                    type="daterange"
-                    align="right"
-                    unlink-panels
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    :picker-options="pickerOptions">
-            </el-date-picker>
-            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            <el-button style="float: right" type="primary" @click="goto_edit_produce_order(0)">新增生产单</el-button>
-            <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
+                        <span style="font-size: 14px;">交货日期:</span>
+                        <el-date-picker
+                                v-model="dateTime"
+                                type="daterange"
+                                align="right"
+                                unlink-panels
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                value-format="yyyy-MM-dd"
+                                :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </p>
+                    <p style="margin-top: 5px;">
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
+                    </p>
+                </el-collapse-item>
+            </el-collapse>
+
         </div>
         <div class="table_container">
             <el-table
@@ -46,7 +71,7 @@
 
                                         </el-form-item>
                                         <el-form-item label="装饰/辅料:" >
-                                            <span v-for="(material_sub, index)  in props.row.material_sub">{{material_sub.name}};</span>
+                                            <span v-for="(material_sub, index)  in props.row.material_sub">{{material_sub.material.name}}-{{material_sub.from.name}}(数量:{{material_sub.sum}});</span>
                                         </el-form-item>
                                         <el-form-item label="装饰说明:" >
                                             <span>{{props.row.decoration}}</span>
@@ -67,7 +92,7 @@
                                     </el-form>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="编号" prop="order_no"></el-table-column>
+                            <el-table-column label="系统编号" prop="order_no"></el-table-column>
                             <el-table-column label="包含业务单">
                                 <template slot-scope="scope">
 
@@ -86,6 +111,11 @@
 
                                 </template>
                             </el-table-column>
+                            <el-table-column label="已交接数量">
+                                <template slot-scope="scope">
+                                    {{scope.row.handed_num}}/{{scope.row.sum}}
+                                </template>
+                            </el-table-column>
                             <el-table-column label="操作" width="300">
                                 <template slot-scope="scope">
                                     <el-button v-if="scope.row.status==1 && scope.row.process_state_id == 0 && scope.row.process_state_next_id == 0" size="mini" type="success" @click="submit_storage(scope.row)">提交仓库</el-button>
@@ -99,6 +129,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="名称" prop="set_name"></el-table-column>
+                <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
                 <!--<el-table-column label="包含业务单">-->
                 <!--<template slot-scope="scope">-->
@@ -156,7 +187,7 @@
                     :data="current.sales_sub_orders"
                     style="width: 100%">
 
-                <el-table-column label="编号" prop="order_code"></el-table-column>
+                <el-table-column label="客户单号" prop="order_code"></el-table-column>
                 <el-table-column label="客户款式" prop="custom_model"></el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
@@ -166,7 +197,7 @@
 
         <el-dialog title="导出" :visible.sync="dialogFormVisibleDaochu" width="30%">
             <p>
-                您即将导出订单数据,条件为:[编号:{{order_no?order_no:'无限制'}}]。
+                您即将导出订单数据,条件为:[生产单名称:{{set_name?set_name:'无限制'}}][制单时间:{{dateTime_create?dateTime_create[0]:'无限制'}}-{{dateTime_create?dateTime_create[1]:'无限制'}}][交货时间:{{dateTime?dateTime[0]:'无限制'}}-{{dateTime?dateTime[1]:'无限制'}}]。
             </p>
             <p>
                 特别说明:如果报名数据比较多,则导出速度会相应的慢一些哦~
@@ -216,6 +247,7 @@
                 //                choose_categories:[],
                 //                categories:[],
                 order_no: "",
+                set_name: "",
                 loadingBtn: -1,
                 print_order_no: "",
                 barcode_url: "",
@@ -253,8 +285,7 @@
                     ]
                 },
                 dateTime: "",
-                startDate: "",
-                endDate: ""
+                dateTime_create: "",
             };
         },
         components: {
@@ -273,9 +304,15 @@
         methods: {
             list() {
                 produce_order_list({
+                    list_type: 1,
                     page: this.currentPage,
                     page_size: this.limit,
-                    order_no: this.order_no
+                    order_no: this.order_no,
+                    set_name: this.set_name,
+                    start_time: this.dateTime ? this.dateTime[0]:'',
+                    end_time: this.dateTime ? this.dateTime[1]:'',
+                    start_time_create: this.dateTime_create ? this.dateTime_create[0]:'',
+                    end_time_create: this.dateTime_create ? this.dateTime_create[1]:'',
                 }).then(
                         function(res) {
                             if (res.code == this.$store.state.constant.status_success) {
@@ -323,29 +360,7 @@
                     this.current_entity = {};
                 }
             },
-            // 时间转换 start
-            formatTen(num) {
-                return num > 9 ? num + "" : "0" + num;
-            },
-            formatDate(date) {
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
-                var day = date.getDate();
-                var hour = date.getHours();
-                var minute = date.getMinutes();
-                var second = date.getSeconds();
-                return year + "-" + this.formatTen(month) + "-" + this.formatTen(day);
-            },
-            // 时间转换 end
             search() {
-                if (!this.dateTime) {
-                    this.$message.error("请选择日期！");
-                    return;
-                }
-                this.startDate = this.formatDate(this.dateTime[0]);
-                this.endDate = this.formatDate(this.dateTime[1]);
-                console.log(this.startDate, "开始日期");
-                console.log(this.endDate, "结束日期");
 
                 this.currentPage = 1;
                 this.list();
@@ -486,8 +501,11 @@
             daochu() {
                 window.open(
                         this.$store.state.constant.produce_order_excel_out +
-                        "?client_from=1&order_no=" +
-                        this.order_no +
+                        "?client_from=1&set_name=" + this.set_name +
+                        '&start_time='+(this.dateTime?this.dateTime[0]:'')+
+                        '&end_time='+(this.dateTime?this.dateTime[1]:'')+
+                        '&start_time_create='+(this.dateTime_create?this.dateTime_create[0]:'')+
+                        '&end_time_create='+(this.dateTime_create?this.dateTime_create[1]:'')+
                         "&token=" +
                         (getStore("token") ? getStore("token") : "")
                 );
@@ -512,5 +530,8 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+    .el-collapse-item__header{
+        background: #EEF4FF!important;
     }
 </style>

@@ -62,9 +62,15 @@
                         <p v-if="scope.row.process_state_id != 999999" >下一流程:{{scope.row.process_state_next}}</p>
                     </template>
                 </el-table-column>
+                <el-table-column label="已交接数量">
+                    <template slot-scope="scope">
+                        {{scope.row.handed_num}}/{{scope.row.sum}}
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0 && scope.row.can_handover_order" size="mini" type="success" @click="process_order(scope.row)">接单</el-button>
+                        <el-button v-if="scope.row.status == 1 && scope.row.process_state_next_id > 0 && scope.row.can_handover_order" size="mini" type="success" @click="dialog_handover_visible=true;cur_order=scope.row">接单</el-button>
                         <el-tag v-if="scope.row.has_handover_order" type="success" >已接单</el-tag>
                     </template>
                 </el-table-column>
@@ -91,6 +97,16 @@
             </el-table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialog_sales_order_visible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_handover_visible" width="20%">
+            <p>
+                请输入交接数量({{cur_order.handed_num}}/{{cur_order.sum}}):<el-input v-model="cur_order.handover_num" auto-complete="off"></el-input>
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="process_order(cur_order)">确 定</el-button>
+                <el-button @click="dialog_handover_visible = false">取 消</el-button>
             </div>
         </el-dialog>
 
@@ -130,7 +146,9 @@ export default {
       print_order_no: "",
       barcode_url: "",
       order_info: "",
-      dialog_sales_order_visible: false
+      dialog_sales_order_visible: false,
+        dialog_handover_visible: false,
+      cur_order: {},
     };
   },
   components: {
@@ -162,13 +180,27 @@ export default {
       );
     },
     process_order(row) {
-      this.$confirm("接单之后,流程将流转到下一阶段,确认此操作?", "提示", {
+
+        if (parseInt(row.handover_num) + parseInt(row.handed_num) > parseInt(row.sum)) {
+            this.$message({
+                type: "warning",
+                message: '交接数量超过订单总数,请重新输入正确的交接数量'
+            });
+            return;
+        } else if (parseInt(row.handover_num) + parseInt(row.handed_num) == parseInt(row.sum)) {
+            var msg_tip = "本次交接数量为"+row.handover_num+",本次交接完成,流程将流转至下一流程,确认此操作?";
+        } else {
+            var msg_tip = "本次交接数量为"+row.handover_num+",确认此操作?";
+        }
+
+
+      this.$confirm(msg_tip, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(
         function() {
-          process_order({ produce_order_id: row.id }).then(
+          process_order({ produce_order_id: row.id , handover_num:row.handover_num}).then(
             function(res) {
               if (res.code == this.$store.state.constant.status_success) {
                 this.list();
@@ -176,6 +208,7 @@ export default {
                   type: "success",
                   message: res.msg
                 });
+                  this.dialog_handover_visible = false;
               } else {
                 this.$message({
                   type: "warning",
