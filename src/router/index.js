@@ -39,6 +39,9 @@ const add_produce_order = r => require.ensure([], () => r(require('@/page_biz/ad
 const sales_order = r => require.ensure([], () => r(require('@/page_biz/sales_order')), 'sales_order');
 const add_sales_order = r => require.ensure([], () => r(require('@/page_biz/add_sales_order')), 'add_sales_order');
 
+const search_order = r => require.ensure([], () => r(require('@/page_biz/search_order')), 'search_order');
+const statistics_biz = r => require.ensure([], () => r(require('@/page_biz/statistics_biz')), 'statistics_biz');
+
 //{#replace1#}
 
 const routes = [
@@ -139,6 +142,8 @@ const routes = [
 {path: '/add_produce_order',component: add_produce_order,meta: ['生产单', '设置生产单'],},
 {path: '/sales_order',component: sales_order,meta: ['业务单', '业务单管理'],},
 {path: '/add_sales_order',component: add_sales_order,meta: ['业务单', '设置业务单'],},
+{path: '/search_order',component: search_order,meta: ['查询', '查询订单'],},
+{path: '/statistics_biz',component: statistics_biz,meta: ['统计', '业务统计'],},
 //{#replace2#}
 
 		]
