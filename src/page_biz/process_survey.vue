@@ -12,12 +12,15 @@
                         </div>
                         <div class="line" v-for="(item, index)  in detail.items">
                             <div class="process_block info" style="line-height: 20px;">
-                                {{item.product_category}}[{{item.product_code}}][{{item.color}}]<br/>
+                                {{item.product_category}}[{{item.product_code}}][{{item.color}}{{item.color_data?'-'+item.color_data.custom_model:''}}]<br/>
                                 数量:{{item.sum}}(生产单总数:{{item.produce_sum}})&nbsp;&nbsp;交货时间:{{item.create_time}}<br/>
                             </div>
                             <div class="process_block" v-for="(process, index)  in item.process_list" :style="process.status==1?'background:#67C23A':'background:#F56C6C'">
                                 <span style="font-size: 16px;">{{process.name}}</span><br/>
-                                {{process.produce_handed_num}}/{{item.produce_sum}}
+                                <p style="line-height: 15px">
+                                    <span v-if="process.id>0">已完成:{{process.produce_completed_num}}/{{item.produce_sum}}</span><br/>
+                                    已交付:{{process.produce_handed_num}}/{{item.produce_sum}}<br/>
+                                </p>
                             </div>
 
                         </div>
@@ -191,7 +194,7 @@
         display: inline-block;
         color: #fff;
         background: red;
-        width: 100px;
+        width: 150px;
         height: 80px;
         text-align: center;
         line-height: 40px;

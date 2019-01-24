@@ -17,6 +17,49 @@
             </div>
 
             <div v-if="active == 0 && way == 1" class="table_container">
+                <!--<el-table-->
+                        <!--v-loading="table_loading"-->
+                        <!--ref="multipleTable"-->
+                        <!--:data="tableData"-->
+                        <!--@selection-change="handleSelectionChange"-->
+                        <!--style="width: 100%">-->
+                    <!--<el-table-column-->
+                            <!--type="selection"-->
+                            <!--width="55">-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column type="expand">-->
+                        <!--<template slot-scope="props">-->
+                            <!--<el-form  label-position="left" inline class="demo-table-expand">-->
+                                <!--<el-form-item label="材质:" >-->
+                                    <!--<span v-for="(material, index)  in props.row.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="装饰说明:" >-->
+                                    <!--<span>{{props.row.decoration}}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="样品图:" >-->
+                                    <!--<img width="80" v-for="(img, index)  in props.row.sample_imgs_final" :src="img">-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="备注说明:" >-->
+                                    <!--<span>{{props.row.sample_info}}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="流程:" >-->
+                                    <!--<span v-for="(process, index)  in props.row.process"><span v-if="index!=0">-></span>{{process.name}}</span>-->
+                                <!--</el-form-item>-->
+                            <!--</el-form>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="帽型" prop="product_cat_name"></el-table-column>-->
+                    <!--<el-table-column label="型号" prop="product_code"></el-table-column>-->
+                    <!--<el-table-column label="颜色" prop="color_code">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<span>{{scope.row.color_code}}</span><span v-if="scope.row.color_data">-{{scope.row.color_data.custom_model}}</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="数量" prop="sum"></el-table-column>-->
+                    <!--<el-table-column label="业务单号" prop="sales_order.order_no"></el-table-column>-->
+                    <!--<el-table-column label="交货时间" prop="sales_order.delivery_date"></el-table-column>-->
+
+                <!--</el-table>-->
                 <el-table
                         v-loading="table_loading"
                         ref="multipleTable"
@@ -29,33 +72,58 @@
                     </el-table-column>
                     <el-table-column type="expand">
                         <template slot-scope="props">
-                            <el-form  label-position="left" inline class="demo-table-expand">
-                                <el-form-item label="材质:" >
-                                    <span v-for="(material, index)  in props.row.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
-                                </el-form-item>
-                                <el-form-item label="装饰说明:" >
-                                    <span>{{props.row.decoration}}</span>
-                                </el-form-item>
-                                <el-form-item label="样品图:" >
-                                    <img width="80" v-for="(img, index)  in props.row.sample_imgs_final" :src="img">
-                                </el-form-item>
-                                <el-form-item label="备注说明:" >
-                                    <span>{{props.row.sample_info}}</span>
-                                </el-form-item>
-                                <el-form-item label="流程:" >
-                                    <span v-for="(process, index)  in props.row.process"><span v-if="index!=0">-></span>{{process.name}}</span>
-                                </el-form-item>
-                            </el-form>
+                            <el-table
+                                    v-loading="table_loading"
+
+                                    :data="props.row.sub_orders"
+
+                                    style="width: 100%">
+                                <!--<el-table-column-->
+                                        <!--type="selection"-->
+                                        <!--width="55">-->
+                                <!--</el-table-column>-->
+                                <el-table-column type="expand">
+                                    <template slot-scope="props">
+                                        <el-form  label-position="left" inline class="demo-table-expand">
+                                            <el-form-item label="材质:" >
+                                                <span v-for="(material, index)  in props.row.material">{{material.material ? material.material.name : material.name}}[{{material.sub ? material.sub.name : material.color_name}}]数量{{material.num}};</span>
+                                            </el-form-item>
+                                            <el-form-item label="装饰说明:" >
+                                                <span>{{props.row.decoration}}</span>
+                                            </el-form-item>
+                                            <el-form-item label="样品图:" >
+                                                <img width="80" v-for="(img, index)  in props.row.sample_imgs_final" :src="img">
+                                            </el-form-item>
+                                            <el-form-item label="备注说明:" >
+                                                <span>{{props.row.sample_info}}</span>
+                                            </el-form-item>
+                                            <el-form-item label="流程:" >
+                                                <span v-for="(process, index)  in props.row.process"><span v-if="index!=0">-></span>{{process.name}}</span>
+                                            </el-form-item>
+                                        </el-form>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="帽型" prop="product_cat_name"></el-table-column>
+                                <el-table-column label="型号" prop="product_code"></el-table-column>
+                                <el-table-column label="颜色" prop="color_code">
+                                    <template slot-scope="scope">
+                                        <span>{{scope.row.color_code}}</span><span v-if="scope.row.color_data">-{{scope.row.color_data.custom_model}}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="数量" prop="sum"></el-table-column>
+                                <!--<el-table-column label="业务单号" prop="sales_order.order_no"></el-table-column>-->
+                                <el-table-column label="交货时间" prop="sales_order.delivery_date"></el-table-column>
+
+                            </el-table>
                         </template>
                     </el-table-column>
-                    <el-table-column label="帽型" prop="product_cat_name"></el-table-column>
-                    <el-table-column label="型号" prop="product_code"></el-table-column>
-                    <el-table-column label="颜色" prop="color_code"></el-table-column>
-                    <el-table-column label="数量" prop="sum"></el-table-column>
-                    <el-table-column label="业务单号" prop="sales_order.order_no"></el-table-column>
-                    <el-table-column label="交货时间" prop="sales_order.delivery_date"></el-table-column>
+                    <el-table-column label="客户单号" prop="custom_order_no"></el-table-column>
+                    <el-table-column label="制单时间" prop="order_date"></el-table-column>
+                    <el-table-column label="交货时间" prop="delivery_date"></el-table-column>
+
 
                 </el-table>
+
                 <div class="Pagination" style="text-align: left;margin-top: 10px;">
                     <el-pagination
                             @current-change="handleCurrentChange"
@@ -389,7 +457,7 @@ import {
   sales_order_edit,
   sales_order_info,
   init_select_options,
-  sales_sub_orders
+        sales_sub_orders_index_by_order
 } from "@/api/getDatasales_order";
 import {
   beforeAvatarUpload,
@@ -403,7 +471,7 @@ export default {
       id: 0,
       tableData: [],
       table_loading: false,
-      limit: 20,
+      limit: 1,
       count: 0,
       currentPage: 1,
       loading: false,
@@ -475,8 +543,10 @@ export default {
           query: { active: 0, way: 1 }
         });
       }
-      this.sub_orders = cache_sales_order_selection;
-      this.gen_options_product_cat_product();
+        this.sub_orders = cache_sales_order_selection;
+        this.set_name = new Date().toLocaleDateString()+'生产单'+((this.sub_orders&&this.sub_orders.length)?'[业务单:'+this.sub_orders[0]['sales_order']['custom_order_no']+']':'');
+
+        this.gen_options_product_cat_product();
       this.gen_material_color();
     }
 
@@ -526,11 +596,12 @@ export default {
         this.handleCurrentChange(1);
       }
       this.produce_man = this.user_info.show_name;
-      this.set_name = new Date().toLocaleDateString()+'生产单';
+//        console.log(this.sub_orders);
+      this.set_name = new Date().toLocaleDateString()+'生产单'+((this.sub_orders&&this.sub_orders.length)?'[业务单:'+this.sub_orders[0]['sales_order']['custom_order_no']+']':'');
     },
     get_sales_sub_order_list() {
       this.table_loading = true;
-      sales_sub_orders({
+        sales_sub_orders_index_by_order({
         page: this.currentPage,
         page_size: this.limit,
         status: 1
@@ -571,104 +642,110 @@ export default {
       //                    data:{}
       //                };
       var sales_order_selection;
+//        console.log(this.multipleSelection)
       for (var i in this.multipleSelection) {
         if (!sales_order_selection) sales_order_selection = {};
         if (this.multipleSelection[i] && this.multipleSelection[i].length) {
           this.multipleSelection[i].forEach(
-            function(val, index) {
-              if (!this.delivery_date) {
-                // console.log(val);
-                this.delivery_date = val.delivery_date;
-              }
-              var unique =
-                val.product_cat_id +
-                "|" +
-                val.product_id +
-                "|" +
-                val.color_id +
-                "|" +
-                val.color_code;
-              //var unique = val.product_cat_id + '|' + val.product_id;
+            function(_val, _index) {
+                _val.sub_orders.forEach(function(val, index){
 
-              //判断流程是否存在并一致
-              var extra_id = index;
-              if (val.process) {
-                extra_id = "";
-                val.process.forEach(function(val1) {
-                  extra_id += "|" + val1.id;
-                });
-              }
-              unique += extra_id;
+                    if (!this.delivery_date) {
+                        // console.log(val);
+                        this.delivery_date = val.delivery_date;
+                    }
+                    var unique =
+                            val.product_cat_id +
+                            "|" +
+                            val.product_id +
+                            "|" +
+                            val.color_id +
+                            "|" +
+                            val.color_code;
+                    //var unique = val.product_cat_id + '|' + val.product_id;
 
-              if (!sales_order_selection[unique]) {
-                sales_order_selection[unique] = {};
-              }
+                    //判断流程是否存在并一致
+                    var extra_id = index;
+                    if (val.process) {
+                        extra_id = "";
+                        val.process.forEach(function(val1) {
+                            extra_id += "|" + val1.id;
+                        });
+                    }
+                    unique += extra_id;
 
-              var color_unique = val.color_id + "|" + val.color_code;
-              if (!sales_order_selection[unique][color_unique]) {
-                sales_order_selection[unique][color_unique] = {
-                  order_codes: [], //主业务员单号
-                  order_sub_ids: [], //业务子单号
-                  order_sub: [], //业务子单
-                  data: {}, //业务单数据
-                  sales_order_sub_diff_data: [] //业务单数据
-                };
-              }
+                    if (!sales_order_selection[unique]) {
+                        sales_order_selection[unique] = {};
+                    }
 
-              if (
-                sales_order_selection[unique][
-                  color_unique
-                ].order_sub_ids.indexOf(val.id) == -1
-              ) {
-                sales_order_selection[unique][color_unique].order_sub_ids.push(
-                  val.id
-                );
-                sales_order_selection[unique][color_unique].order_sub.push({
-                  sub_id: val.id,
-                  order_id: val.order_id
-                }); //用于提交
-              }
-              if (
-                sales_order_selection[unique][color_unique].order_codes.indexOf(
-                  val.sales_order.order_no
-                ) == -1
-              ) {
-                sales_order_selection[unique][color_unique].order_codes.push(
-                  val.sales_order.order_no
-                );
-              }
+                    var color_unique = val.color_id + "|" + val.color_code;
+                    if (!sales_order_selection[unique][color_unique]) {
+                        sales_order_selection[unique][color_unique] = {
+                            order_codes: [], //主业务员单号
+                            order_sub_ids: [], //业务子单号
+                            order_sub: [], //业务子单
+                            data: {}, //业务单数据
+                            sales_order_sub_diff_data: [] //业务单数据
+                        };
+                    }
 
-              if (sales_order_selection[unique][color_unique].data.product_id) {
-                //合并
-                sales_order_selection[unique][color_unique].data.sum =
-                  parseInt(
-                    sales_order_selection[unique][color_unique].data.sum
-                  ) + parseInt(val.sum);
-                //合并情况下,其他杂项清空
-                sales_order_selection[unique][color_unique].data.material = [];
-                sales_order_selection[unique][
-                  color_unique
-                ].data.material_sub = [];
-                sales_order_selection[unique][color_unique].data.decoration =
-                  "";
-                sales_order_selection[unique][
-                  color_unique
-                ].data.sample_imgs = [];
-                sales_order_selection[unique][
-                  color_unique
-                ].data.sample_imgs_final = [];
-                sales_order_selection[unique][color_unique].data.sample_info =
-                  "";
-                sales_order_selection[unique][color_unique].data.custom_model =
-                  "";
-              } else {
-                sales_order_selection[unique][color_unique].data = deepCopy(
-                  val
-                );
-              }
-              sales_order_selection[unique][
-                color_unique
-              ].sales_order_sub_diff_data.push(val);
+                    if (
+                            sales_order_selection[unique][
+                                    color_unique
+                                    ].order_sub_ids.indexOf(val.id) == -1
+                    ) {
+                        sales_order_selection[unique][color_unique].order_sub_ids.push(
+                                val.id
+                        );
+                        sales_order_selection[unique][color_unique].order_sub.push({
+                            sub_id: val.id,
+                            order_id: val.order_id
+                        }); //用于提交
+                    }
+                    if (
+                            sales_order_selection[unique][color_unique].order_codes.indexOf(
+                                    val.sales_order.custom_order_no
+                            ) == -1
+                    ) {
+                        sales_order_selection[unique][color_unique].order_codes.push(
+                                val.sales_order.custom_order_no
+                        );
+                    }
+
+                    if (sales_order_selection[unique][color_unique].data.product_id) {
+                        //合并
+                        sales_order_selection[unique][color_unique].data.sum =
+                                parseInt(
+                                        sales_order_selection[unique][color_unique].data.sum
+                                ) + parseInt(val.sum);
+                        //合并情况下,其他杂项清空
+                        sales_order_selection[unique][color_unique].data.material = [];
+                        sales_order_selection[unique][
+                                color_unique
+                                ].data.material_sub = [];
+                        sales_order_selection[unique][color_unique].data.decoration =
+                                "";
+                        sales_order_selection[unique][
+                                color_unique
+                                ].data.sample_imgs = [];
+                        sales_order_selection[unique][
+                                color_unique
+                                ].data.sample_imgs_final = [];
+                        sales_order_selection[unique][color_unique].data.sample_info =
+                                "";
+                        sales_order_selection[unique][color_unique].data.custom_model =
+                                "";
+                    } else {
+                        sales_order_selection[unique][color_unique].data = deepCopy(
+                                val
+                        );
+                    }
+                    sales_order_selection[unique][
+                            color_unique
+                            ].sales_order_sub_diff_data.push(val);
+
+                }.bind(this))
+
             }.bind(this)
           );
         }
@@ -766,7 +843,7 @@ export default {
       this.get_sales_sub_order_list();
     },
     handleSelectionChange(val) {
-      // console.log(val)
+//       console.log(val)
       setTimeout(
         function() {
           //                    this.multipleSelection['page'+this.currentPage]= [];
@@ -872,6 +949,7 @@ export default {
         }.bind(this)
       );
 
+//        console.log(this.sub_orders);return;
       if (error_msg) {
         this.$message({
           type: "warning",

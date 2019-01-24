@@ -8,6 +8,11 @@
                    <!--<i class="iconfont" style="color: #999;font-size: 140px;">&#xe628;</i>-->
                    输入单号查询
                </p>
+
+               <el-radio-group v-model="order_no_type">
+                   <el-radio-button label="yw">业务单</el-radio-button>
+                   <el-radio-button label="sc">生产单</el-radio-button>
+               </el-radio-group>
                <el-input ref="input" autofocus v-model="order_no" placeholder="业务单号/生产单号" style="width: 500px;display: inline-block" clearable></el-input>
                <!--<el-button v-if="!order_no || !order_detail.order_no" type="success" style="display: inline-block" @click="produce_order_detail()">搜索</el-button>-->
                <el-button  type="success" style="display: inline-block" @click="search()">查询</el-button>
@@ -30,12 +35,20 @@
                                    :data="order_list"
                                    style="width: 100%;"
                                    height="500">
-                               <el-table-column  label="客户单号" prop="custom_order_no">
+                               <el-table-column v-if="order_no_type=='yw'" label="客户单号" prop="custom_order_no">
                                    <template slot-scope="scope">
 
                                        <span @click="order_list=[scope.row];get_single_order()" style="text-decoration: underline;cursor: pointer">{{scope.row.custom_order_no}}</span>
                                    </template>
                                </el-table-column>
+
+                               <el-table-column v-if="order_no_type=='sc'" label="单号" prop="order_no">
+                                   <template slot-scope="scope">
+
+                                       <span @click="order_list=[scope.row];get_single_order()" style="text-decoration: underline;cursor: pointer">{{scope.row.order_no}}</span>
+                                   </template>
+                               </el-table-column>
+
                                <el-table-column label="创建时间" prop="create_time"></el-table-column>
                            </el-table>
                            <div slot="footer" class="dialog-footer">
@@ -78,7 +91,7 @@
     import salesOrder from '../components/salesOrder'
     import produceOrder from '../components/produceOrder'
     import {sales_order_info,sales_order_get_all} from "@/api/getDatasales_order";
-    import {produce_order_info} from "@/api/getDataproduce_order";
+    import {produce_order_info,produce_order_all_list} from "@/api/getDataproduce_order";
     import '@/assets/js/jquery-1.4.4.min';
     import '@/assets/js/jquery.jqprint-0.3';
     export default {
@@ -92,7 +105,7 @@
                 dialog_order_visible:false,
                 current:{},
                 order_no:'',
-                order_no_type:'',
+                order_no_type:'yw',
                 order_detail:{},
                 loadingBtn:-1,
                 order_info:null,
@@ -123,12 +136,12 @@
                     return;
                 }
 
-                var order_no_arr = this.order_no.split('-');
-                if (order_no_arr.length == 4 && order_no_arr[0].indexOf('SC')!= -1) {
-                    this.order_no_type = 'sc';
-                } else {
-                    this.order_no_type = 'yw';
-                }
+//                var order_no_arr = this.order_no.split('-');
+//                if (order_no_arr.length == 4 && order_no_arr[0].indexOf('SC')!= -1) {
+//                    this.order_no_type = 'sc';
+//                } else {
+//                    this.order_no_type = 'yw';
+//                }
 
                 this.order_list = [];
                 if (this.order_no_type == 'yw') {//业务单
@@ -155,9 +168,21 @@
                         }
                     }.bind(this));
                 } else if(this.order_no_type == 'sc') {//生产单
-                    produce_order_info({order_no:this.order_no}).then(function(res){
+
+                    produce_order_all_list({order_no:this.order_no}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
-                            this.order_info = res.data;
+                            this.order_list = res.data;
+                            if (!this.order_list.length) {
+                                this.$message({
+                                    type: "warning",
+                                    message: "没有查询到订单信息"
+                                });
+                                return;
+                            } else if (this.order_list.length == 1) {
+                                this.get_single_order();
+                            } else {
+
+                            }
                             this.dialog_order_visible = true;
                         } else {
                             this.$message({
@@ -171,18 +196,33 @@
 
             },
             get_single_order(){
-                sales_order_info({id:this.order_list[0].id}).then(function(res){
-                    if (res.code == this.$store.state.constant.status_success) {
-                        this.order_info = res.data;
+                if(this.order_no_type == 'yw') {//生产单
+                    sales_order_info({id:this.order_list[0].id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.order_info = res.data;
 //                                        this.order_list = [];
-                        this.dialog_order_visible = true;
-                    } else {
-                        this.$message({
-                            type: "warning",
-                            message: res.msg
-                        });
-                    }
-                }.bind(this));
+                            this.dialog_order_visible = true;
+                        } else {
+                            this.$message({
+                                type: "warning",
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                } else if(this.order_no_type == 'sc') {//生产单
+                    produce_order_info({id:this.order_list[0].id}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.order_info = res.data;
+                            this.dialog_order_visible = true;
+                        } else {
+                            this.$message({
+                                type: "warning",
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }
+
             },
             // 打印
             print_order_sales_order(row) {

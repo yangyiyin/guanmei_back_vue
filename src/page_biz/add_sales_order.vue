@@ -79,18 +79,19 @@
                     </el-option>
                   </el-select>
                   <el-input v-if="color.id == -1" clearable placeholder="颜色" v-model="color.name" style="width: 220px"></el-input>
+                  <el-input clearable placeholder="代号" v-model="color.custom_model" style="width: 120px"></el-input>
 
                   <div style="vertical-align: top;margin-top: 10px;">
                     <p style="font-size: 12px;color: #333"><i style="color:red;">*</i>详细信息:</p>
                     <div style="text-align: center;">
                       <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">尺寸:</div>
-                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">型号:</div>
+                      <div style="display: none;width: 140px;text-align: left;font-size: 12px;color: #333">型号:</div>
                       <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">去向:</div>
                       <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">数量:</div>
                       <div v-for="(item, idx)  in color.color_details" :key='idx' style="margin-top: 5px;">
 
                         <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 140px"></el-input>
-                        <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 140px"></el-input>
+                        <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 140px;display: none"></el-input>
                         <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 140px"></el-input>
                         <el-input type="number" clearable placeholder="数量" v-model="item.sum" style="width: 135px"></el-input>
 
@@ -524,7 +525,9 @@ export default {
             );
           }.bind(this)
         )
-        .catch(() => {})
+        .catch(() => {
+        this.loading = false;
+      })
         .finally(
           function() {
 //            this.loading = false;
@@ -670,6 +673,7 @@ export default {
 
       sub_order.options_product_cat_product = [];
       sub_order.product = {};
+      this.change_product(sub_order,1);
       this.options.options_product.forEach(
         function(val) {
           if (val.cid == sub_order.product_cat.id) {
@@ -734,9 +738,16 @@ export default {
       );
     },
 
-    change_product(sub_order) {
-      sub_order.product_id = sub_order.product.id;
-      sub_order.product_name = sub_order.product.name;
+    change_product(sub_order,clear) {
+//      console.log(sub_order);
+      if (clear) {
+        sub_order.product_id = 0;
+        sub_order.product_name = '';
+      } else {
+        sub_order.product_id = sub_order.product.id;
+        sub_order.product_name = sub_order.product.name;
+      }
+
     },
     change_color(color, sub_order) {
 //      console.log(color, "change_color");

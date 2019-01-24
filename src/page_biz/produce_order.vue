@@ -131,6 +131,12 @@
                 <el-table-column label="名称" prop="set_name"></el-table-column>
                 <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
                 <el-table-column label="创建时间" prop="create_time"></el-table-column>
+                <el-table-column label="是否提交仓库" prop="has_init">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.has_init" style="width: 10px;height: 10px;background: #ED6470;border-radius: 10px;"></div>
+                        <div v-if="!scope.row.has_init" style="width: 10px;height: 10px;background: #6AC82F;border-radius: 10px;"></div>
+                    </template>
+                </el-table-column>
                 <!--<el-table-column label="包含业务单">-->
                 <!--<template slot-scope="scope">-->
 
