@@ -93,10 +93,10 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="系统编号" prop="order_no"></el-table-column>
-                            <el-table-column label="包含业务单">
+                            <el-table-column label="包含业务单" width="300">
                                 <template slot-scope="scope">
 
-                                    <span style="cursor: pointer;text-decoration: underline" @click="dialog_sales_order_visible = true;current=scope.row">{{scope.row.sales_order_nos}}</span>
+                                    <span style="cursor: pointer;text-decoration: underline" @click="dialog_sales_order_visible = true;current=scope.row">客户单号:{{scope.row.sales_order_nos}}(客户型号:{{scope.row.sales_order_models}})</span>
                                 </template>
                             </el-table-column>
 

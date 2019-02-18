@@ -53,14 +53,16 @@
                         :value="item">
                 </el-option>
             </el-select>
-            <el-select v-model="sub_order.product" placeholder="请选择"  @change="change_product(sub_order)" value-key="id">
-                <el-option
-                        v-for="item in sub_order.options_product_cat_product"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item">
-                </el-option>
-            </el-select>
+            <!--<el-select v-model="sub_order.product" placeholder="请选择"  @change="change_product(sub_order)" value-key="id">-->
+                <!--<el-option-->
+                        <!--v-for="item in sub_order.options_product_cat_product"-->
+                        <!--:key="item.id"-->
+                        <!--:label="item.name"-->
+                        <!--:value="item">-->
+                <!--</el-option>-->
+            <!--</el-select>-->
+          <el-input clearable placeholder="型号" v-model="sub_order.product.name" style="width: 135px"></el-input>
+
         </div>
         <!-- 颜色 -->
         <div class="search_item">
@@ -86,13 +88,13 @@
                     <div style="text-align: center;">
                       <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">尺寸:</div>
                       <div style="display: none;width: 140px;text-align: left;font-size: 12px;color: #333">型号:</div>
-                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">去向:</div>
+                      <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333"><el-input type="text" clearable placeholder="去向" v-model="color.go_name" style="width: 100px;border: none"></el-input>:</div>
                       <div style="display: inline-block;width: 140px;text-align: left;font-size: 12px;color: #333">数量:</div>
                       <div v-for="(item, idx)  in color.color_details" :key='idx' style="margin-top: 5px;">
 
                         <el-input type="text" clearable placeholder="尺寸" v-model="item.size" style="width: 140px"></el-input>
                         <el-input type="text" clearable placeholder="型号" v-model="item.model" style="width: 140px;display: none"></el-input>
-                        <el-input type="text" clearable placeholder="去向" v-model="item.go" style="width: 140px"></el-input>
+                        <el-input type="text" clearable :placeholder="color.go_name" v-model="item.go" style="width: 140px"></el-input>
                         <el-input type="number" clearable placeholder="数量" v-model="item.sum" style="width: 135px"></el-input>
 
                         <el-button type="danger" @click="del_color_detail(color, idx)" round size="mini"><i class="iconfont" style="font-size: 10px;margin-right: 0">&#xe603;</i></el-button>
@@ -425,8 +427,9 @@ export default {
         function(val, index) {
           if (!val.product_cat_id)
             error_msg = "请选择帽型类别";
-          if (!val.product_id)
-            error_msg = "请选择帽型型号";
+//          if (!val.product_id)
+//            error_msg = "请选择帽型型号";
+          val.product_name = val.product.name;
           if (!val.colors || !val.colors.length) {
             error_msg = "请添加颜色";
           }
@@ -600,6 +603,7 @@ export default {
         size: "",
         model: "",
         go: "",
+//        go_name: "去向",
         sum:""
       };
       if (!item.color_details) {
@@ -632,11 +636,13 @@ export default {
         name: "",
         sum: "",
         color: {},
+        go_name:"去向",
         color_details:[
           {
             size: "",
             model: "",
             go: "",
+//            go_name: "去向",
             sum:""
           }
         ]

@@ -105,6 +105,7 @@
                                 </el-table-column>
                                 <el-table-column label="帽型" prop="product_cat_name"></el-table-column>
                                 <el-table-column label="型号" prop="product_code"></el-table-column>
+                                <el-table-column label="客户款式" prop="custom_model"></el-table-column>
                                 <el-table-column label="颜色" prop="color_code">
                                     <template slot-scope="scope">
                                         <span>{{scope.row.color_code}}</span><span v-if="scope.row.color_data">-{{scope.row.color_data.custom_model}}</span>
@@ -118,6 +119,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="客户单号" prop="custom_order_no"></el-table-column>
+                    <!--<el-table-column label="客户单号" prop="custom_order_no"></el-table-column>-->
                     <el-table-column label="制单时间" prop="order_date"></el-table-column>
                     <el-table-column label="交货时间" prop="delivery_date"></el-table-column>
 
@@ -471,7 +473,7 @@ export default {
       id: 0,
       tableData: [],
       table_loading: false,
-      limit: 1,
+      limit: 20,
       count: 0,
       currentPage: 1,
       loading: false,

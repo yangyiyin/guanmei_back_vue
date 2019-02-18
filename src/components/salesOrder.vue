@@ -13,7 +13,7 @@
             <!--交货日期:{{order_info.delivery_date}}-->
         </div>
         <div class="item-item" style="float: right">
-            帽类:{{order_info.sales_order_sub[0].product_cat_name}}
+            帽类:{{order_info.sales_order_sub[0].product_cat_name}}<span v-if="order_info.sales_order_sub[0].product_name">({{order_info.sales_order_sub[0].product_name}})</span>
             <!--交货日期:{{order_info.delivery_date}}-->
         </div>
         <div style="clear: both"></div>
@@ -23,7 +23,7 @@
         <table border="1" cellspacing="0" style="width: 100%">
 
             <tr>
-                <td>产品型号:{{order_info.sales_order_sub[0].product_name}}</td>
+                <td>产品型号:{{order_info.sales_order_sub[0].custom_model}}</td>
                 <td>数/件:</td>
                 <td>件数:</td>
                 <td>总数量:{{order_info.sum}}</td>
@@ -33,13 +33,14 @@
             <tr>
                 <td colspan="4" style="width: 50%;vertical-align: top">
                     <table style="width: 100%;">
-                        <tr style="font-weight: bolder">
-                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">颜色</td>
-                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">数量</td>
-                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">尺寸</td>
-                            <td style="border-bottom: 1px solid #999">去向</td>
-                        </tr>
+
                         <template v-for="(color, index)  in order_info.sales_order_sub[0].colors">
+                            <tr style="font-weight: bolder">
+                                <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">颜色</td>
+                                <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">数量</td>
+                                <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">尺寸</td>
+                                <td style="border-bottom: 1px solid #999">{{color.go_name}}</td>
+                            </tr>
                             <template v-for="(detail, index2)  in color.color_details"  >
                                 <tr >
                                     <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">{{color.name}}{{color.custom_model?'-'+color.custom_model:''}}</td>
