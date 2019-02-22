@@ -8,7 +8,8 @@
 
                     <div class="block" v-for="(detail, index)  in survey_order_data">
                         <div class="line" style="margin-left: 0px;">
-                            <span style="background: #ccc">业务单:{{detail.order_no}}&nbsp;({{detail.sales_man}})</span>
+
+                            <span style="background: #ccc;cursor: pointer" @click="get_single_order(detail.id)">业务单:{{detail.order_no}}&nbsp;({{detail.sales_man}})</span>
                         </div>
                         <div class="line" v-for="(item, index)  in detail.items">
                             <div class="process_block info" style="line-height: 20px;">
@@ -66,13 +67,28 @@
 
         </el-dialog>
 
+        <el-dialog title="" :visible.sync="dialog_order_visible" width="70%">
+            <template  v-if="order_info">
+
+
+                <div id="print_sales_order">
+                    <sales-order :order_info="order_info"></sales-order>
+
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="success" @click="print_order_sales_order()">打 印</el-button>
+                    <el-button @click="dialog_order_visible = false">关 闭</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import headTop from '../components/headTop'
     import {survey_order,survey_orgnize} from '@/api/getDataprocess'
-
+    import {sales_order_info} from "@/api/getDatasales_order";
+    import salesOrder from '../components/salesOrder'
     import '@/assets/js/jquery-1.4.4.min';
     import '@/assets/js/jquery.jqprint-0.3';
     export default {
@@ -89,11 +105,13 @@
                 activeName:'first',
                 survey_order_data:[],
                 survey_orgnize_data:[],
+                dialog_order_visible:false,
+                order_info:{}
 
             }
         },
         components: {
-            headTop,
+            headTop,salesOrder
         },
         created(){
 
@@ -168,6 +186,26 @@
             show_orders(orders) {
                 this.current_orders = orders;
                 this.dialogFormVisible = true;
+            },
+            get_single_order(id){
+                sales_order_info({id:id}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.order_info = res.data;
+                        console.log(this.order_info)
+                        this.dialog_order_visible = true;
+                    } else {
+                        this.$message({
+                            type: "warning",
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
+
+
+            },
+            // 打印
+            print_order_sales_order(row) {
+                $("#print_sales_order").jqprint();
             }
         },
     }

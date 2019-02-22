@@ -46,7 +46,11 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column label="编号" prop="order_no"></el-table-column>
+                <el-table-column label="编号" prop="order_no">
+                    <template slot-scope="scope">
+                        <span style="cursor: pointer;text-decoration: underline" @click="show_order_detail(scope.row.id)">{{scope.row.order_no}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="包含业务单">
                     <template slot-scope="scope">
 
@@ -58,7 +62,7 @@
                 <el-table-column label="进度">
                     <template slot-scope="scope">
                         <p v-if="scope.row.process_state_id != 999999">当前流程:{{scope.row.process_state}}</p>
-                     <el-tag v-if="scope.row.process_state_id == 999999" type="success" >{{scope.row.process_state}}</el-tag>
+                        <el-tag v-if="scope.row.process_state_id == 999999" type="success" >{{scope.row.process_state}}</el-tag>
                         <p v-if="scope.row.process_state_id != 999999" >下一流程:{{scope.row.process_state_next}}</p>
                     </template>
                 </el-table-column>
@@ -152,213 +156,247 @@
                 <p style="width: 90%;text-align: center;margin: 0 auto">{{order_info}}</p>
             </div>
         </div>
+
+        <el-dialog title="" :visible.sync="dialog_order_visible" width="70%">
+
+            <template  v-if="order_info">
+                <div id="print_produce_order">
+                    <produce-order :order_info="order_info"></produce-order>
+
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="success" @click="print_order_produce_order()">打 印</el-button>
+                    <el-button @click="dialog_order_visible = false">关 闭</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import headTop from "../components/headTop";
-import {
-  process_produce_order,
-  process_order,
-        complete_order_num,get_my_order_handover_processes
-} from "@/api/getDataproduce_order";
+    import headTop from "../components/headTop";
+    import {
+            process_produce_order,
+            process_order,
+            complete_order_num,get_my_order_handover_processes
+    } from "@/api/getDataproduce_order";
+    import {produce_order_info} from "@/api/getDataproduce_order";
+    import produceOrder from '../components/produceOrder'
+    import "@/assets/js/jquery-1.4.4.min";
+    import "@/assets/js/jquery.jqprint-0.3";
+    export default {
+        data() {
+            return {
+                tableData: [],
+                limit: 10,
+                count: 0,
+                currentPage: 1,
+                dialogFormVisible: false,
+                current: {},
+                //                remark:'',
+                //                choose_categories:[],
+                //                categories:[],
+                order_no: "",
+                loadingBtn: -1,
+                print_order_no: "",
+                barcode_url: "",
+                order_info: "",
+                dialog_sales_order_visible: false,
+                dialog_handover_visible: false,
+                dialog_set_complete_visible: false,
+                dialog_processoption_visible: false,
+                cur_order: {},
+                process_options:[],
+                cur_process_option:{},
+                process_options_type:0,
+                order_info : {},
+                dialog_order_visible : false
+            };
+        },
+        components: {
+            headTop,
+            produceOrder
+        },
+        created() {
+            this.list();
+        },
+        mounted() {},
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                // 通过 `vm` 访问组件实例
+                vm.list();
+        });
+        },
+        methods: {
+            list() {
+                process_produce_order({
+                    page: this.currentPage,
+                    page_size: this.limit,
+                    order_no: this.order_no
+                }).then(
+                        function(res) {
+                            if (res.code == this.$store.state.constant.status_success) {
+                                this.tableData = res.data.list;
+                                this.count = parseInt(res.data.count);
+                            }
+                        }.bind(this)
+                );
+            },
+            complete_num_order(row,do_process,process_option){
 
-import "@/assets/js/jquery-1.4.4.min";
-import "@/assets/js/jquery.jqprint-0.3";
-export default {
-  data() {
-    return {
-      tableData: [],
-      limit: 10,
-      count: 0,
-      currentPage: 1,
-      dialogFormVisible: false,
-      current: {},
-      //                remark:'',
-      //                choose_categories:[],
-      //                categories:[],
-      order_no: "",
-      loadingBtn: -1,
-      print_order_no: "",
-      barcode_url: "",
-      order_info: "",
-      dialog_sales_order_visible: false,
-        dialog_handover_visible: false,
-        dialog_set_complete_visible: false,
-        dialog_processoption_visible: false,
-      cur_order: {},
-        process_options:[],
-        cur_process_option:{},
-        process_options_type:0
-    };
-  },
-  components: {
-    headTop
-  },
-  created() {
-    this.list();
-  },
-  mounted() {},
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      // 通过 `vm` 访问组件实例
-      vm.list();
-    });
-  },
-  methods: {
-    list() {
-      process_produce_order({
-        page: this.currentPage,
-        page_size: this.limit,
-        order_no: this.order_no
-      }).then(
-        function(res) {
-          if (res.code == this.$store.state.constant.status_success) {
-            this.tableData = res.data.list;
-            this.count = parseInt(res.data.count);
-          }
-        }.bind(this)
-      );
-    },
-      complete_num_order(row,do_process,process_option){
+                if (!do_process) {
+                    this.get_my_order_handover_processes(row.id,2);return;
+                }
 
-          if (!do_process) {
-              this.get_my_order_handover_processes(row.id,2);return;
-          }
+                if (parseInt(row.complete_num) + parseInt(row.completed_num) > parseInt(row.sum)) {
+                    this.$message({
+                        type: "warning",
+                        message: '完成数量超过订单总数,请重新输入正确的数量'
+                    });
+                    return;
+                } else {
+                    var msg_tip = "本次完成数量为"+row.complete_num+",确认此操作?";
+                }
 
-          if (parseInt(row.complete_num) + parseInt(row.completed_num) > parseInt(row.sum)) {
-              this.$message({
-                  type: "warning",
-                  message: '完成数量超过订单总数,请重新输入正确的数量'
-              });
-              return;
-          } else {
-              var msg_tip = "本次完成数量为"+row.complete_num+",确认此操作?";
-          }
-
-          this.$confirm(msg_tip, "提示", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-          }).then(
-                  function() {
-                      complete_order_num({ produce_order_id: row.id , complete_num:row.complete_num,from_process_id:this.cur_process_option.from.id}).then(
-                              function(res) {
-                                  if (res.code == this.$store.state.constant.status_success) {
-                                      this.list();
-                                      this.$message({
-                                          type: "success",
-                                          message: res.msg
-                                      });
-                                      this.dialog_set_complete_visible = false;
-                                  } else {
-                                      this.$message({
-                                          type: "warning",
-                                          message: res.msg
-                                      });
-                                  }
-                              }.bind(this)
-                      );
-                  }.bind(this)
-          );
+                this.$confirm(msg_tip, "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(
+                        function() {
+                            complete_order_num({ produce_order_id: row.id , complete_num:row.complete_num,from_process_id:this.cur_process_option.from.id}).then(
+                                    function(res) {
+                                        if (res.code == this.$store.state.constant.status_success) {
+                                            this.list();
+                                            this.$message({
+                                                type: "success",
+                                                message: res.msg
+                                            });
+                                            this.dialog_set_complete_visible = false;
+                                        } else {
+                                            this.$message({
+                                                type: "warning",
+                                                message: res.msg
+                                            });
+                                        }
+                                    }.bind(this)
+                            );
+                        }.bind(this)
+                );
 
 
 
-      },
+            },
 
-      get_my_order_handover_processes(produce_order_id,type){
+            get_my_order_handover_processes(produce_order_id,type){
 
-          get_my_order_handover_processes({ produce_order_id: produce_order_id}).then(
-                  function(res) {
-                      if (res.code == this.$store.state.constant.status_success) {
+                get_my_order_handover_processes({ produce_order_id: produce_order_id}).then(
+                        function(res) {
+                            if (res.code == this.$store.state.constant.status_success) {
 //                          this.list();
 //                          this.$message({
 //                              type: "success",
 //                              message: res.msg
 //                          });
-                          this.process_options_type=type;
-                          this.process_options = res.data;
-                          this.dialog_processoption_visible = true;
-                      } else {
-                          this.$message({
-                              type: "warning",
-                              message: res.msg
-                          });
-                      }
-                  }.bind(this)
-          );
-      },
-    process_order(row,do_process,process_option) {
-          if (!do_process) {
-              this.get_my_order_handover_processes(row.id,1);return;
-          }
+                                this.process_options_type=type;
+                                this.process_options = res.data;
+                                this.dialog_processoption_visible = true;
+                            } else {
+                                this.$message({
+                                    type: "warning",
+                                    message: res.msg
+                                });
+                            }
+                        }.bind(this)
+                );
+            },
+            process_order(row,do_process,process_option) {
+                if (!do_process) {
+                    this.get_my_order_handover_processes(row.id,1);return;
+                }
 
-        if (parseInt(row.handover_num) + parseInt(row.handed_num) > parseInt(row.sum)) {
-            this.$message({
-                type: "warning",
-                message: '交接数量超过订单总数,请重新输入正确的交接数量'
-            });
-            return;
-        } else if (parseInt(row.handover_num) + parseInt(row.handed_num) == parseInt(row.sum)) {
-            var msg_tip = "本次交接数量为"+row.handover_num+",本次交接完成,流程将流转至下一流程,确认此操作?";
-        } else {
-            var msg_tip = "本次交接数量为"+row.handover_num+",确认此操作?";
-        }
+                if (parseInt(row.handover_num) + parseInt(row.handed_num) > parseInt(row.sum)) {
+                    this.$message({
+                        type: "warning",
+                        message: '交接数量超过订单总数,请重新输入正确的交接数量'
+                    });
+                    return;
+                } else if (parseInt(row.handover_num) + parseInt(row.handed_num) == parseInt(row.sum)) {
+                    var msg_tip = "本次交接数量为"+row.handover_num+",本次交接完成,流程将流转至下一流程,确认此操作?";
+                } else {
+                    var msg_tip = "本次交接数量为"+row.handover_num+",确认此操作?";
+                }
 
 
-      this.$confirm(msg_tip, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(
-        function() {
-          process_order({ produce_order_id: row.id , handover_num:row.handover_num,from_process_id:this.cur_process_option.from.id}).then(
-            function(res) {
-              if (res.code == this.$store.state.constant.status_success) {
+                this.$confirm(msg_tip, "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(
+                        function() {
+                            process_order({ produce_order_id: row.id , handover_num:row.handover_num,from_process_id:this.cur_process_option.from.id}).then(
+                                    function(res) {
+                                        if (res.code == this.$store.state.constant.status_success) {
+                                            this.list();
+                                            this.$message({
+                                                type: "success",
+                                                message: res.msg
+                                            });
+                                            this.dialog_handover_visible = false;
+                                        } else {
+                                            this.$message({
+                                                type: "warning",
+                                                message: res.msg
+                                            });
+                                        }
+                                    }.bind(this)
+                            );
+                        }.bind(this)
+                );
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
                 this.list();
-                this.$message({
-                  type: "success",
-                  message: res.msg
-                });
-                  this.dialog_handover_visible = false;
-              } else {
-                this.$message({
-                  type: "warning",
-                  message: res.msg
-                });
-              }
-            }.bind(this)
-          );
-        }.bind(this)
-      );
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.list();
-    },
-    search() {
-      this.currentPage = 1;
-      this.list();
-    }
-  }
-};
+            },
+            search() {
+                this.currentPage = 1;
+                this.list();
+            },
+            show_order_detail(id){
+                produce_order_info({id:id}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.order_info = res.data;
+                        this.dialog_order_visible = true;
+                    } else {
+                        this.$message({
+                            type: "warning",
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
+            },
+            print_order_produce_order(row) {
+                $("#print_produce_order").jqprint();
+            },
+        }
+    };
 </script>
 
 <style lang="less">
-@import "../style/mixin";
-.table_container {
-  padding: 20px;
-}
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
-}
+    @import "../style/mixin";
+    .table_container {
+        padding: 20px;
+    }
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 </style>
