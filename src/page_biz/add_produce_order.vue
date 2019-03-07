@@ -910,10 +910,11 @@ export default {
         error_msg = "请添加订单子项";
 
       var order_num = 0;
+//        console.log(data);return;
       data.sub_orders.forEach(
         function(val, index) {
           if (!val.material || !val.material.length) {
-            error_msg = "第" + (index + 1) + "个子项,请添加材料";
+            //error_msg = "第" + (index + 1) + "个子项,请添加材料";
           } else {
             val.material.forEach(function(item) {
               if (!item.material || !item.sub || !item.num) {
