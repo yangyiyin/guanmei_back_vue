@@ -40,6 +40,26 @@
                                 :picker-options="pickerOptions">
                         </el-date-picker>
                     </p>
+                    <p style="margin-top:20px;">
+                        <span style="font-size: 14px;">排序:</span>
+                        <el-select size="mini" v-model="order_by[0].key" placeholder="排序字段" clearable>
+                            <el-option
+                                    v-for="item in [{value:'delivery_date',label:'交货日期'},{value:'order_date',label:'制单日期'},{value:'process_state_id',label:'流程进度'}]"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+
+                        <el-select size="mini" v-model="order_by[0].value" placeholder="排序方式" clearable>
+                            <el-option
+                                    v-for="item in [{value:'asc',label:'从小到大'},{value:'desc',label:'从大到小'}]"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </p>
                     <p style="margin-top: 5px;">
                         <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
                         <el-button  @click="dialogFormVisibleDaochu = true;">导出</el-button>
@@ -48,6 +68,8 @@
             </el-collapse>
 
         </div>
+
+
         <div class="table_container">
             <el-table
                     :data="tableData"
@@ -258,7 +280,7 @@
                 print_order_no: "",
                 barcode_url: "",
                 order_info: "",
-
+                order_by:[{key:'',value:''}],
                 pickerOptions: {
                     shortcuts: [
                         {
@@ -319,6 +341,7 @@
                     end_time: this.dateTime ? this.dateTime[1]:'',
                     start_time_create: this.dateTime_create ? this.dateTime_create[0]:'',
                     end_time_create: this.dateTime_create ? this.dateTime_create[1]:'',
+                    order_by:this.order_by
                 }).then(
                         function(res) {
                             if (res.code == this.$store.state.constant.status_success) {

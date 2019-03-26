@@ -125,7 +125,7 @@
                 <el-table-column label="操作" width="400">
                     <template slot-scope="scope">
                         <el-button size="mini" v-if="scope.row.status == 5" @click="verify(scope, 1)" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
-                        <el-button v-if="scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
+                        <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
                         <el-button size="mini" @click="goto_edit_sales_order(scope.row.id,'clone')">克隆</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <el-button v-if="scope.row.status == 5" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
