@@ -337,7 +337,7 @@
                 dialogFormVisibleDaochu: false,
                 dialogFormVisibleSubmit: false,
                 current: {},
-                current_order: {},
+                current_order: {row:{}},
                 //                remark:'',
                 //                choose_categories:[],
                 //                categories:[],
