@@ -14,8 +14,10 @@ export const submit_storage = data => fetch('/guanmei/produce_order/submit_stora
 export const storage_produce_order_list = data => fetch('/guanmei/produce_order/storage_produce_order_list', data, 'POST').then(check_login);
 export const gen_barcode_html = data => fetch('/guanmei/produce_order/gen_barcode_html', data, 'POST').then(check_login);
 export const process_produce_order = data => fetch('/guanmei/produce_order/process_produce_order', data, 'POST').then(check_login);
+export const process_produce_order_set = data => fetch('/guanmei/produce_order/process_produce_order_set', data, 'POST').then(check_login);
 export const get_my_order_handover_processes = data => fetch('/guanmei/produce_order/get_my_order_handover_processes', data, 'POST').then(check_login);
 export const process_order = data => fetch('/guanmei/produce_order/handover', data, 'POST').then(check_login);
+export const handover_directly = data => fetch('/guanmei/produce_order/handover_directly', data, 'POST').then(check_login);
 export const complete_order_num = data => fetch('/guanmei/produce_order/complete_order_num', data, 'POST').then(check_login);
 export const produce_order_detail = data => fetch('/guanmei/produce_order/detail', data, 'POST').then(check_login);
 

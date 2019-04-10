@@ -19,8 +19,9 @@
                        <el-button @click="dialogFormVisible=true;current=month">
                            <p>  <el-tag>{{month.label}}月份</el-tag></p>
                             <p style="margin-top: 5px;">
-                                业务单:{{month.complete.sales}}/{{month.target.sales}}({{month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0}}%)<br/>
-                                生产单:{{month.complete.produce}}/{{month.target.produce}}({{month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 :0}}%)
+                                业务单提交量:{{month.complete.sales}}/{{month.target.sales}}({{month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0}}%)<br/>
+                                业务单完成量:{{month.complete.produce}}/{{month.target.produce}}({{month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 :0}}%)<br/>
+                                完成率:({{month.complete.sales ? parseInt((month.complete.produce/month.complete.sales)*10000)/100 :0}}%)
                             </p>
 
 
@@ -37,10 +38,10 @@
         <el-dialog :title="'配置目标:'+current.label+'月份'" :visible.sync="dialogFormVisible" width="20%" >
             <template v-if="current.target">
                 <p>
-                    业务单目标数量:<el-input v-model="current.target.sales" auto-complete="off"></el-input>
+                    业务单提交-目标数量:<el-input v-model="current.target.sales" auto-complete="off"></el-input>
                 </p>
                 <p>
-                    生产单目标数量:<el-input v-model="current.target.produce" auto-complete="off"></el-input>
+                    业务单完成-目标数量:<el-input v-model="current.target.produce" auto-complete="off"></el-input>
                 </p>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="set_targets()">确 定</el-button>
@@ -123,7 +124,7 @@
                         position: function (pt) {
                             return [pt[0], '10%'];
                         },
-                        formatter:'{b0}<br/>{a0}: {c0}%<br />{a1}: {c1}%'
+                        formatter:'{b0}<br/>{a0}: {c0}<br />{a1}: {c1}'
                     },
                     title: {
                         left: 'center',
@@ -149,7 +150,7 @@
                         axisLabel: {
                             show: true,
                             interval: 'auto',
-                            formatter: '{value}%'
+                            formatter: '{value}'
                         },
                     },
                     dataZoom: [{
@@ -171,7 +172,7 @@
                     }],
                     series: [
                         {
-                            name:'业务单',
+                            name:'业务单提交量',
                             type:'line',
                             smooth:true,
 //                            symbol: 'none',
@@ -185,7 +186,7 @@
                             data: data1
                         },
                         {
-                            name:'生产单',
+                            name:'业务单完成量',
                             type:'line',
                             smooth:true,
 //                            symbol: 'none',
@@ -260,8 +261,8 @@
                 this.months = [];
                 for(var i=1;i<=12;i++) {
                     var _id = this.cur_year+'_'+i;
-                    var _id_complete_sales = '1_'+this.cur_year+'_'+i;
-                    var _id_complete_produce = '2_'+this.cur_year+'_'+i;
+                    var _id_complete_sales = '6_'+this.cur_year+'_'+i;
+                    var _id_complete_produce = '7_'+this.cur_year+'_'+i;
 
                     this.months.push({
                         id:_id,
@@ -291,8 +292,12 @@
                     var month = this.months[i];
                     date[i] = month.label2;
 
-                    var sales_rate = month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0;
-                    var produce_rate = month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 : 0;
+//                    var sales_rate = month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0;
+//                    var produce_rate = month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 : 0;
+
+                    var sales_rate = month.complete.sales ? month.complete.sales : 0;
+                    var produce_rate = month.complete.produce ? month.complete.produce : 0;
+
                     data1.push(sales_rate);
                     data2.push(produce_rate);
                 }

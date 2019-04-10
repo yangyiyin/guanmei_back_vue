@@ -29,6 +29,7 @@ const add_product = r => require.ensure([], () => r(require('@/page_biz/add_prod
 const _process = r => require.ensure([], () => r(require('@/page_biz/process')), 'process');
 const add_process = r => require.ensure([], () => r(require('@/page_biz/add_process')), 'add_process');
 const process_produce_order = r => require.ensure([], () => r(require('@/page_biz/process_produce_order')), 'process_produce_order');
+const process_produce_order_set = r => require.ensure([], () => r(require('@/page_biz/process_produce_order_set')), 'process_produce_order_set');
 const process_saoyisao = r => require.ensure([], () => r(require('@/page_biz/process_saoyisao')), 'process_saoyisao');
 const process_survey = r => require.ensure([], () => r(require('@/page_biz/process_survey')), 'process_survey');
 const storage_produce_order = r => require.ensure([], () => r(require('@/page_biz/storage_produce_order')), 'storage_produce_order');
@@ -133,6 +134,7 @@ const routes = [
 {path: '/process',component: _process,meta: ['设置', '流程管理'],},
 {path: '/add_process',component: add_process,meta: ['设置', '设置流程'],},
 {path: '/process_produce_order',component: process_produce_order,meta: ['交接单', '订单交接'],},
+{path: '/process_produce_order_set',component: process_produce_order_set,meta: ['进度管理', '进度控制'],},
 {path: '/process_saoyisao',component: process_saoyisao,meta: ['交接单', '扫码交接'],},
 {path: '/process_survey',component: process_survey,meta: ['流程概况', '概况'],},
 {path: '/storage_produce_order',component: storage_produce_order,meta: ['仓库', '生产单管理'],},

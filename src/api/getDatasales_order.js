@@ -9,6 +9,7 @@ export const sales_order_get_all = data => fetch('/guanmei/sales_order/get_all',
 export const sales_order_edit = data => fetch('/guanmei/sales_order/edit', data, 'POST').then(check_login);
 export const sales_order_verify = data => fetch('/guanmei/sales_order/verify', data, 'POST').then(check_login);
 export const sales_order_del = data => fetch('/guanmei/sales_order/del', data, 'POST').then(check_login);
+export const sales_order_del_force = data => fetch('/guanmei/sales_order/del_force', data, 'POST').then(check_login);
 export const sales_order_info = data => fetch('/guanmei/sales_order/info', data, 'POST').then(check_login);
 export const sales_order_sort = data => fetch('/guanmei/sales_order/sort', data, 'POST').then(check_login);
 export const init_select_options = data => fetch('/guanmei/sales_order/init_select_options', data, 'POST').then(check_login);

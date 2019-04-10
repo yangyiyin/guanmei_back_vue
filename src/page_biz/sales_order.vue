@@ -87,6 +87,18 @@
                             <el-form-item label="客户姓名:" >
                                 <span>{{props.row.custom_name}}</span>
                             </el-form-item>
+                            <el-form-item label="每箱数量:" >
+                                <span>{{props.row.package_containment}}</span>
+                            </el-form-item>
+                            <el-form-item label="箱数:" >
+                                <span>{{props.row.package_num}}</span>
+                            </el-form-item>
+                            <el-form-item label="包装配色:" >
+                                <span>{{props.row.package_short_info}}</span>
+                            </el-form-item>
+                            <el-form-item label="箱麦:" >
+                                <span>{{props.row.package_info}}</span>
+                            </el-form-item>
                             <el-form-item label="当前进度:" >
                                 <span style="font-weight: bold;color: #000">{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
                             </el-form-item>
@@ -124,11 +136,12 @@
 
                 <el-table-column label="操作" width="400">
                     <template slot-scope="scope">
-                        <el-button size="mini" v-if="scope.row.status == 5" @click="verify(scope, 1)" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 5" @click="dialogFormVisibleSubmit=true;current_order=scope" type="warning" :loading="loadingBtn == scope.$index">提交</el-button>
                         <el-button v-if="scope.row.status == 1 || scope.row.status == 5" size="mini" @click="goto_edit_sales_order(scope.row.id)">编辑</el-button>
                         <el-button size="mini" @click="goto_edit_sales_order(scope.row.id,'clone')">克隆</el-button>
                         <!--<el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">下架</el-button>-->
                         <el-button v-if="scope.row.status == 5" size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button v-if="scope.row.has_del_force" size="mini" @click="del_force(scope.row, scope.$index)">强制删除</el-button>
                         <el-button size="mini"  @click="print_order(scope.row)">打印</el-button>
                     </template>
                 </el-table-column>
@@ -153,6 +166,19 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="sort">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="提交业务单" :visible.sync="dialogFormVisibleSubmit" width="30%">
+            <p style="font-size: 16px;">
+                您即将提交:业务单<span style="font-weight: bolder">{{current_order.row.custom_order_no}}</span>
+            </p>
+            <p style="margin-top: 20px;">
+                该操作将会自动生成生产单,并自动进入流程流转,您提交后<span style="color: red">无法修改或删除</span>该业务单,如果实在要修改,则需要联系超级管理员进行删除,之后您再重新提交一个业务单。
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleSubmit = false">取 消</el-button>
+                <el-button type="primary" @click="verify(current_order, 1)" :loading="loadingBtn == current_order.$index">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -290,6 +316,7 @@
     import {
             sales_order_list,
             sales_order_del,
+            sales_order_del_force,
             sales_order_verify,
             sales_order_sort,
             sales_order_info
@@ -308,7 +335,9 @@
                 currentPage: 1,
                 dialogFormVisible: false,
                 dialogFormVisibleDaochu: false,
+                dialogFormVisibleSubmit: false,
                 current: {},
+                current_order: {},
                 //                remark:'',
                 //                choose_categories:[],
                 //                categories:[],
@@ -408,38 +437,64 @@
                 });
             },
             verify(scope, status) {
-                this.$confirm("提交后将不能修改和删除,确认此操作?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(
-                        function() {
-                            var item = scope.row;
-                            this.loadingBtn = scope.$index;
-                            sales_order_verify({ id: item.id, status: status })
-                                    .then(
-                                            function(res) {
-                                                if (res.code == this.$store.state.constant.status_success) {
-                                                    item.status = status;
-                                                    this.$message({
-                                                        type: "success",
-                                                        message: "操作成功"
-                                                    });
-                                                } else {
-                                                    this.$message({
-                                                        type: "warning",
-                                                        message: res.msg
-                                                    });
-                                                }
-                                            }.bind(this)
-                                    )
-                                    .finally(
-                                            function() {
-                                                this.loadingBtn = -1;
-                                            }.bind(this)
-                                    );
-                        }.bind(this)
-                );
+//                this.$confirm("提交后将不能修改和删除,确认此操作?", "提示", {
+//                    confirmButtonText: "确定",
+//                    cancelButtonText: "取消",
+//                    type: "warning"
+//                }).then(
+//                        function() {
+//                            var item = scope.row;
+//                            this.loadingBtn = scope.$index;
+//                            sales_order_verify({ id: item.id, status: status })
+//                                    .then(
+//                                            function(res) {
+//                                                if (res.code == this.$store.state.constant.status_success) {
+//                                                    this.list();
+//                                                    this.$message({
+//                                                        type: "success",
+//                                                        message: "操作成功"
+//                                                    });
+//                                                } else {
+//                                                    this.$message({
+//                                                        type: "warning",
+//                                                        message: res.msg
+//                                                    });
+//                                                }
+//                                            }.bind(this)
+//                                    )
+//                                    .finally(
+//                                            function() {
+//                                                this.loadingBtn = -1;
+//                                            }.bind(this)
+//                                    );
+//                        }.bind(this)
+//                );
+
+                var item = scope.row;
+                this.loadingBtn = scope.$index;
+                sales_order_verify({ id: item.id, status: status })
+                        .then(
+                                function(res) {
+                                    if (res.code == this.$store.state.constant.status_success) {
+                                        this.list();
+                                        this.$message({
+                                            type: "success",
+                                            message: "操作成功"
+                                        });
+                                        this.dialogFormVisibleSubmit = false;
+                                    } else {
+                                        this.$message({
+                                            type: "warning",
+                                            message: res.msg
+                                        });
+                                    }
+                                }.bind(this)
+                        )
+                        .finally(
+                                function() {
+                                    this.loadingBtn = -1;
+                                }.bind(this)
+                        );
             },
             del(item, index) {
                 this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
@@ -449,6 +504,33 @@
                 }).then(
                         function() {
                             sales_order_del({ id: item.id }).then(
+                                    function(res) {
+                                        if (res.code == this.$store.state.constant.status_success) {
+                                            this.tableData.splice(index, 1);
+                                            this.count--;
+                                            this.$message({
+                                                type: "success",
+                                                message: "操作成功"
+                                            });
+                                        } else {
+                                            this.$message({
+                                                type: "warning",
+                                                message: res.msg
+                                            });
+                                        }
+                                    }.bind(this)
+                            );
+                        }.bind(this)
+                );
+            },
+            del_force(item, index) {
+                this.$confirm("此操作将永久删除该条数据,并删除已绑定的生产单 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(
+                        function() {
+                            sales_order_del_force({ id: item.id }).then(
                                     function(res) {
                                         if (res.code == this.$store.state.constant.status_success) {
                                             this.tableData.splice(index, 1);

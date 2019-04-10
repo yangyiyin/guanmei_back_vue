@@ -41,7 +41,7 @@
         </el-input>
       </div>
       <!-- 订单子项 -->
-      <div class="block" v-for="(sub_order, index) in sub_orders" :key='index'>
+      <div class="" v-for="(sub_order, index) in sub_orders" :key='index'>
         <!-- 帽型 -->
         <div class="search_item">
             <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>帽型:</span>
@@ -173,7 +173,7 @@
 
         <!-- 流程 -->
         <div class="search_item">
-          <span class="pre_info" style="font-size: 14px;">流程:</span>
+          <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>流程:</span>
           <el-select multiple v-model="sub_order.process" placeholder="请选择" value-key="id" @change="change_process(sub_order)">
             <el-option
                 v-for="item in options.options_process"
@@ -226,7 +226,31 @@
             <el-input clearable placeholder="请输入客户款式" v-model="sub_order.custom_model" style="width: 350px;vertical-align: middle"></el-input>
         </div>
 
+
         <!-- <i class="iconfont del_block" @click="del_block(index)">&#xe603;</i> -->
+      </div>
+      <!-- 客户款式/型号 -->
+      <div class="search_item">
+        <span class="pre_info" style="font-size: 14px;">每箱数量:</span>
+        <el-input type="number" clearable placeholder="" v-model="package_containment" style="width: 350px;vertical-align: middle"></el-input>
+      </div>
+
+      <!-- 客户款式/型号 -->
+      <div class="search_item">
+        <span class="pre_info" style="font-size: 14px;">箱数:</span>
+        <el-input type="number" clearable placeholder="" v-model="package_num" style="width: 350px;vertical-align: middle"></el-input>
+      </div>
+
+      <!-- 客户款式/型号 -->
+      <div class="search_item">
+        <span class="pre_info" style="font-size: 14px;">包装配色:</span>
+        <el-input  type="textarea" clearable placeholder="" v-model="package_info" style="width: 350px;vertical-align: middle"></el-input>
+      </div>
+
+      <!-- 客户款式/型号 -->
+      <div class="search_item">
+        <span class="pre_info" style="font-size: 14px;">箱麦:</span>
+        <el-input  type="textarea" clearable placeholder="" v-model="package_short_info" style="width: 350px;vertical-align: middle"></el-input>
       </div>
 
       <!-- <div class="search_item add_block" @click="add_block"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>增加订单子项</div> -->
@@ -263,6 +287,10 @@ export default {
       custom_name: "",
       order_no: "",
       sales_man: "",
+      package_containment: "",
+      package_num: "",
+      package_short_info: "",
+      package_info: "",
       sub_orders: [
         {
           product_cat: {},
@@ -319,6 +347,10 @@ export default {
       this.custom_name = "";
       this.order_no = "";
       this.sales_man = this.user_info.show_name;
+      this.package_containment = "";
+      this.package_num= "";
+      this.package_short_info= "";
+      this.package_info="";
       this.sub_orders = [
         {
           product_cat: {},
@@ -362,6 +394,12 @@ export default {
             this.custom_name = res.data.custom_name;
             this.order_no = res.data.custom_order_no;
             this.sales_man = res.data.sales_man;
+
+            this.package_containment = res.data.package_containment;
+            this.package_num= res.data.package_num;
+            this.package_short_info= res.data.package_short_info;
+            this.package_info=res.data.package_info;
+
             this.sub_orders = res.data.sales_order_sub;
             this.gen_options_product_cat_product();
             this.gen_material_color();
@@ -408,6 +446,10 @@ export default {
         custom_name: this.custom_name,
         order_no: this.order_no,
         sales_man: this.sales_man,
+        package_containment: this.package_containment,
+        package_num: this.package_num,
+        package_short_info: this.package_short_info,
+        package_info: this.package_info,
         sub_orders: this.sub_orders
       };
       if (this.clone) {
@@ -449,6 +491,7 @@ export default {
           }
 
           if (!val.raw_material) error_msg = "请输入材料";
+          if (!val.process || !val.process.length) error_msg = "请输入流程";
 
           // if (!val.material || !val.material.length) {
           //   error_msg = "第" + (index + 1) + "个子项,请添加材料";

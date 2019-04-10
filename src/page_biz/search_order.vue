@@ -10,10 +10,10 @@
                </p>
 
                <el-radio-group v-model="order_no_type">
-                   <el-radio-button label="yw">业务单</el-radio-button>
-                   <el-radio-button label="sc">生产单</el-radio-button>
+                   <el-radio-button label="yw">业务单单号</el-radio-button>
+                   <!--<el-radio-button label="sc">生产单</el-radio-button>-->
                </el-radio-group>
-               <el-input ref="input" autofocus v-model="order_no" placeholder="业务单号/生产单号" style="width: 500px;display: inline-block" clearable></el-input>
+               <el-input ref="input" autofocus v-model="order_no" placeholder="业务单号" style="width: 500px;display: inline-block" clearable></el-input>
                <!--<el-button v-if="!order_no || !order_detail.order_no" type="success" style="display: inline-block" @click="produce_order_detail()">搜索</el-button>-->
                <el-button  type="success" style="display: inline-block" @click="search()">查询</el-button>
                <br/>
@@ -33,7 +33,7 @@
 
                            <el-table
                                    :data="order_list"
-                                   style="width: 100%;"
+                                   style="width: 100%;text-align: left"
                                    height="500">
                                <el-table-column v-if="order_no_type=='yw'" label="客户单号" prop="custom_order_no">
                                    <template slot-scope="scope">
@@ -50,6 +50,11 @@
                                </el-table-column>
 
                                <el-table-column label="创建时间" prop="create_time"></el-table-column>
+                               <el-table-column label="跳转流程控制" v-if="order_no_type=='yw'">
+                                   <template slot-scope="scope">
+                                       <el-button type="success" size="mini" @click=" goto_process_produce_order_set(scope.row.custom_order_no)">跳转流程控制</el-button>
+                                   </template>
+                               </el-table-column>
                            </el-table>
                            <div slot="footer" class="dialog-footer">
                                <el-button @click="dialog_order_visible = false">关 闭</el-button>
@@ -282,7 +287,13 @@
 //                    }.bind(this));
 //                }.bind(this))
 //
-//            }
+//            },
+            goto_process_produce_order_set(no) {
+                this.$router.push({
+                    path: "process_produce_order_set",
+                    query: { no: no}
+                });
+            },
         },
     }
 </script>

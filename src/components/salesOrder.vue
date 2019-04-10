@@ -70,6 +70,23 @@
                             <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">装饰说明:</td>
                             <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.sales_order_sub[0].decoration}}</td>
                         </tr>
+                        <tr>
+                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">每箱数量:</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.package_containment}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">箱数:</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.package_num}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">包装配色:</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.package_short_info}}</td>
+                        </tr>
+                        <tr>
+                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">箱麦:</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.package_info}}</td>
+                        </tr>
+
                         <!--<tr>-->
                             <!--<td>包装说明:</td>-->
                             <!--<td style="width: 80%">{{order_info.sales_order_sub[0].product_cat_name}}</td>-->
