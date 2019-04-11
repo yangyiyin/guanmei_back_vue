@@ -100,15 +100,26 @@
                 <template v-for="(item, index) in tableData">
                     <template v-if="item.list.length > 1">
                         <tr class="item_line">
-                            <td :rowspan="item.list.length + 1">
+                            <td :rowspan="item.list.length">
                                 {{item.set_name}}<br/>
-                                <el-button size="mini"  @click="order_list = item.sales_order;search_sales_order();">详情</el-button>
+                                <el-button style="padding:2px 3px;" size="mini" type="primary"  @click="order_list = item.sales_order;search_sales_order();">详情</el-button>
                             </td>
-                            <td :rowspan="item.list.length + 1">{{item.delivery_date}}</td>
-                            <td :rowspan="item.list.length + 1">{{item.sales_man}}</td>
+                            <td :rowspan="item.list.length">{{item.delivery_date}}</td>
+                            <td :rowspan="item.list.length">{{item.sales_man}}</td>
+
+                            <td>{{item.list[0].product_cat_name}}{{item.list[0].product_code}}</td>
+                            <td>{{item.list[0].color_code}}</td>
+                            <td>{{item.list[0].sum}}</td>
+                            <td>
+                                <template v-for="(process, index3) in item.list[0].process_arr">
+                                    <el-button v-if="process.status" circle style="margin: 2px;" size="mini" type="success" @click="process_order(item.list[0],process)">{{process.name}}</el-button>
+                                    <el-button v-if="!process.status && item.list[0].process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="warning" @click="process_order(item.list[0],process)">{{process.name}}</el-button>
+                                    <el-button v-if="!process.status && !item.list[0].process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item.list[0],process)">{{process.name}}</el-button>
+                                </template>
+                            </td>
 
                         </tr>
-                        <tr v-for="(item2, index2) in item.list" class="item_line">
+                        <tr v-for="(item2, index2) in item.list" class="item_line" v-if="index2 > 0">
                             <td>{{item2.product_cat_name}}{{item2.product_code}}</td>
                             <td>{{item2.color_code}}</td>
                             <td>{{item2.sum}}</td>
@@ -121,9 +132,10 @@
                             </td>
                         </tr>
                     </template>
-                    <template v-if="item.list.length <= 1">
+                    <template v-if="item.list.length == 1">
                         <tr class="item_line">
-                            <td >{{item.set_name}}</td>
+                            <td >{{item.set_name}}<br/>
+                                <el-button style="padding:2px 3px;" size="mini" type="primary"   @click="order_list = item.sales_order;search_sales_order();">详情</el-button></td>
                             <td >{{item.delivery_date}}</td>
                             <td >{{item.sales_man}}</td>
 
@@ -138,6 +150,19 @@
                                     </template>
                                 </td>
                             </template>
+                        </tr>
+                    </template>
+                    <template v-if="item.list.length == 0">
+                        <tr class="item_line">
+                            <td >{{item.set_name}}
+                               </td>
+                            <td >{{item.delivery_date}}</td>
+                            <td >{{item.sales_man}}</td>
+                            <td ></td>
+                            <td ></td>
+                            <td ></td>
+                            <td ></td>
+
                         </tr>
                     </template>
                 </template>
