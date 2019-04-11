@@ -1136,7 +1136,7 @@ var pathTool = __webpack_require__(574);
 
 var colorTool = __webpack_require__(213);
 
-var matrix = __webpack_require__(196);
+var matrix = __webpack_require__(201);
 
 var vector = __webpack_require__(177);
 
@@ -2226,7 +2226,7 @@ var env = __webpack_require__(179);
 
 var timsort = __webpack_require__(233);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 var GlobalModel = __webpack_require__(430);
 
@@ -2250,7 +2250,7 @@ var graphic = __webpack_require__(170);
 
 var modelUtil = __webpack_require__(172);
 
-var _throttle = __webpack_require__(206);
+var _throttle = __webpack_require__(209);
 
 var throttle = _throttle.throttle;
 
@@ -4176,7 +4176,7 @@ var formatUtil = __webpack_require__(181);
 
 var nubmerUtil = __webpack_require__(176);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var each = zrUtil.each;
 var isObject = zrUtil.isObject;
@@ -6146,7 +6146,7 @@ module.exports = _default;
 
 var zrUtil = __webpack_require__(157);
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var numberUtil = __webpack_require__(176);
 
@@ -6324,7 +6324,7 @@ exports.getTextRect = getTextRect;
 
 var vec2 = __webpack_require__(177);
 
-var matrix = __webpack_require__(196);
+var matrix = __webpack_require__(201);
 
 /**
  * @module echarts/core/BoundingRect
@@ -6507,7 +6507,8 @@ var _default = BoundingRect;
 module.exports = _default;
 
 /***/ }),
-/* 183 */
+/* 183 */,
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var zrUtil = __webpack_require__(157);
@@ -6703,7 +6704,6 @@ var _default = Model;
 module.exports = _default;
 
 /***/ }),
-/* 184 */,
 /* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6974,13 +6974,13 @@ exports.setReadOnly = setReadOnly;
 
 var zrUtil = __webpack_require__(157);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var componentUtil = __webpack_require__(230);
 
 var clazzUtil = __webpack_require__(185);
 
-var layout = __webpack_require__(191);
+var layout = __webpack_require__(193);
 
 var boxLayoutMixin = __webpack_require__(434);
 
@@ -7161,7 +7161,7 @@ module.exports = _default;
 /* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 exports.Dispatcher = Eventful;
 
@@ -7314,7 +7314,9 @@ exports.notLeftMouse = notLeftMouse;
 /***/ }),
 /* 188 */,
 /* 189 */,
-/* 190 */
+/* 190 */,
+/* 191 */,
+/* 192 */
 /***/ (function(module, exports) {
 
 var features = {};
@@ -7331,7 +7333,7 @@ exports.register = register;
 exports.get = get;
 
 /***/ }),
-/* 191 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var zrUtil = __webpack_require__(157);
@@ -7821,7 +7823,10 @@ exports.getLayoutParams = getLayoutParams;
 exports.copyLayoutParams = copyLayoutParams;
 
 /***/ }),
-/* 192 */
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var BoundingRect = __webpack_require__(182);
@@ -8513,7 +8518,7 @@ exports.parseRichText = parseRichText;
 exports.makeFont = makeFont;
 
 /***/ }),
-/* 193 */
+/* 198 */
 /***/ (function(module, exports) {
 
 /**
@@ -8846,7 +8851,7 @@ var _default = Eventful;
 module.exports = _default;
 
 /***/ }),
-/* 194 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _config = __webpack_require__(178);
@@ -8855,7 +8860,7 @@ var __DEV__ = _config.__DEV__;
 
 var zrUtil = __webpack_require__(157);
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var OrdinalScale = __webpack_require__(442);
 
@@ -9124,7 +9129,7 @@ exports.getFormattedLabels = getFormattedLabels;
 exports.getAxisRawValue = getAxisRawValue;
 
 /***/ }),
-/* 195 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _vector = __webpack_require__(177);
@@ -9661,7 +9666,7 @@ exports.quadraticSubdivide = quadraticSubdivide;
 exports.quadraticProjectPoint = quadraticProjectPoint;
 
 /***/ }),
-/* 196 */
+/* 201 */
 /***/ (function(module, exports) {
 
 /**
@@ -9837,13 +9842,11 @@ exports.scale = scale;
 exports.invert = invert;
 
 /***/ }),
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
 /* 202 */,
-/* 203 */
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _config = __webpack_require__(178);
@@ -10377,7 +10380,7 @@ var _default = DataZoomModel;
 module.exports = _default;
 
 /***/ }),
-/* 204 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ComponentView = __webpack_require__(261);
@@ -10449,7 +10452,7 @@ var _default = ComponentView.extend({
 module.exports = _default;
 
 /***/ }),
-/* 205 */
+/* 208 */
 /***/ (function(module, exports) {
 
 var _default = {
@@ -10494,7 +10497,7 @@ var _default = {
 module.exports = _default;
 
 /***/ }),
-/* 206 */
+/* 209 */
 /***/ (function(module, exports) {
 
 var ORIGIN_METHOD = '\0__throttleOriginMethod';
@@ -10647,9 +10650,6 @@ exports.createOrUpdate = createOrUpdate;
 exports.clear = clear;
 
 /***/ }),
-/* 207 */,
-/* 208 */,
-/* 209 */,
 /* 210 */,
 /* 211 */,
 /* 212 */,
@@ -11284,7 +11284,7 @@ exports.stringify = stringify;
 
 var zrUtil = __webpack_require__(157);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var each = zrUtil.each;
 var curry = zrUtil.curry; // Build axisPointerModel, mergin tooltip.axisPointer model for each axis.
@@ -12092,7 +12092,7 @@ module.exports = _default;
 /* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var curve = __webpack_require__(195);
+var curve = __webpack_require__(200);
 
 var vec2 = __webpack_require__(177);
 
@@ -15675,7 +15675,7 @@ var formatUtil = __webpack_require__(181);
 
 var graphic = __webpack_require__(170);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var _number = __webpack_require__(176);
 
@@ -15686,7 +15686,7 @@ var _symbol = __webpack_require__(231);
 
 var createSymbol = _symbol.createSymbol;
 
-var matrixUtil = __webpack_require__(196);
+var matrixUtil = __webpack_require__(201);
 
 var _vector = __webpack_require__(177);
 
@@ -16708,13 +16708,13 @@ var zrUtil = __webpack_require__(157);
 
 var graphic = __webpack_require__(170);
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var formatUtil = __webpack_require__(181);
 
-var matrix = __webpack_require__(196);
+var matrix = __webpack_require__(201);
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 var AxisBuilder = __webpack_require__(240);
 
@@ -17185,7 +17185,7 @@ var zrUtil = __webpack_require__(157);
 
 var numberUtil = __webpack_require__(176);
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 var linearMap = numberUtil.linearMap;
 
@@ -17452,7 +17452,7 @@ module.exports = _default;
 
 var zrUtil = __webpack_require__(157);
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 function getName(obj) {
   if (zrUtil.isObject(obj) && obj.value != null) {
@@ -17625,7 +17625,7 @@ var __DEV__ = _config.__DEV__;
 
 var zrUtil = __webpack_require__(157);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var DataDiffer = __webpack_require__(227);
 
@@ -19092,7 +19092,7 @@ var ComponentModel = __webpack_require__(186);
 
 var colorPaletteMixin = __webpack_require__(258);
 
-var _layout = __webpack_require__(191);
+var _layout = __webpack_require__(193);
 
 var getLayoutParams = _layout.getLayoutParams;
 var mergeLayoutParam = _layout.mergeLayoutParam;
@@ -19807,7 +19807,7 @@ module.exports = isObject;
 
 var guid = __webpack_require__(272);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 var Transformable = __webpack_require__(281);
 
@@ -20987,7 +20987,7 @@ module.exports = _default;
 
 var vec2 = __webpack_require__(177);
 
-var curve = __webpack_require__(195);
+var curve = __webpack_require__(200);
 
 /**
  * @author Yi Shen(https://github.com/pissang)
@@ -22021,7 +22021,7 @@ var normalizeCssArray = _util.normalizeCssArray;
 var isString = _util.isString;
 var isObject = _util.isObject;
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var roundRectHelper = __webpack_require__(279);
 
@@ -22452,7 +22452,7 @@ exports.needDrawText = needDrawText;
 /* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var matrix = __webpack_require__(196);
+var matrix = __webpack_require__(201);
 
 var vector = __webpack_require__(177);
 
@@ -25653,7 +25653,7 @@ var axisPointerModelHelper = __webpack_require__(214);
 
 var eventTool = __webpack_require__(187);
 
-var throttleUtil = __webpack_require__(206);
+var throttleUtil = __webpack_require__(209);
 
 var modelUtil = __webpack_require__(172);
 
@@ -26650,9 +26650,9 @@ module.exports = _default;
 
 __webpack_require__(250);
 
-__webpack_require__(203);
+__webpack_require__(206);
 
-__webpack_require__(204);
+__webpack_require__(207);
 
 __webpack_require__(394);
 
@@ -27105,7 +27105,7 @@ module.exports = _default;
 /* 390 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DataZoomModel = __webpack_require__(203);
+var DataZoomModel = __webpack_require__(206);
 
 var _default = DataZoomModel.extend({
   type: 'dataZoom.inside',
@@ -27134,7 +27134,7 @@ module.exports = _default;
 
 var zrUtil = __webpack_require__(157);
 
-var DataZoomView = __webpack_require__(204);
+var DataZoomView = __webpack_require__(207);
 
 var sliderMove = __webpack_require__(226);
 
@@ -27330,7 +27330,7 @@ module.exports = _default;
 /* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DataZoomModel = __webpack_require__(203);
+var DataZoomModel = __webpack_require__(206);
 
 var _default = DataZoomModel.extend({
   type: 'dataZoom.select'
@@ -27342,7 +27342,7 @@ module.exports = _default;
 /* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DataZoomView = __webpack_require__(204);
+var DataZoomView = __webpack_require__(207);
 
 var _default = DataZoomView.extend({
   type: 'dataZoom.select'
@@ -27354,7 +27354,7 @@ module.exports = _default;
 /* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DataZoomModel = __webpack_require__(203);
+var DataZoomModel = __webpack_require__(206);
 
 var SliderZoomModel = DataZoomModel.extend({
   type: 'dataZoom.slider',
@@ -27435,13 +27435,13 @@ var eventTool = __webpack_require__(187);
 
 var graphic = __webpack_require__(170);
 
-var throttle = __webpack_require__(206);
+var throttle = __webpack_require__(209);
 
-var DataZoomView = __webpack_require__(204);
+var DataZoomView = __webpack_require__(207);
 
 var numberUtil = __webpack_require__(176);
 
-var layout = __webpack_require__(191);
+var layout = __webpack_require__(193);
 
 var sliderMove = __webpack_require__(226);
 
@@ -28148,7 +28148,7 @@ var zrUtil = __webpack_require__(157);
 
 var RoamController = __webpack_require__(401);
 
-var throttleUtil = __webpack_require__(206);
+var throttleUtil = __webpack_require__(209);
 
 // Only create one roam controller for each coordinate system.
 // one roam controller might be refered by two inside data zoom
@@ -28354,9 +28354,9 @@ exports.generateCoordId = generateCoordId;
 
 __webpack_require__(250);
 
-__webpack_require__(203);
+__webpack_require__(206);
 
-__webpack_require__(204);
+__webpack_require__(207);
 
 __webpack_require__(392);
 
@@ -28415,7 +28415,7 @@ var __DEV__ = _config.__DEV__;
 
 var zrUtil = __webpack_require__(157);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 var graphic = __webpack_require__(170);
 
@@ -29668,7 +29668,7 @@ module.exports = _default;
 
 var zrUtil = __webpack_require__(157);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 var eventTool = __webpack_require__(187);
 
@@ -29925,7 +29925,7 @@ exports.onIrrelevantElement = onIrrelevantElement;
 /* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _layout = __webpack_require__(191);
+var _layout = __webpack_require__(193);
 
 var getLayoutRect = _layout.getLayoutRect;
 var layoutBox = _layout.box;
@@ -30006,7 +30006,7 @@ var echarts = __webpack_require__(171);
 
 var zrUtil = __webpack_require__(157);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var ToolboxModel = echarts.extendComponentModel({
   type: 'toolbox',
@@ -30062,13 +30062,13 @@ var echarts = __webpack_require__(171);
 
 var zrUtil = __webpack_require__(157);
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var graphic = __webpack_require__(170);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var DataDiffer = __webpack_require__(227);
 
@@ -30292,9 +30292,9 @@ var zrUtil = __webpack_require__(157);
 
 var eventTool = __webpack_require__(187);
 
-var lang = __webpack_require__(205);
+var lang = __webpack_require__(208);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var dataViewLang = lang.toolbox.dataView;
 var BLOCK_SPLITER = new Array(60).join('-');
@@ -30776,9 +30776,9 @@ var history = __webpack_require__(249);
 
 var sliderMove = __webpack_require__(226);
 
-var lang = __webpack_require__(205);
+var lang = __webpack_require__(208);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 __webpack_require__(397);
 
@@ -31058,9 +31058,9 @@ var echarts = __webpack_require__(171);
 
 var zrUtil = __webpack_require__(157);
 
-var lang = __webpack_require__(205);
+var lang = __webpack_require__(208);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var magicTypeLang = lang.toolbox.magicType;
 
@@ -31233,9 +31233,9 @@ var echarts = __webpack_require__(171);
 
 var history = __webpack_require__(249);
 
-var lang = __webpack_require__(205);
+var lang = __webpack_require__(208);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var restoreLang = lang.toolbox.restore;
 
@@ -31275,9 +31275,9 @@ module.exports = _default;
 
 var env = __webpack_require__(179);
 
-var lang = __webpack_require__(205);
+var lang = __webpack_require__(208);
 
-var featureManager = __webpack_require__(190);
+var featureManager = __webpack_require__(192);
 
 var saveAsImageLang = lang.toolbox.saveAsImage;
 
@@ -31719,13 +31719,13 @@ var graphic = __webpack_require__(170);
 
 var findPointFromSeries = __webpack_require__(244);
 
-var layoutUtil = __webpack_require__(191);
+var layoutUtil = __webpack_require__(193);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var globalListener = __webpack_require__(245);
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 var axisPointerViewHelper = __webpack_require__(246);
 
@@ -32586,7 +32586,7 @@ var axisDefault = __webpack_require__(417);
 
 var ComponentModel = __webpack_require__(186);
 
-var _layout = __webpack_require__(191);
+var _layout = __webpack_require__(193);
 
 var getLayoutParams = _layout.getLayoutParams;
 var mergeLayoutParam = _layout.mergeLayoutParam;
@@ -32950,11 +32950,11 @@ var zrUtil = __webpack_require__(157);
 
 var BoundingRect = __webpack_require__(182);
 
-var _layout = __webpack_require__(191);
+var _layout = __webpack_require__(193);
 
 var getLayoutRect = _layout.getLayoutRect;
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 var Cartesian2D = __webpack_require__(421);
 
@@ -33874,7 +33874,7 @@ var zrender = __webpack_require__(282);
 
 exports.zrender = zrender;
 
-var matrix = __webpack_require__(196);
+var matrix = __webpack_require__(201);
 
 exports.matrix = matrix;
 
@@ -33900,7 +33900,7 @@ var formatUtil = __webpack_require__(181);
 
 exports.format = formatUtil;
 
-var _throttle = __webpack_require__(206);
+var _throttle = __webpack_require__(209);
 
 var throttle = _throttle.throttle;
 exports.throttle = _throttle.throttle;
@@ -33913,7 +33913,7 @@ var _List = __webpack_require__(255);
 
 exports.List = _List;
 
-var _Model = __webpack_require__(183);
+var _Model = __webpack_require__(184);
 
 exports.Model = _Model;
 
@@ -33946,11 +33946,11 @@ var zrUtil = __webpack_require__(157);
 
 var createListFromArray = __webpack_require__(238);
 
-var axisHelper = __webpack_require__(194);
+var axisHelper = __webpack_require__(199);
 
 var axisModelCommonMixin = __webpack_require__(253);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var _completeDimensions = __webpack_require__(256);
 
@@ -34160,7 +34160,7 @@ var zrUtil = __webpack_require__(157);
 
 var modelUtil = __webpack_require__(172);
 
-var Model = __webpack_require__(183);
+var Model = __webpack_require__(184);
 
 var ComponentModel = __webpack_require__(186);
 
@@ -35346,7 +35346,7 @@ module.exports = _default;
 /* 437 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var graphicUtil = __webpack_require__(170);
 
@@ -37375,7 +37375,7 @@ var vec2 = __webpack_require__(177);
 
 var Draggable = __webpack_require__(573);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 /**
  * Handler
@@ -40026,7 +40026,7 @@ exports.containStroke = containStroke;
 /* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var curve = __webpack_require__(195);
+var curve = __webpack_require__(200);
 
 /**
  * 三次贝塞尔曲线描边包含判断
@@ -40122,7 +40122,7 @@ var _util = __webpack_require__(268);
 
 var normalizeRadian = _util.normalizeRadian;
 
-var curve = __webpack_require__(195);
+var curve = __webpack_require__(200);
 
 var windingLine = __webpack_require__(269);
 
@@ -40546,7 +40546,7 @@ exports.contain = contain;
 /* 553 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _curve = __webpack_require__(195);
+var _curve = __webpack_require__(200);
 
 var quadraticProjectPoint = _curve.quadraticProjectPoint;
 
@@ -40696,7 +40696,7 @@ var normalizeEvent = _event.normalizeEvent;
 
 var zrUtil = __webpack_require__(157);
 
-var Eventful = __webpack_require__(193);
+var Eventful = __webpack_require__(198);
 
 var env = __webpack_require__(179);
 
@@ -41167,7 +41167,7 @@ var Displayable = __webpack_require__(234);
 
 var zrUtil = __webpack_require__(157);
 
-var textContain = __webpack_require__(192);
+var textContain = __webpack_require__(197);
 
 var textHelper = __webpack_require__(280);
 
@@ -41525,7 +41525,7 @@ var Path = __webpack_require__(180);
 
 var vec2 = __webpack_require__(177);
 
-var _curve = __webpack_require__(195);
+var _curve = __webpack_require__(200);
 
 var quadraticSubdivide = _curve.quadraticSubdivide;
 var cubicSubdivide = _curve.cubicSubdivide;

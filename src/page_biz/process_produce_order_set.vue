@@ -100,7 +100,10 @@
                 <template v-for="(item, index) in tableData">
                     <template v-if="item.list.length > 1">
                         <tr class="item_line">
-                            <td :rowspan="item.list.length + 1">{{item.set_name}}</td>
+                            <td :rowspan="item.list.length + 1">
+                                {{item.set_name}}
+                                <el-button size="mini"  @click="order_list = item.sales_order;search_sales_order();">详情</el-button>
+                            </td>
                             <td :rowspan="item.list.length + 1">{{item.delivery_date}}</td>
                             <td :rowspan="item.list.length + 1">{{item.sales_man}}</td>
 
@@ -166,43 +169,43 @@
             </div>
         </el-dialog>
 
-        <el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_processoption_visible" width="20%">
-            <p v-for="(process_option,index) in process_options" style="text-align: center;padding:5px;">
+        <!--<el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_processoption_visible" width="20%">-->
+            <!--<p v-for="(process_option,index) in process_options" style="text-align: center;padding:5px;">-->
 
-                <el-button v-if="process_options_type==1" @click="dialog_processoption_visible = false;dialog_handover_visible = true;cur_process_option=process_option;" type="primary">{{process_option.from.name}}->{{process_option.to.name}}</el-button>
-                <el-button v-if="process_options_type==2" @click="dialog_processoption_visible = false;dialog_set_complete_visible = true;cur_process_option=process_option;" type="primary">{{process_option.from.name}}->{{process_option.to.name}}</el-button>
-            </p>
-            <div slot="footer" class="dialog-footer">
+                <!--<el-button v-if="process_options_type==1" @click="dialog_processoption_visible = false;dialog_handover_visible = true;cur_process_option=process_option;" type="primary">{{process_option.from.name}}->{{process_option.to.name}}</el-button>-->
+                <!--<el-button v-if="process_options_type==2" @click="dialog_processoption_visible = false;dialog_set_complete_visible = true;cur_process_option=process_option;" type="primary">{{process_option.from.name}}->{{process_option.to.name}}</el-button>-->
+            <!--</p>-->
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--&lt;!&ndash;<el-button @click="process_order(cur_order,true)">确 定</el-button>&ndash;&gt;-->
+                <!--<el-button @click="dialog_processoption_visible = false">取 消</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
+
+        <!--<el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_handover_visible" width="20%">-->
+            <!--<p v-if="cur_process_option.from">-->
+                <!--流程走向:{{cur_process_option.from.name}}->{{cur_process_option.to.name}}-->
+            <!--</p>-->
+            <!--<p>-->
+                <!--请输入交接数量({{cur_process_option.handed_num}}/{{cur_order.sum}}):<el-input v-model="cur_order.handover_num" auto-complete="off"></el-input>-->
+            <!--</p>-->
+            <!--<div slot="footer" class="dialog-footer">-->
                 <!--<el-button @click="process_order(cur_order,true)">确 定</el-button>-->
-                <el-button @click="dialog_processoption_visible = false">取 消</el-button>
-            </div>
-        </el-dialog>
+                <!--<el-button @click="dialog_handover_visible = false">取 消</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
 
-        <el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_handover_visible" width="20%">
-            <p v-if="cur_process_option.from">
-                流程走向:{{cur_process_option.from.name}}->{{cur_process_option.to.name}}
-            </p>
-            <p>
-                请输入交接数量({{cur_process_option.handed_num}}/{{cur_order.sum}}):<el-input v-model="cur_order.handover_num" auto-complete="off"></el-input>
-            </p>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="process_order(cur_order,true)">确 定</el-button>
-                <el-button @click="dialog_handover_visible = false">取 消</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_set_complete_visible" width="20%">
-            <p v-if="cur_process_option.from">
-                流程走向:{{cur_process_option.from.name}}->{{cur_process_option.to.name}}
-            </p>
-            <p>
-                请输入完成数量({{cur_process_option.completed_num}}/{{cur_order.sum}}):<el-input v-model="cur_order.complete_num" auto-complete="off"></el-input>
-            </p>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="complete_num_order(cur_order,true)">确 定</el-button>
-                <el-button @click="dialog_set_complete_visible = false">取 消</el-button>
-            </div>
-        </el-dialog>
+        <!--<el-dialog :title="'订单编号:'+cur_order.order_no" :visible.sync="dialog_set_complete_visible" width="20%">-->
+            <!--<p v-if="cur_process_option.from">-->
+                <!--流程走向:{{cur_process_option.from.name}}->{{cur_process_option.to.name}}-->
+            <!--</p>-->
+            <!--<p>-->
+                <!--请输入完成数量({{cur_process_option.completed_num}}/{{cur_order.sum}}):<el-input v-model="cur_order.complete_num" auto-complete="off"></el-input>-->
+            <!--</p>-->
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button @click="complete_num_order(cur_order,true)">确 定</el-button>-->
+                <!--<el-button @click="dialog_set_complete_visible = false">取 消</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
 
 
         <div style="display: none">
@@ -213,19 +216,48 @@
             </div>
         </div>
 
-        <el-dialog title="" :visible.sync="dialog_order_visible" width="70%">
 
-            <template  v-if="order_info">
-                <div id="print_produce_order">
-                    <produce-order :order_info="order_info"></produce-order>
+        <el-dialog title="" :visible.sync="dialog_order_visible" width="70%">
+            <template  v-if="order_list && order_list.length>1">
+                <div class="table_container">
+
+                    <el-table
+                            :data="order_list"
+                            style="width: 100%;text-align: left"
+                            height="500">
+                        <el-table-column label="客户单号" prop="custom_order_no">
+                            <template slot-scope="scope">
+
+                                <span @click="order_list=[scope.row];get_single_order()" style="text-decoration: underline;cursor: pointer">{{scope.row.custom_order_no}}</span>
+                            </template>
+                        </el-table-column>
+
+
+                        <el-table-column label="创建时间" prop="create_time"></el-table-column>
+
+                    </el-table>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialog_order_visible = false">关 闭</el-button>
+                    </div>
+                </div>
+
+            </template>
+            <template  v-if="order_info && order_info.id && (!order_list.length || order_list.length <= 1)">
+
+
+                <div id="print_sales_order">
+                    <sales-order :order_info="order_info"></sales-order>
 
                 </div>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="success" @click="print_order_produce_order()">打 印</el-button>
+                    <el-button type="success" @click="print_order_sales_order()">打 印</el-button>
                     <el-button @click="dialog_order_visible = false">关 闭</el-button>
                 </div>
             </template>
+
         </el-dialog>
+
+
     </div>
 </template>
 
@@ -237,7 +269,11 @@
             complete_order_num,get_my_order_handover_processes,handover_directly
     } from "@/api/getDataproduce_order";
     import {produce_order_info} from "@/api/getDataproduce_order";
+
+    import salesOrder from '../components/salesOrder'
     import produceOrder from '../components/produceOrder'
+    import {sales_order_info,sales_order_get_all} from "@/api/getDatasales_order";
+
     import "@/assets/js/jquery-1.4.4.min";
     import "@/assets/js/jquery.jqprint-0.3";
     export default {
@@ -253,6 +289,8 @@
                 //                choose_categories:[],
                 //                categories:[],
                 order_no: "",
+                order_no_search: "",
+                order_list: [],
                 loadingBtn: -1,
                 print_order_no: "",
                 barcode_url: "",
@@ -271,7 +309,8 @@
         },
         components: {
             headTop,
-            produceOrder
+            produceOrder,
+            salesOrder
         },
         created() {
             //this.list();
@@ -429,8 +468,36 @@
                     rowspan: 1,
                     colspan: 1
                 };
-            }
+            },
+            search_sales_order(){
+                if (!this.order_list.length) {
+                    this.$message({
+                        type: "warning",
+                        message: "没有查询到订单信息"
+                    });
+                } else if (this.order_list.length == 1) {
+                    this.get_single_order();
+                } else {
+                    this.dialog_order_visible = true;
+                }
 
+            },
+            get_single_order(){
+                sales_order_info({id:this.order_list[0].id}).then(function(res){
+                    if (res.code == this.$store.state.constant.status_success) {
+                        this.order_info = res.data;
+                        this.dialog_order_visible = true;
+                    } else {
+                        this.$message({
+                            type: "warning",
+                            message: res.msg
+                        });
+                    }
+                }.bind(this));
+            },
+            print_order_sales_order(row) {
+                $("#print_sales_order").jqprint();
+            },
         }
     };
 </script>
