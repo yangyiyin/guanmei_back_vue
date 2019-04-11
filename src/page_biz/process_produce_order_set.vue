@@ -101,7 +101,7 @@
                     <template v-if="item.list.length > 1">
                         <tr class="item_line">
                             <td :rowspan="item.list.length + 1">
-                                {{item.set_name}}
+                                {{item.set_name}}<br/>
                                 <el-button size="mini"  @click="order_list = item.sales_order;search_sales_order();">详情</el-button>
                             </td>
                             <td :rowspan="item.list.length + 1">{{item.delivery_date}}</td>
