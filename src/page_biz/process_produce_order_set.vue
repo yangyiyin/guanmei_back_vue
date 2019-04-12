@@ -104,7 +104,11 @@
                                 {{item.set_name}}<br/>
                                 <el-button style="padding:2px 3px;" size="mini" type="primary"  @click="order_list = item.sales_order;search_sales_order();">详情</el-button>
                             </td>
-                            <td :rowspan="item.list.length">{{item.delivery_date}}</td>
+                            <td :rowspan="item.list.length">{{item.delivery_date}}
+                                <br/>
+                                (总数量:{{item.sum}})
+
+                            </td>
                             <td :rowspan="item.list.length">{{item.sales_man}}</td>
 
                             <td>{{item.list[0].product_cat_name}}{{item.list[0].product_code}}</td>
@@ -136,7 +140,10 @@
                         <tr class="item_line">
                             <td >{{item.set_name}}<br/>
                                 <el-button style="padding:2px 3px;" size="mini" type="primary"   @click="order_list = item.sales_order;search_sales_order();">详情</el-button></td>
-                            <td >{{item.delivery_date}}</td>
+                            <td >{{item.delivery_date}}
+                                <br/>
+                                (总数量:{{item.sum}})
+                            </td>
                             <td >{{item.sales_man}}</td>
 
 
@@ -146,7 +153,9 @@
                                 <td>{{item2.sum}}</td>
                                 <td>
                                     <template v-for="(process, index3) in item2.process_arr">
-                                        <el-button circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item2,process)">{{process.name}}</el-button>
+                                        <el-button v-if="process.status" circle style="margin: 2px;" size="mini" type="success" @click="process_order(item2,process)">{{process.name}}</el-button>
+                                        <el-button v-if="!process.status && item2.process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="warning" @click="process_order(item2,process)">{{process.name}}</el-button>
+                                        <el-button v-if="!process.status && !item2.process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item2,process)">{{process.name}}</el-button>
                                     </template>
                                 </td>
                             </template>

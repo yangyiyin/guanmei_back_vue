@@ -15,13 +15,17 @@
             <p style="margin-top: 20px">
                 <span style="padding: 10px;font-size: 14px;">月份:</span>
                 <template v-for="(month, index) in months">
-                    <el-badge :value="month.is_config ? '':'配'" class="item" style="margin: 10px;">
-                       <el-button @click="dialogFormVisible=true;current=month">
+                    <!--<el-badge :value="month.is_config ? '':'配'" class="item" style="margin: 10px;">-->
+                    <el-badge :value="month.is_config ? '':''" class="item" style="margin: 10px;">
+                       <!--<el-button @click="dialogFormVisible=true;current=month">-->
+                       <el-button >
                            <p>  <el-tag>{{month.label}}月份</el-tag></p>
                             <p style="margin-top: 5px;">
-                                业务单提交量:{{month.complete.sales}}/{{month.target.sales}}({{month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0}}%)<br/>
-                                业务单完成量:{{month.complete.produce}}/{{month.target.produce}}({{month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 :0}}%)<br/>
-                                完成率:({{month.complete.sales ? parseInt((month.complete.produce/month.complete.sales)*10000)/100 :0}}%)
+                                业务单提交量:{{month.complete.sales}}<br/>
+                                业务单完成量:{{month.complete.produce}}
+                                <!--业务单提交量:{{month.complete.sales}}/{{month.target.sales}}({{month.target.sales ? parseInt((month.complete.sales/month.target.sales)*10000)/100 : 0}}%)<br/>-->
+                                <!--业务单完成量:{{month.complete.produce}}/{{month.target.produce}}({{month.target.produce ? parseInt((month.complete.produce/month.target.produce)*10000)/100 :0}}%)-->
+                                <!--完成率:({{month.complete.sales ? parseInt((month.complete.produce/month.complete.sales)*10000)/100 :0}}%)-->
                             </p>
 
 

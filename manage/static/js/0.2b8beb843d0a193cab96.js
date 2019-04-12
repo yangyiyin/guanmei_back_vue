@@ -37265,20 +37265,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "margin": "10px"
       },
       attrs: {
-        "value": month.is_config ? '' : '配'
+        "value": month.is_config ? '' : ''
       }
-    }, [_c('el-button', {
-      on: {
-        "click": function($event) {
-          _vm.dialogFormVisible = true;
-          _vm.current = month
-        }
-      }
-    }, [_c('p', [_c('el-tag', [_vm._v(_vm._s(month.label) + "月份")])], 1), _vm._v(" "), _c('p', {
+    }, [_c('el-button', [_c('p', [_c('el-tag', [_vm._v(_vm._s(month.label) + "月份")])], 1), _vm._v(" "), _c('p', {
       staticStyle: {
         "margin-top": "5px"
       }
-    }, [_vm._v("\n                            业务单提交量:" + _vm._s(month.complete.sales) + "/" + _vm._s(month.target.sales) + "(" + _vm._s(month.target.sales ? parseInt((month.complete.sales / month.target.sales) * 10000) / 100 : 0) + "%)"), _c('br'), _vm._v("\n                            业务单完成量:" + _vm._s(month.complete.produce) + "/" + _vm._s(month.target.produce) + "(" + _vm._s(month.target.produce ? parseInt((month.complete.produce / month.target.produce) * 10000) / 100 : 0) + "%)"), _c('br'), _vm._v("\n                            完成率:(" + _vm._s(month.complete.sales ? parseInt((month.complete.produce / month.complete.sales) * 10000) / 100 : 0) + "%)\n                        ")])])], 1)]
+    }, [_vm._v("\n                            业务单提交量:" + _vm._s(month.complete.sales)), _c('br'), _vm._v("\n                            业务单完成量:" + _vm._s(month.complete.produce) + "\n                            ")])])], 1)]
   })], 2), _vm._v(" "), _c('v-chart', {
     staticStyle: {
       "width": "100%"
