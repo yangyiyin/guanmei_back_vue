@@ -84,7 +84,7 @@
                         </tr>
                         <tr>
                             <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">箱麦:</td>
-                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.package_info}}</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999"><div v-html="order_info.package_info"></div></td>
                         </tr>
 
                         <!--<tr>-->

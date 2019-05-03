@@ -1,6 +1,13 @@
 <template>
   <div class="fillcontain">
     <head-top></head-top>
+
+    <el-alert
+            v-if="(new Date()).getTime() < 1557456869000"
+            title="温馨提示:制单日期已无需在本页面填写了,当提交业务单的时候,系统会自动取提交时刻的日期作为制单日期,请悉知!"
+            type="warning">
+    </el-alert>
+
     <div class="table_container" style="padding:20px">
       <!-- 客户单号 -->
       <div class="search_item">
@@ -9,7 +16,7 @@
         </el-input>
       </div>
       <!-- 制单日期 -->
-      <div class="search_item">
+      <div class="search_item" style="display: none">
         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>制单日期:</span>
         <el-date-picker
           v-model="order_date"
@@ -244,13 +251,17 @@
       <!-- 客户款式/型号 -->
       <div class="search_item">
         <span class="pre_info" style="font-size: 14px;">包装配色:</span>
-        <el-input  type="textarea" clearable placeholder="" v-model="package_info" style="width: 350px;vertical-align: middle"></el-input>
+        <el-input  type="textarea" clearable placeholder="" v-model="package_short_info" style="width: 350px;vertical-align: middle"></el-input>
       </div>
 
       <!-- 客户款式/型号 -->
       <div class="search_item">
         <span class="pre_info" style="font-size: 14px;">箱麦:</span>
-        <el-input  type="textarea" clearable placeholder="" v-model="package_short_info" style="width: 350px;vertical-align: middle"></el-input>
+        <!--<el-input  type="textarea" clearable placeholder="" v-model="package_short_info" style="width: 350px;vertical-align: middle"></el-input>-->
+        <div class="editor-container">
+          <script id="editor1" type="text/plain" ></script>
+        </div>
+
       </div>
 
       <!-- <div class="search_item add_block" @click="add_block"><i class="iconfont" style="font-size: 10px;">&#xe658;</i>增加订单子项</div> -->
@@ -287,6 +298,7 @@ export default {
       custom_name: "",
       order_no: "",
       sales_man: "",
+      editor1:null,
       package_containment: "",
       package_num: "",
       package_short_info: "",
@@ -313,22 +325,35 @@ export default {
       options: {
         options_product_cat: [],
         options_process: []
+      },
+      config: {
+        initialFrameWidth: null,
+        initialFrameHeight: 150,
+        initialFrameWidth: 300,
+        toolbars: [[
+          'fullscreen', 'source', '|',
+          'bold', 'italic', 'underline', '|', 'fontsize', 'insertimage', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+          'preview'
+        ]]
       }
     };
   },
   components: {
-    headTop
+    headTop,
   },
   created() {
     this.user_info = JSON.parse(getStore("user_info"));
   },
-  mounted() {},
+  mounted() {
+
+  },
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // 通过 `vm` 访问组件实例
       vm.id = to.query.id ? to.query.id : 0;
       // console.log(vm.id);
+    vm.editor1 = null;
       vm.init_select_options().then(function() {
         if (vm.id && vm.id > 0) {
           vm.clone = to.query.clone ? true : false;
@@ -351,6 +376,7 @@ export default {
       this.package_num= "";
       this.package_short_info= "";
       this.package_info="";
+      this.editor1=null;
       this.sub_orders = [
         {
           product_cat: {},
@@ -380,9 +406,23 @@ export default {
           : this.sales_man;
         this.sub_orders = sales_order_edit_data.sub_orders;
       }
-      console.log(sales_order_edit_data, "草稿中获取");
+      //console.log(sales_order_edit_data, "草稿中获取");
 
       this.order_date = new Date().toLocaleDateString();
+      this.init_editor();
+    },
+    init_editor(){
+      var _this = this;
+//      console.log(this.editor1);
+      if (!this.editor1) {
+        UE.delEditor('editor1');
+        this.editor1 = UE.getEditor('editor1', this.config); // 初始化UE
+        this.editor1.addListener("ready", function () {
+          _this.editor1.setContent(_this.package_info); // 确保UE加载完成后，放入内容。
+        });
+      } else {
+        _this.editor1.setContent(_this.package_info); // 确保UE加载完成后，放入内容。
+      }
     },
     // 获取复制时的数据
     get_info() {
@@ -404,12 +444,14 @@ export default {
             this.gen_options_product_cat_product();
             this.gen_material_color();
 //            console.log(this.sub_orders, "get_info--sub_orders");
+//            this.init_editor();
           } else {
             this.$message({
               message: res.msg,
               type: "warning"
             });
           }
+          this.init_editor();
         }.bind(this)
       );
     },
@@ -439,6 +481,7 @@ export default {
 
     // 保存
     submit: function() {
+
       var data = {
         id: this.id,
         order_date: this.order_date,
@@ -449,7 +492,7 @@ export default {
         package_containment: this.package_containment,
         package_num: this.package_num,
         package_short_info: this.package_short_info,
-        package_info: this.package_info,
+        package_info: this.editor1.getContent(),
         sub_orders: this.sub_orders
       };
       if (this.clone) {
@@ -908,4 +951,7 @@ export default {
    border-color: #409eff;
    color: #409eff;
  }
+.editor-container{
+  display: inline-block;vertical-align: top;
+}
 </style>

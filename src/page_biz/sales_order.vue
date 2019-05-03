@@ -97,7 +97,7 @@
                                 <span>{{props.row.package_short_info}}</span>
                             </el-form-item>
                             <el-form-item label="箱麦:" >
-                                <span>{{props.row.package_info}}</span>
+                                <div v-html="props.row.package_info"></div>
                             </el-form-item>
                             <el-form-item label="当前进度:" >
                                 <span style="font-weight: bold;color: #000">{{sub_order.process_state ? sub_order.process_state : '暂无'}}</span>
