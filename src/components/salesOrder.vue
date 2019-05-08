@@ -63,6 +63,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">材料说明:</td>
+                            <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.sales_order_sub[0].raw_material}}</td>
+                        </tr>
+                        <tr>
                             <td style="border-right: 1px solid #999;border-bottom: 1px solid #999">备注说明:</td>
                             <td style="width: 80%;border-bottom: 1px solid #999">{{order_info.sales_order_sub[0].sample_info}}</td>
                         </tr>
