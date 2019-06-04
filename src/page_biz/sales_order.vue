@@ -117,8 +117,10 @@
                 <el-table-column label="客户单号" prop="order_no">
                     <template slot-scope="scope">
                         <span>{{scope.row.custom_order_no}}</span>
+                        <el-button size="mini" @click="dialogFormVisibleRemark=true;current=scope.row">备注</el-button>
                     </template>
                 </el-table-column>
+                <el-table-column label="总数量" prop="sum"></el-table-column>
                 <el-table-column label="制单日期" prop="order_date"></el-table-column>
                 <el-table-column label="交货日期" prop="delivery_date"></el-table-column>
                 <el-table-column label="业务员" prop="sales_man"></el-table-column>
@@ -192,6 +194,21 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisibleDaochu = false">取 消</el-button>
                 <el-button type="primary" @click="daochu" :loading="loadingBtn == 'daochu'">开始导出</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="备注" :visible.sync="dialogFormVisibleRemark" width="50%">
+            <p>
+                <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 4}"
+                        placeholder="请输入内容"
+                        v-model="current.back_remark">
+                </el-input>
+            </p>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleRemark = false">取 消</el-button>
+                <el-button type="primary" @click="remark">保存</el-button>
             </div>
         </el-dialog>
 
@@ -319,7 +336,8 @@
             sales_order_del_force,
             sales_order_verify,
             sales_order_sort,
-            sales_order_info
+            sales_order_info,
+            setBackRemark
     } from "@/api/getDatasales_order";
     import "@/assets/js/jquery-1.4.4.min";
     import "@/assets/js/jquery.jqprint-0.3";
@@ -336,6 +354,7 @@
                 dialogFormVisible: false,
                 dialogFormVisibleDaochu: false,
                 dialogFormVisibleSubmit: false,
+                dialogFormVisibleRemark: false,
                 current: {},
                 current_order: {row:{}},
                 //                remark:'',
@@ -495,6 +514,24 @@
                                     this.loadingBtn = -1;
                                 }.bind(this)
                         );
+            },
+            remark() {
+                setBackRemark({ id: this.current.id,back_remark: this.current.back_remark }).then(
+                        function(res) {
+                            if (res.code == this.$store.state.constant.status_success) {
+                                this.$message({
+                                    type: "success",
+                                    message: "操作成功"
+                                });
+                            } else {
+                                this.$message({
+                                    type: "warning",
+                                    message: res.msg
+                                });
+                            }
+                            this.dialogFormVisibleRemark = false;
+                        }.bind(this)
+                );
             },
             del(item, index) {
                 this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {

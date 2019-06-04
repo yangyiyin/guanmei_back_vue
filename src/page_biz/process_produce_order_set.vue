@@ -444,7 +444,9 @@
                 );
             },
             process_order(row,process) {
-
+                if (row.is_vip == 1) {
+                    return ;
+                }
                 this.$confirm('确认此操作', "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",

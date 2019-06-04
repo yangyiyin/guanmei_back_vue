@@ -35,8 +35,27 @@
           placeholder="选择日期">
         </el-date-picker>
       </div>
-      <!-- 客户姓名 -->
+
       <div class="search_item">
+        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>是否为vip客户:</span>
+
+        <el-checkbox v-model="is_vip"></el-checkbox>
+      </div>
+
+      <div class="search_item" v-if="is_vip">
+        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>vip客户:</span>
+        <el-select v-model="vip" placeholder="请选择" value-key="id">
+          <el-option
+                  v-for="item in options.options_vips"
+                  :key="item.id"
+                  :label="item.show_name"
+                  :value="item">
+          </el-option>
+        </el-select>
+      </div>
+
+      <!-- 客户姓名 -->
+      <div class="search_item" v-if="!is_vip">
         <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>客户姓名:</span>
         <el-input clearable placeholder="请输入客户姓名" v-model="custom_name" style="width: 350px">
         </el-input>
@@ -295,6 +314,10 @@ export default {
       dialogVisible: false,
       order_date: "",
       delivery_date: "",
+      vip:{
+        id:'0'
+      },
+      is_vip:false,
       custom_name: "",
       order_no: "",
       sales_man: "",
@@ -370,6 +393,10 @@ export default {
       this.order_date = "";
       this.delivery_date = "";
       this.custom_name = "";
+      this.vip = {
+        id:'0'
+      };
+      this.is_vip = false;
       this.order_no = "";
       this.sales_man = this.user_info.show_name;
       this.package_containment = "";
@@ -432,6 +459,8 @@ export default {
             this.order_date = res.data.order_date;
             this.delivery_date = res.data.delivery_date;
             this.custom_name = res.data.custom_name;
+            this.vip = res.data.vip;
+            this.is_vip = res.data.is_vip;
             this.order_no = res.data.custom_order_no;
             this.sales_man = res.data.sales_man;
 
@@ -487,6 +516,8 @@ export default {
         order_date: this.order_date,
         delivery_date: this.delivery_date,
         custom_name: this.custom_name,
+        vip: this.vip,
+        is_vip: this.is_vip,
         order_no: this.order_no,
         sales_man: this.sales_man,
         package_containment: this.package_containment,

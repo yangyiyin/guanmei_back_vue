@@ -13,6 +13,7 @@ export const admin_user_edit = data => fetch('/guanmei/admin_user/edit', data, '
 export const admin_user_verify = data => fetch('/guanmei/admin_user/verify', data, 'POST').then(check_login);
 export const admin_user_del = data => fetch('/guanmei/admin_user/del', data, 'POST').then(check_login);
 export const admin_user_info = data => fetch('/guanmei/admin_user/info', data, 'POST').then(check_login);
+export const setIsVip = data => fetch('/guanmei/admin_user/setIsVip', data, 'POST').then(check_login);
 export const admin_group_list = data => fetch('/guanmei/admin_group/index', data, 'POST').then(check_login);
 export const admin_group_all_list = data => fetch('/guanmei/admin_group/all_list', data, 'POST').then(check_login);
 export const admin_group_edit = data => fetch('/guanmei/admin_group/edit', data, 'POST').then(check_login);

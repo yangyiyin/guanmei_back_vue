@@ -48,6 +48,7 @@
 				<!--</el-row>-->
 			</el-col>
 			<el-col :span="21" style="height: 100%;overflow: auto;">
+				<div @click="showHelp=true" style="position: fixed;cursor:pointer;left: 0px;bottom:0px;z-index: 100;background: #F5B587;font-size: 12px;padding: 5px;">查看帮助与更新</div>
 				<keep-alive>
 					<el-scrollbar style="height: 100%;">
 						<router-view></router-view>
@@ -56,19 +57,33 @@
 				</keep-alive>
 			</el-col>
 		</el-row>
+		<el-dialog
+				title="帮助与更新"
+				:visible.sync="showHelp"
+				width="80%">
+			<div>
+				<help></help>
+			</div>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="showHelp = false">关 闭</el-button>
+			</div>
+		</el-dialog>
   	</div>
 </template>
 
 <script>
 	import {get_menu} from '@/api/getDataEarth'
-    import headTopUserinfo from '../components/headTopUserinfo'
+    import headTopUserinfo from '@/components/headTopUserinfo'
+	import help from '@/components/help'
     export default {
 		data(){
 			return {
-				menu:[]
+				menu:[],
+				showHelp:false
 			}
 
 		},
+
 		created(){
 			this.get_menu();
 		},
@@ -100,7 +115,8 @@
 			}
 		},
         components: {
-            headTopUserinfo
+            headTopUserinfo,
+			help
         },
     }
 </script>

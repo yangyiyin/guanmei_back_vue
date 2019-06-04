@@ -27,6 +27,8 @@
                         <el-button size="mini" v-if="scope.row.status == 1" @click="verify(scope, 0)" :loading="loadingBtn == scope.$index">禁用</el-button>
                         <el-button size="mini" v-if="scope.row.status == 0" @click="verify(scope, 1)" :loading="loadingBtn == scope.$index">启用</el-button>
                         <el-button size="mini" @click="del(scope.row, scope.$index)">删除</el-button>
+                        <el-button size="mini"  v-if="scope.row.is_vip == 0" @click="set_vip(scope.row, 1)">设为vip</el-button>
+                        <el-button size="mini"  v-if="scope.row.is_vip == 1" @click="set_vip(scope.row, 0)">设为非vip</el-button>
                         <el-button size="mini" type="primary" @click="del_app_login_token(scope.row)">app重新登录</el-button>
                     </template>
                 </el-table-column>
@@ -47,7 +49,7 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,del_app_login_token} from '@/api/getDataEarth'
+    import {admin_user_list,admin_user_del,admin_user_verify,admin_user_sort,del_app_login_token,setIsVip} from '@/api/getDataEarth'
     export default {
         data(){
             return {
@@ -170,6 +172,28 @@
                     del_app_login_token({uid:row.id}).then(function(res){
                         if (res.code == this.$store.state.constant.status_success) {
 
+                            this.$message({
+                                type: 'success',
+                                message: res.msg
+                            });
+                        } else {
+                            this.$message({
+                                type: 'warning',
+                                message: res.msg
+                            });
+                        }
+                    }.bind(this));
+                }.bind(this))
+            },
+            set_vip(row, is_vip) {
+                this.$confirm('确认此操作, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    setIsVip({id:row.id,is_vip:is_vip}).then(function(res){
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.list();
                             this.$message({
                                 type: 'success',
                                 message: res.msg

@@ -12,6 +12,7 @@ export const sales_order_del = data => fetch('/guanmei/sales_order/del', data, '
 export const sales_order_del_force = data => fetch('/guanmei/sales_order/del_force', data, 'POST').then(check_login);
 export const sales_order_info = data => fetch('/guanmei/sales_order/info', data, 'POST').then(check_login);
 export const sales_order_sort = data => fetch('/guanmei/sales_order/sort', data, 'POST').then(check_login);
+export const setBackRemark = data => fetch('/guanmei/sales_order/setBackRemark', data, 'POST').then(check_login);
 export const init_select_options = data => fetch('/guanmei/sales_order/init_select_options', data, 'POST').then(check_login);
 export const sales_sub_orders = data => fetch('/guanmei/sales_order_sub/index', data, 'POST').then(check_login);
 export const sales_sub_orders_index_by_order = data => fetch('/guanmei/sales_order_sub/index_by_order', data, 'POST').then(check_login);
