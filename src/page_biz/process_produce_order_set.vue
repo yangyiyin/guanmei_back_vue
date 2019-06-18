@@ -447,29 +447,46 @@
                 if (row.is_vip == 1) {
                     return ;
                 }
-                this.$confirm('确认此操作', "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(
-                        function() {
-                            handover_directly({ produce_order_id: row.id,from_process_id:process.id}).then(
-                                    function(res) {
-                                        if (res.code == this.$store.state.constant.status_success) {
-                                            this.list();
-                                            this.$message({
-                                                type: "success",
-                                                message: res.msg
-                                            });
-                                            this.dialog_handover_visible = false;
-                                        } else {
-                                            this.$message({
-                                                type: "warning",
-                                                message: res.msg
-                                            });
-                                        }
-                                    }.bind(this)
-                            );
+//                this.$confirm('确认此操作', "提示", {
+//                    confirmButtonText: "确定",
+//                    cancelButtonText: "取消",
+//                    type: "warning"
+//                }).then(
+//                        function() {
+//                            handover_directly({ produce_order_id: row.id,from_process_id:process.id}).then(
+//                                    function(res) {
+//                                        if (res.code == this.$store.state.constant.status_success) {
+//                                            this.list();
+//                                            this.$message({
+//                                                type: "success",
+//                                                message: res.msg
+//                                            });
+//                                            this.dialog_handover_visible = false;
+//                                        } else {
+//                                            this.$message({
+//                                                type: "warning",
+//                                                message: res.msg
+//                                            });
+//                                        }
+//                                    }.bind(this)
+//                            );
+//                        }.bind(this)
+//                );
+                handover_directly({ produce_order_id: row.id,from_process_id:process.id}).then(
+                        function(res) {
+                            if (res.code == this.$store.state.constant.status_success) {
+                                this.list();
+                                this.$message({
+                                    type: "success",
+                                    message: res.msg
+                                });
+                                this.dialog_handover_visible = false;
+                            } else {
+                                this.$message({
+                                    type: "warning",
+                                    message: res.msg
+                                });
+                            }
                         }.bind(this)
                 );
             },
