@@ -117,7 +117,8 @@
                 <el-table-column label="客户单号" prop="order_no">
                     <template slot-scope="scope">
                         <span>{{scope.row.custom_order_no}}</span>
-                        <el-button size="mini" @click="dialogFormVisibleRemark=true;current=scope.row">备注</el-button>
+                        <el-button type="warning" v-if="scope.row.back_remark" size="mini" @click="dialogFormVisibleRemark=true;current=scope.row">备注</el-button>
+                        <el-button v-if="!scope.row.back_remark" size="mini" @click="dialogFormVisibleRemark=true;current=scope.row">备注</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="总数量" prop="sum"></el-table-column>

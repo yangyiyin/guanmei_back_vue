@@ -96,6 +96,7 @@
                     <th width="150">颜色</th>
                     <th width="30">数量</th>
                     <th>流程</th>
+                    <th>条码</th>
                 </tr>
                 <template v-for="(item, index) in tableData">
                     <template v-if="item.list.length > 1">
@@ -121,7 +122,9 @@
                                     <el-button v-if="!process.status && !item.list[0].process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item.list[0],process)">{{process.name}}</el-button>
                                 </template>
                             </td>
-
+                            <td>
+                                <el-button  size="mini" type="success" @click="print_barcode(item.list[0])">打印({{item.list[0].print_count}})</el-button>
+                            </td>
                         </tr>
                         <tr v-for="(item2, index2) in item.list" class="item_line" v-if="index2 > 0">
                             <td>{{item2.product_cat_name}}{{item2.product_code}}</td>
@@ -133,6 +136,9 @@
                                     <el-button v-if="!process.status && item2.process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="warning" @click="process_order(item2,process)">{{process.name}}</el-button>
                                     <el-button v-if="!process.status && !item2.process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item2,process)">{{process.name}}</el-button>
                                 </template>
+                            </td>
+                            <td>
+                                <el-button size="mini" type="success" @click="print_barcode(item2)">打印({{item2.print_count}})</el-button>
                             </td>
                         </tr>
                     </template>
@@ -158,6 +164,9 @@
                                         <el-button v-if="!process.status && !item2.process_status_map[process.id]" circle style="margin: 2px;" size="mini" type="danger" @click="process_order(item2,process)">{{process.name}}</el-button>
                                     </template>
                                 </td>
+                                <td>
+                                    <el-button size="mini" type="success" @click="print_barcode(item2)">打印({{item2.print_count}})</el-button>
+                                </td>
                             </template>
                         </tr>
                     </template>
@@ -167,6 +176,7 @@
                                </td>
                             <td >{{item.delivery_date}}</td>
                             <td >{{item.sales_man}}</td>
+                            <td ></td>
                             <td ></td>
                             <td ></td>
                             <td ></td>
@@ -298,9 +308,10 @@
 <script>
     import headTop from "../components/headTop";
     import {
-            process_produce_order_set,
-            process_order,
-            complete_order_num,get_my_order_handover_processes,handover_directly
+        process_produce_order_set,
+        process_order,
+        complete_order_num,get_my_order_handover_processes,handover_directly,
+        gen_barcode_html
     } from "@/api/getDataproduce_order";
     import {produce_order_info} from "@/api/getDataproduce_order";
 
@@ -550,6 +561,39 @@
             },
             print_order_sales_order(row) {
                 $("#print_sales_order").jqprint();
+            },
+
+            print_barcode(row) {
+                this.print_order_no = row.order_no;
+                this.order_info =
+                    row.product_cat_name +
+                    "-" +
+                    row.product_code +
+                    "-" +
+                    row.color_code +
+                    " " +
+                    "数量" +
+                    row.sum;
+                gen_barcode_html({
+                    code: row.order_no,
+                    id: row.id
+                }).then(
+                    function(res) {
+                        if (res.code == this.$store.state.constant.status_success) {
+                            this.barcode_url = res.data;
+                            setTimeout(function() {
+                                $("#print").jqprint();
+                                row.print_count++;
+                            });
+                        } else {
+                            this.$message({
+                                showClose: true,
+                                message: res.msg,
+                                type: "warning"
+                            });
+                        }
+                    }.bind(this)
+                );
             },
         }
     };
