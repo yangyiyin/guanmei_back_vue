@@ -574,7 +574,6 @@
                     " " +
                     "数量" +
                     row.sum;
-                this.barcode_url = 'http://api.yixsu.com/index.php/waibao/common/qrcode?text=' + row.order_no;
 
                 gen_barcode_html({
                     code: row.order_no,
@@ -583,6 +582,7 @@
                     function(res) {
                         if (res.code == this.$store.state.constant.status_success) {
                             //this.barcode_url = res.data;
+                            this.barcode_url = 'http://api.yixsu.com/index.php/waibao/common/qrcode?text=' + row.order_no;
                             setTimeout(function() {
                                 $("#print").jqprint();
                                 row.print_count++;
