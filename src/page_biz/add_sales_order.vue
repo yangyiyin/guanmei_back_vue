@@ -36,19 +36,31 @@
         </el-date-picker>
       </div>
 
+      <!--<div class="search_item">-->
+        <!--<span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>是否为vip客户:</span>-->
+
+        <!--<el-checkbox v-model="is_vip"></el-checkbox>-->
+      <!--</div>-->
+
+      <!--<div class="search_item" v-if="is_vip">-->
+        <!--<span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>vip客户:</span>-->
+        <!--<el-select v-model="vip" placeholder="请选择" value-key="id">-->
+          <!--<el-option-->
+                  <!--v-for="item in options.options_vips"-->
+                  <!--:key="item.id"-->
+                  <!--:label="item.show_name"-->
+                  <!--:value="item">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
+      <!--</div>-->
+
       <div class="search_item">
-        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>是否为vip客户:</span>
-
-        <el-checkbox v-model="is_vip"></el-checkbox>
-      </div>
-
-      <div class="search_item" v-if="is_vip">
-        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>vip客户:</span>
-        <el-select v-model="vip" placeholder="请选择" value-key="id">
+        <span class="pre_info" style="font-size: 14px;"><i style="color:red;">*</i>品质等级:</span>
+        <el-select v-model="level" placeholder="请选择">
           <el-option
-                  v-for="item in options.options_vips"
-                  :key="item.id"
-                  :label="item.show_name"
+                  v-for="item in ['3A','2A','A','B']"
+                  :key="item"
+                  :label="item"
                   :value="item">
           </el-option>
         </el-select>
@@ -215,7 +227,7 @@
           <span class="pre_info" style="font-size: 14px;">装饰说明:</span>
           <el-input type="textarea" clearable placeholder="请输入装饰说明" v-model="sub_order.decoration" style="width: 350px;vertical-align: middle"></el-input>
         </div>
-        
+
         <!-- 样品图片 -->
         <div class="search_item">
           <span class="pre_info" style="font-size: 14px;">样品图片:</span>
@@ -239,7 +251,7 @@
               <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </div>
-        
+
         <!-- 备注说明 -->
         <div class="search_item">
             <span class="pre_info" style="font-size: 14px;">备注说明:</span>
@@ -318,6 +330,7 @@ export default {
         id:'0'
       },
       is_vip:false,
+      level:'3A',
       custom_name: "",
       order_no: "",
       sales_man: "",
@@ -461,6 +474,7 @@ export default {
             this.custom_name = res.data.custom_name;
             this.vip = res.data.vip;
             this.is_vip = res.data.is_vip;
+            this.level = res.data.level;
             this.order_no = res.data.custom_order_no;
             this.sales_man = res.data.sales_man;
 
@@ -518,6 +532,7 @@ export default {
         custom_name: this.custom_name,
         vip: this.vip,
         is_vip: this.is_vip,
+        level: this.level,
         order_no: this.order_no,
         sales_man: this.sales_man,
         package_containment: this.package_containment,

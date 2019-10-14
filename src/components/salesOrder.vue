@@ -12,6 +12,10 @@
             订单号:{{order_info.custom_order_no}}
             <!--交货日期:{{order_info.delivery_date}}-->
         </div>
+        <div class="item-item" style="margin-left:20px;float: left">
+            品质等级:<span style="font-weight: bolder">{{order_info.level}}</span>
+            <!--交货日期:{{order_info.delivery_date}}-->
+        </div>
         <div class="item-item" style="float: right">
             帽类:{{order_info.sales_order_sub[0].product_cat_name}}<span v-if="order_info.sales_order_sub[0].product_name">({{order_info.sales_order_sub[0].product_name}})</span>
             <!--交货日期:{{order_info.delivery_date}}-->
