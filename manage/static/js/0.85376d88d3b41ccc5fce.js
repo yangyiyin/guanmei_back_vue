@@ -23623,7 +23623,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
 
         var cur_year = new Date().getFullYear();
-        for (var i = 2018; i <= cur_year; i++) {
+        for (var i = 2018; i <= cur_year + 1; i++) {
             this.years.push({
                 label: i,
                 active: i == cur_year ? true : false
